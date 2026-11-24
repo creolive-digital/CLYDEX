@@ -24,7 +24,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "Create a &desktop shortcut for the CLYDEX widget"; \
-  GroupDescription: "Additional icons:"; Flags: checked
+  GroupDescription: "Additional icons:"
 
 [Files]
 ; --- Widget (exe + _widget internal folder + studio_ui fonts/assets) ---
