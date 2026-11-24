@@ -1,0 +1,64 @@
+name: Build CLYDEX Installer
+
+on:
+  push:
+    branches: [ main ]
+    tags:    [ 'v*' ]        # push a tag like v1.0 to auto-create a Release
+  workflow_dispatch:          # lets you click "Run workflow" in the GitHub UI
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      # ── 1. Source ────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Python ────────────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install "pyinstaller>=6.0" pyinstaller-hooks-contrib
+
+      # ── 3. PyInstaller builds ────────────────────────────────
+      - name: Build clydex_widget.exe
+        run: python -m PyInstaller --clean --noconfirm clydex_widget.spec
+
+      - name: Build clydex_voice_agent.exe
+        run: python -m PyInstaller --clean --noconfirm clydex_voice_agent.spec
+
+      # ── 4. Inno Setup ────────────────────────────────────────
+      - name: Install Inno Setup 6
+        run: choco install innosetup --yes --no-progress
+
+      - name: Compile installer
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path installer_out | Out-Null
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      # ── 5. Upload ────────────────────────────────────────────
+      - name: Upload installer as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CLYDEX_Setup
+          path: installer_out\CLYDEX_Setup.exe
+          if-no-files-found: error
+          retention-days: 30
+
+      # ── 6. GitHub Release (only when a v* tag is pushed) ────
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: installer_out\CLYDEX_Setup.exe
+          generate_release_notes: true

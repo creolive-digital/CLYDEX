@@ -1,0 +1,224 @@
+<!DOCTYPE html><html lang="en" class="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLYDEX Voice Agent — Desktop</title>
+  <link rel="stylesheet" href="stitch.css"><link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="desktop.css">
+  <style>
+    .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      line-height: 1 !important;
+      box-sizing: content-box;
+      overflow: hidden;
+      white-space: nowrap;
+      direction: ltr;
+      vertical-align: middle;
+    }
+    /* Custom subtle scrollbar for transcript */
+    .transcript-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .transcript-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .transcript-scroll::-webkit-scrollbar-thumb {
+      background: rgba(134, 147, 151, 0.25);
+      border-radius: 9999px;
+    }
+    .transcript-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(76, 215, 246, 0.45);
+    }
+  </style>
+</head>
+<body class="bg-light-background dark:bg-dark-background text-light-on-background dark:text-dark-on-background antialiased selection:bg-light-primary-container selection:text-light-on-primary-container">
+
+  <!-- Root Desktop Split-Stage Grid -->
+  <div class="min-h-[1024px] w-full grid grid-cols-1 lg:grid-cols-[380px_1fr] xl:grid-cols-[400px_1fr] bg-light-surface dark:bg-dark-surface" data-stitch-vh="min-h-[1024px]===min-h-screen">
+
+    <!-- LEFT SIDEBAR: Live Chat Transcript -->
+    <aside class="lg:min-h-[1024px] flex flex-col bg-light-surface-container-low dark:bg-dark-surface-container-low border-b lg:border-b-0 lg:border-r border-light-outline-variant dark:border-dark-outline-variant" data-stitch-vh="lg:min-h-[1024px]===lg:min-h-screen">
+
+      <!-- Sidebar Header -->
+      <header class="px-gutter-lg py-gutter-md border-b border-light-outline-variant dark:border-dark-outline-variant flex items-center justify-between gap-gutter-sm">
+        <div class="flex items-center gap-gutter-sm">
+          <div class="w-9 h-9 rounded-md bg-light-surface-container-high dark:bg-dark-surface-container-high border border-light-outline-variant dark:border-dark-outline-variant flex items-center justify-center text-light-primary dark:text-dark-primary">
+            <span class="material-symbols-outlined text-[20px]">neurology</span>
+          </div>
+          <div class="flex flex-col">
+            <span data-design-text-token="headline-md" class="font-headline text-headline-md text-light-on-surface dark:text-dark-on-surface leading-tight">CLYDEX</span>
+            <span data-design-text-token="label-sm" class="font-label text-label-sm text-light-on-surface-variant dark:text-dark-on-surface-variant">VOICE AGENT</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-gutter-xs">
+          <!-- COMPONENT: badge-status -->
+          <span id="sidebarStatusBadge" data-component-id="badge-status" data-component-type="badge" data-component-variant="status" role="status" class="inline-flex items-center gap-gutter-xs px-gutter-sm py-gutter-xs rounded-full bg-light-surface-container-high dark:bg-dark-surface-container-high border border-light-outline-variant dark:border-dark-outline-variant text-light-primary dark:text-dark-primary">
+            <span id="sidebarStatusDot" class="inline-block w-1.5 h-1.5 rounded-full bg-light-primary dark:bg-dark-primary"></span>
+            <span id="sidebarStatusText" data-design-text-token="label-sm" class="font-label text-label-sm">STANDBY</span>
+          </span>
+
+          <!-- COMPONENT: button-icon -->
+          <button id="audioSettingsBtn" data-component-id="button-icon" data-component-type="button" data-component-variant="icon" type="button" aria-label="Audio settings" title="Audio settings" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-light-surface-container-high dark:bg-dark-surface-container-high text-light-on-surface-variant dark:text-dark-on-surface-variant border border-light-outline-variant dark:border-dark-outline-variant transition-colors duration-state-change ease-state-change hover:border-light-primary dark:hover:border-dark-primary hover:text-light-primary dark:hover:text-dark-primary">
+            <span class="material-symbols-outlined text-[18px]">settings</span>
+          </button>
+          <button id="clearChatBtn" data-component-id="button-icon" data-component-type="button" data-component-variant="icon" type="button" aria-label="Clear transcript" title="Clear transcript" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-light-surface-container-high dark:bg-dark-surface-container-high text-light-on-surface-variant dark:text-dark-on-surface-variant border border-light-outline-variant dark:border-dark-outline-variant transition-colors duration-state-change ease-state-change hover:border-light-primary dark:hover:border-dark-primary hover:text-light-primary dark:hover:text-dark-primary">
+            <span class="material-symbols-outlined text-[18px]">delete_sweep</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Transcript Section Subheader -->
+      <div class="px-gutter-lg py-gutter-sm flex items-center justify-between border-b border-light-outline-variant dark:border-dark-outline-variant bg-light-surface-container dark:bg-dark-surface-container">
+        <span data-design-text-token="label-sm" class="font-label text-label-sm text-light-on-surface-variant dark:text-dark-on-surface-variant">LIVE CONVERSATION TRANSCRIPT</span>
+        <span id="turnCountLabel" data-design-text-token="label-sm" class="font-label text-label-sm text-light-on-surface-variant dark:text-dark-on-surface-variant tabular-nums">0 TURNS</span>
+      </div>
+
+      <!-- Scrollable Chat Messages -->
+      <div id="chatFeed" class="flex-1 overflow-y-auto transcript-scroll p-gutter-md flex flex-col gap-gutter-md max-h-[420px] lg:max-h-[calc(1024px-196px)]" data-stitch-vh="lg:max-h-[calc(1024px-196px)]===lg:max-h-[calc(100vh-196px)]">
+
+      </div>
+
+      <!-- Fallback Text Input Bar -->
+      <form id="chatForm" class="p-gutter-md border-t border-light-outline-variant dark:border-dark-outline-variant bg-light-surface-container dark:bg-dark-surface-container">
+        <div class="flex items-center gap-gutter-sm">
+          <!-- COMPONENT: input-field-text -->
+          <label data-component-id="input-field-text" data-component-type="input-field" data-component-variant="text" class="flex-1">
+            <span class="sr-only">Type a message to CLYDEX</span>
+            <input id="chatInput" type="text" placeholder="Type a prompt or speak..." class="w-full px-gutter-md py-gutter-sm rounded-full bg-light-surface-container-high dark:bg-dark-surface-container-high text-light-on-surface dark:text-dark-on-surface placeholder:text-light-outline dark:placeholder:text-dark-outline border border-light-outline-variant dark:border-dark-outline-variant font-body text-body-md focus:outline-none focus:border-light-primary dark:focus:border-dark-primary focus:ring-1 focus:ring-light-primary dark:focus:ring-dark-primary">
+          </label>
+
+          <!-- COMPONENT: button-icon-primary -->
+          <button data-component-id="button-icon-primary" data-component-type="button" data-component-variant="primary" type="submit" aria-label="Send message" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-light-primary dark:bg-dark-primary text-light-on-primary dark:text-dark-on-primary transition-transform duration-state-change ease-state-change hover:opacity-90 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-light-primary dark:focus-visible:outline-dark-primary">
+            <span class="material-symbols-outlined text-[18px]">arrow_upward</span>
+          </button>
+        </div>
+      </form>
+    </aside>
+
+    <!-- RIGHT STAGE: Top Telemetry Bar + Voice-Reactive Hologram + Bottom Mic Waveform Dock -->
+    <main class="lg:min-h-[1024px] flex flex-col bg-light-surface-container-lowest dark:bg-dark-surface-container-lowest relative overflow-hidden" data-stitch-vh="lg:min-h-[1024px]===lg:min-h-screen">
+
+      <!-- Top Stage Header / Mode Switcher -->
+      <header class="px-gutter-lg py-gutter-md flex flex-wrap items-center justify-between gap-gutter-md border-b border-light-outline-variant dark:border-dark-outline-variant bg-light-surface-container-low dark:bg-dark-surface-container-low z-10">
+        <div class="flex items-center gap-gutter-md">
+          <!-- COMPONENT: badge-success -->
+          <span id="audioSyncBadge" data-component-id="badge-success" data-component-type="badge" data-component-variant="success" role="status" class="inline-flex items-center gap-gutter-xs px-gutter-sm py-gutter-xs rounded-full bg-success text-on-success">
+            <span data-design-text-token="label-sm" class="font-label text-label-sm">NEURAL LINK // READY</span>
+          </span>
+
+          <span data-design-text-token="label-sm" class="font-label text-label-sm text-light-on-surface-variant dark:text-dark-on-surface-variant tabular-nums">
+            AUDIO IDLE
+          </span>
+        </div>
+
+              <!-- Interactive Hologram State Controls -->
+        <div class="flex flex-wrap items-center gap-gutter-xs" role="group" aria-label="Voice agent mode">
+          <button type="button" data-mode="listening" class="mode-btn px-gutter-md py-gutter-xs rounded-full font-label text-label-sm border transition-colors duration-state-change ease-state-change bg-light-primary dark:bg-dark-primary text-light-on-primary dark:text-dark-on-primary border-light-primary dark:border-dark-primary">
+            <span data-design-text-token="label-sm">LISTENING</span>
+          </button>
+          <button type="button" data-mode="speaking" class="mode-btn px-gutter-md py-gutter-xs rounded-full font-label text-label-sm border transition-colors duration-state-change ease-state-change bg-light-surface-container-high dark:bg-dark-surface-container-high text-light-on-surface-variant dark:text-dark-on-surface-variant border-light-outline-variant dark:border-dark-outline-variant hover:border-light-primary dark:hover:border-dark-primary">
+            <span data-design-text-token="label-sm">SPEAKING</span>
+          </button>
+          <button type="button" data-mode="thinking" class="mode-btn px-gutter-md py-gutter-xs rounded-full font-label text-label-sm border transition-colors duration-state-change ease-state-change bg-light-surface-container-high dark:bg-dark-surface-container-high text-light-on-surface-variant dark:text-dark-on-surface-variant border-light-outline-variant dark:border-dark-outline-variant hover:border-light-primary dark:hover:border-dark-primary">
+            <span data-design-text-token="label-sm">THINKING</span>
+          </button>
+          <button type="button" data-mode="standby" class="mode-btn px-gutter-md py-gutter-xs rounded-full font-label text-label-sm border transition-colors duration-state-change ease-state-change bg-light-surface-container-high dark:bg-dark-surface-container-high text-light-on-surface-variant dark:text-dark-on-surface-variant border-light-outline-variant dark:border-dark-outline-variant hover:border-light-primary dark:hover:border-dark-primary">
+            <span data-design-text-token="label-sm">STANDBY</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- CENTER STAGE: Voice-Reactive 3D Hologram -->
+      <section aria-label="Voice-reactive hologram" class="flex-1 flex flex-col items-center justify-center p-gutter-lg relative min-h-[440px]">
+
+        <!-- Subtle Technical Corner Reticles -->
+        <div class="w-full max-w-2xl flex items-center justify-between px-gutter-md pointer-events-none">
+          <span data-design-text-token="label-sm" class="font-label text-label-sm text-light-outline dark:text-dark-outline tabular-nums">HOLO-CORE // 01</span>
+          <span id="hologramStateTelemetry" data-design-text-token="label-sm" class="font-label text-label-sm text-light-primary dark:text-dark-primary tabular-nums">RESONANCE: IDLE</span>
+        </div>
+
+        <!-- Hologram Canvas Container (strictly 1:1 square) -->
+        <div class="relative w-[340px] h-[340px] xl:w-[380px] xl:h-[380px] flex items-center justify-center my-gutter-sm shrink-0">
+          <canvas id="hologramCanvas" class="w-full h-full block"></canvas>
+        </div>
+
+        <!-- Live Spoken Caption / Agent Focal Readout -->
+        <div class="w-full max-w-xl text-center flex flex-col items-center gap-gutter-xs px-gutter-md">
+          <h1 data-design-text-token="headline-lg" class="font-headline text-headline-lg text-light-on-surface dark:text-dark-on-surface text-balance">
+            CLYDEX Acoustic Core
+          </h1>
+          <p id="liveCaption" data-design-text-token="body-md" class="font-body text-body-md text-light-on-surface-variant dark:text-dark-on-surface-variant text-pretty max-w-prose">
+            Type a prompt or start the microphone.
+          </p>
+        </div>
+      </section>
+
+      <!-- BOTTOM DOCK: Mic-Tone Responsive Waveform & Controls -->
+      <section aria-label="Microphone waveform and voice controls" class="px-gutter-lg py-gutter-md border-t border-light-outline-variant dark:border-dark-outline-variant bg-light-surface-container dark:bg-dark-surface-container flex flex-col gap-gutter-sm z-10">
+
+        <!-- Waveform Header Telemetry -->
+        <div class="flex flex-wrap items-center justify-between gap-gutter-sm">
+          <div class="flex items-center gap-gutter-sm">
+            <span class="material-symbols-outlined text-[18px] text-light-primary dark:text-dark-primary">graphic_eq</span>
+            <span data-design-text-token="title-sm" class="font-title text-title-sm text-light-on-surface dark:text-dark-on-surface">Microphone Tone Waveform</span>
+          </div>
+
+          <div class="flex items-center gap-gutter-md">
+            <span id="toneMetrics" data-design-text-token="label-sm" class="font-label text-label-sm text-light-on-surface-variant dark:text-dark-on-surface-variant tabular-nums">
+              LEVEL: —
+            </span>
+            <span id="micSourceLabel" data-design-text-token="label-sm" class="font-label text-label-sm text-light-primary dark:text-dark-primary">
+              IDLE
+            </span>
+          </div>
+        </div>
+
+        <!-- Waveform Canvas + Primary Mic Controls Row -->
+        <div class="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] items-center gap-gutter-md p-gutter-sm rounded-lg bg-light-surface-container-low dark:bg-dark-surface-container-low border border-light-outline-variant dark:border-dark-outline-variant">
+
+          <!-- Left: Mic Mute / Unmute Button -->
+          <div class="flex items-center gap-gutter-sm px-gutter-xs">
+            <!-- COMPONENT: button-icon-mic -->
+            <button id="micToggleBtn" data-component-id="button-icon-mic" data-component-type="button" data-component-variant="primary" type="button" aria-label="Toggle microphone" aria-pressed="false" class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-light-primary dark:bg-dark-primary text-light-on-primary dark:text-dark-on-primary transition-transform duration-state-change ease-state-change hover:opacity-90 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-light-primary dark:focus-visible:outline-dark-primary">
+              <span id="micIcon" class="material-symbols-outlined text-[22px]">mic</span>
+            </button>
+
+            <div class="flex flex-col">
+              <span id="micBtnTitle" data-design-text-token="label-lg" class="font-label text-label-lg text-light-on-surface dark:text-dark-on-surface">Mic off</span>
+              <span data-design-text-token="label-sm" class="font-label text-label-sm text-light-on-surface-variant dark:text-dark-on-surface-variant">TONE TRACKING</span>
+            </div>
+          </div>
+
+          <!-- Center: Real-Time Mic Tone Waveform Canvas -->
+          <div class="w-full h-20 rounded-md bg-light-surface-container-lowest dark:bg-dark-surface-container-lowest border border-light-outline-variant dark:border-dark-outline-variant overflow-hidden relative">
+            <canvas id="waveformCanvas" class="w-full h-full block"></canvas>
+          </div>
+
+          <!-- Right: Live Mic & Simulate Voice Controls -->
+          <div class="flex items-center gap-gutter-sm px-gutter-xs">
+            <!-- COMPONENT: button-secondary -->
+            <button id="liveMicBtn" data-component-id="button-secondary" data-component-type="button" data-component-variant="secondary" type="button" class="inline-flex items-center justify-center gap-gutter-xs px-gutter-md py-gutter-sm rounded-full bg-light-surface-container-high dark:bg-dark-surface-container-high text-light-on-surface dark:text-dark-on-surface border border-light-outline-variant dark:border-dark-outline-variant font-label text-label-lg transition-colors duration-state-change ease-state-change hover:border-light-primary dark:hover:border-dark-primary">
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">sensors</span>
+              <span data-design-text-token="label-lg">Use Live Mic</span>
+            </button>
+
+            <!-- COMPONENT: button-with-icon -->
+            <button id="pulseTestBtn" data-component-id="button-with-icon" data-component-type="button" data-component-variant="with-icon" type="button" class="inline-flex items-center justify-center gap-gutter-xs px-gutter-md py-gutter-sm rounded-full bg-light-primary dark:bg-dark-primary text-light-on-primary dark:text-dark-on-primary font-label text-label-lg transition-transform duration-state-change ease-state-change hover:opacity-90 active:scale-95">
+              <span class="material-symbols-outlined text-[18px]" aria-hidden="true">record_voice_over</span>
+              <span data-design-text-token="label-lg">Test Voice</span>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+<dialog id="settings"><form method="dialog"><h2>Audio settings</h2><button aria-label="Close audio settings">×</button></form>
+<label for="device">Microphone input</label><select id="device"><option value="">System default</option></select>
+<label><input type="checkbox" id="speech" checked> Speak replies</label>
+<div><button id="check">Check microphone</button><button id="sound">Windows sound settings</button></div></dialog>
+<script src="studio.js"></script></body></html>

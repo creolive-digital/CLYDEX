@@ -1,0 +1,22 @@
+CLYDEX — Post-Install Notes
+===========================
+
+CLYDEX is now installed. Before the Voice Agent will work:
+
+1. CODEX CLI  (required for AI replies)
+   Open a Command Prompt and run:
+     codex --version
+   If Codex is not installed, follow the setup guide at the Codex CLI repository,
+   then log in:
+     codex login
+
+2. MICROSOFT EDGE WEBVIEW2 RUNTIME  (required for the Voice Agent window)
+   Windows 11 includes this by default.
+   On Windows 10, download the Evergreen Standalone Installer from:
+     https://developer.microsoft.com/en-us/microsoft-edge/webview2/
+
+3. MICROPHONE PERMISSIONS
+   Windows Settings > Privacy & security > Microphone
+   Make sure "Let apps access your microphone" is ON.
+
+The CLYDEX Widget (clock / weather) works without any of the above.
