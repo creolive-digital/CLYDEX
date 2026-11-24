@@ -254,17 +254,22 @@ class ClydexWidget:
         self.watch.itemconfigure('city', text=city)
 
     def launch_agent(self):
-        base = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).resolve().parent
-        agent_exe = base / 'clydex_voice_agent.exe'
-        if agent_exe.is_file():
-            subprocess.Popen([str(agent_exe)], cwd=str(base))
+        if getattr(sys, 'frozen', False):
+            # Installed layout: widget\ and agent\ sit side-by-side under the app root.
+            agent_exe = Path(sys.executable).parent.parent / 'agent' / 'clydex_voice_agent.exe'
+            if agent_exe.is_file():
+                subprocess.Popen([str(agent_exe)], cwd=str(agent_exe.parent))
+                return
+            from tkinter import messagebox
+            messagebox.showerror('CLYDEX AI', 'Voice agent not found. Please reinstall CLYDEX.')
             return
+        # Development: both .pyw files live in the same directory.
+        base = Path(__file__).resolve().parent
         agent_pyw = base / 'clydex_voice_agent.pyw'
         if not agent_pyw.is_file():
             from tkinter import messagebox
             messagebox.showerror('CLYDEX AI', 'Place clydex_voice_agent.pyw in the same folder as the widget.')
             return
-        # pythonw.exe for GUI-only launching when available.
         python_exe = sys.executable
         if python_exe.lower().endswith('python.exe'):
             maybe = Path(python_exe).with_name('pythonw.exe')

@@ -56,5 +56,4 @@ coll = COLLECT(
     upx=False,
     upx_exclude=[],
     name='clydex_voice_agent',
-    contents_directory='_agent',
 )

@@ -43,5 +43,4 @@ coll = COLLECT(
     upx=True,
     upx_exclude=[],
     name='clydex_widget',
-    contents_directory='_widget',
 )
