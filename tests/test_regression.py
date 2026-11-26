@@ -220,6 +220,14 @@ class WidgetRegressionTests(unittest.TestCase):
         widget.stopwatch_elapsed, widget.stopwatch_start = 5.0, 100.0
         self.assertEqual(widget.stopwatch_value(105.5), '00:10.5')
 
+    def test_agent_button_launches_active_v2_after_widget_relocation(self):
+        widget = self.Widget.__new__(self.Widget)
+        with patch('clydex.desktop.widget.subprocess.Popen') as launch:
+            widget.launch_agent()
+        expected = Path(__file__).resolve().parents[1] / 'clydex_voice_agent.pyw'
+        self.assertEqual(Path(launch.call_args.args[0][1]), expected)
+        self.assertEqual(Path(launch.call_args.kwargs['cwd']), expected.parent)
+
     def test_timer_expiry_and_alarm_are_independent_of_active_tab(self):
         widget = self.Widget.__new__(self.Widget)
         widget.timer_end, widget.timer_remaining, widget.timer_duration = 100.0, 1, 300

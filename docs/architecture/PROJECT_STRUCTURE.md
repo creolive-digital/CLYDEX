@@ -1,6 +1,6 @@
 # Project structure and public interfaces
 
-Phase 01 incremental structure. Target follows the owner's mandatory layout; only functional packages exist. Root launchers, widget, legacy assets, build/install entry points and supplied documents are retained. No broad destructive relocation.
+Phase 01 incremental structure, followed by the owner-requested V1 archive relocation. Target follows the owner's mandatory layout; only functional packages exist. Root compatibility launchers, build/install entry points and supplied documents are retained.
 
 ## Actual structure
 
@@ -39,7 +39,11 @@ CLYDEX/
     database/
       store.py               transactional LocalStore, non-secret preferences/audit
       migrations/001_foundation.sql
-    desktop/studio.py        existing PyWebView bridge adapted to CoreApplication
+    desktop/
+      studio.py             existing PyWebView bridge adapted to CoreApplication
+      widget.py             shared Tk clock/weather/time tools, migrated from root
+      theme.py              Tk skins used by the active widget
+      hologram.py           preserved older Tk hologram helper
   tests/                     application, execution, config/database, provider,
                              approval security and legacy/widget regressions
   scripts/verify_windows_smoke.py
@@ -47,13 +51,14 @@ CLYDEX/
     architecture/PROJECT_STRUCTURE.md
   studio_ui/                 preserved static HTML/CSS/JS/fonts/icons
   clydex_voice_agent.pyw      original launch path, now thin package launcher
-  clydex_widget.pyw           preserved working Tk clock/weather/time tools
+  clydex_widget.pyw           thin compatible launcher for desktop/widget.py
   clydex_{engine,apps,desktop,outlook,spectrum}.py
                              root import compatibility facades
   clydex_theme.py, clydex_hologram.py
-                             retained Tk helpers, no unrelated rewrite
-  app_controls.ps1, read_browser_tab.ps1
-                             original compatibility copies (packaged copies under src)
+                             root compatibility imports for desktop helpers
+  assets/legacy/             active legacy PNG artwork; approved references still missing
+  v1-old/                    standalone exact e65fe46 release, original UI/artwork/
+                             launchers/tests/setup; never imported by active V2
   clydex_*.spec, installer.iss, *.bat
                              preserved build/install commands, src-aware packaging
   .github/workflows/build.yml
@@ -77,9 +82,9 @@ CLYDEX/
 | `devices/` | Pairing/revocation/capabilities | Phase 8; no hardware implementation |
 | `api/` | Authenticated FastAPI/WebSocket transport | Deferred transport extraction; no new core HTTP control API in Phase 1 |
 | `database/` (package) | Data access/repositories | SQLite metadata now |
-| `desktop/` | Windows application lifecycle and shell | Studio adapter now |
+| `desktop/` | Windows application lifecycle and shell | Studio, shared widget, Tk skins and older hologram helper |
 | `frontend/` | React/TypeScript HUD/avatar | Phase 4; current `studio_ui/` retained |
-| `assets/` | Approved branding/avatar/fonts/sounds | Specified reference files missing OI-01; no replacement created |
+| `assets/` | Approved branding/avatar/fonts/sounds | Existing V2 artwork under legacy/; approved reference files still missing OI-01 |
 | `cloud/` | Independently deployable cloud gateway/sync | Phase 5 after owner infra approval |
 | `database/` (root) | SQLite/MSSQL deployment schemas/scripts | Add deployment SQL when needed; current embedded local migration is package data |
 | `config/` | Non-secret templates | Implemented |
@@ -100,4 +105,8 @@ Runtime storage: `%LOCALAPPDATA%\CLYDEX\{data,memory,cache,models,logs,backups,s
 
 Install with `python -m pip install -r requirements.txt`, or the dependency-free core with `python -m pip install -e .`. Root launchers can locate local `src/` without an editable install. PyInstaller includes `src` and package SQL/PS1 resources. The install folder keeps widget/agent siblings as before.
 
-Save V2 work, then switch to `main` to run the original implementation. No user data is deleted, no registry setting overwritten, and no DB downgrade attempted. Remove the editable development package only if no longer wanted; main's original scripts do not depend on it. Future schema changes require explicit migrations and restore tests. The original helper-script copies remain for compatibility; keep them identical to packaged sources until their own compatibility migration is approved.
+The original release is now directly runnable from `v1-old/`, without switching branches. Its 43 original tracked files are byte-for-byte copies of the Git baseline; README_ARCHIVE.md is the only added archive documentation. No user data or .git directory is archived. V2's active packaged Windows helper scripts are solely under `src/clydex/tools/`; their root duplicate copies were removed. The archive has its own original helpers.
+
+The root `.pyw` commands still launch V2. Widget development resources resolve from the checkout root and frozen resources from `sys._MEIPASS`; its Agent button targets the active root agent launcher (or installed sibling EXE), not the archive. PyInstaller specifications use `assets/legacy/` and packaged PS1 resources. Root tests moved to `tests/test_voice_routing.py`; the independent archive retains its original test filename.
+
+Save V2 work and switch to `main` if a complete baseline checkout is preferred. No user data is deleted, registry setting overwritten, or DB downgrade attempted. Future schema changes require migrations and restore tests. Active V2 shares no imports or resource lookups with `v1-old/`.

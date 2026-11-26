@@ -17,3 +17,10 @@
 - Fixed the credential adapter's native Unicode-write contract after a real integration check exposed a mismatch missed by the initial mock.
 
 No Phase 02 features implemented. Original product document hashes unchanged. See DEVELOPMENT_PROGRESS for checkpoint/handoff and TESTING_AND_ACCEPTANCE for evidence.
+
+### V1 archive organization
+
+- Preserved standalone original release in `v1-old/` at the owner's request.
+- Migrated active shared Tk implementations into `src/clydex/desktop/`, retained root compatibility launchers/imports, moved legacy V2 artwork into `assets/legacy/` and voice regression cases into `tests/`.
+- Updated build resource paths; removed redundant root Windows helper copies. Active V2 remains independent of the archive.
+- Verified 76 active V2 tests, four independent V1 tests, safe UI startup for both versions and both updated V2 EXE builds.

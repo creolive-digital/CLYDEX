@@ -57,3 +57,11 @@ Known gates: missing standalone visual references; no Inno Setup on this machine
 Run `python -m pip install -r requirements.txt`; existing `python clydex_widget.pyw` and `python clydex_voice_agent.pyw` launch paths remain. Optional `python -m pip install -e ".[dev]"` enables lint. Review source changes and commits locally on `v2`; no push is authorized. Save work and switch to `main` for the original release. Runtime data is outside source and is not deleted or downgraded. Legacy registry voice preferences are left untouched. No destructive data migration was performed.
 
 Checkpoint status: engineering implementation delivered; owner acceptance and declared manual gates pending. Stop before Phase 02. Nothing pushed remotely.
+
+## Owner follow-up — move V1 to `v1-old/`
+
+- Preserved all 43 original tracked baseline files from e65fe46 under `v1-old/`, verified byte-for-byte against Git archive data. Added README_ARCHIVE.md explaining independent launch/testing and provenance. No runtime data, credentials or Git metadata copied.
+- Moved active shared widget/theme/hologram implementations into `src/clydex/desktop/`; original root names are compatibility launchers/imports. V2 uses its own current UI and does not import anything from the V1 archive.
+- Moved active PNG artwork into `assets/legacy/`, original voice tests into `tests/test_voice_routing.py`, and removed duplicate root PS1 files (active packaged copies and original archived copies remain). Updated PyInstaller resources and documented actual layout.
+- Authorization is the owner's explicit V1 organization request; Phase 02 remains untouched and no remote push is authorized.
+- Follow-up validation complete: active V2 **76 tests passed**, standalone V1 **4 passed**, both versions' safe UI smoke checks passed, lint/compilation passed and both updated V2 EXEs built successfully. Archive and artwork integrity verified; existing live integration/installer acceptance gaps remain unchanged.

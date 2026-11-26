@@ -3,11 +3,9 @@
 from PyInstaller.utils.hooks import collect_all
 
 datas = [
-    ('app_controls.ps1', '.'),
-    ('read_browser_tab.ps1', '.'),
     ('studio_ui', 'studio_ui'),
-    ('clydex_hologram.png', '.'),
-    ('clydex_projection.png', '.'),
+    ('assets/legacy/clydex_hologram.png', '.'),
+    ('assets/legacy/clydex_projection.png', '.'),
 ]
 binaries = []
 hiddenimports = ['clydex_engine', 'clydex_spectrum', 'win32timezone']

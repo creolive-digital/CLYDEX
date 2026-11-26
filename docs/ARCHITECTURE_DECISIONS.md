@@ -19,6 +19,7 @@ Status: accepted engineering decisions within owner-approved Phase 01; no change
 | 013 | Per-runtime OS file lock, released on crash/close. | Enforce one local Core queue per user; widget remains independent. No stale PID-file deletion. |
 | 014 | Keep original supplied document bytes under Git attributes. | No line-ending normalization of owner specifications; verify SHA256 before handoff. |
 | 015 | Registry read fallback, SQLite preference writes, immutable startup policy and optional disabled capability scopes. | Preserve voice choice while enabling least privilege without a new provider/permission escalation UI. Restart required to apply policy edits. |
+| 016 | Preserve standalone V1 from exact baseline under owner-requested `v1-old/`; move active shared Tk implementation into desktop package and retain root launchers. | Keep V1 independently runnable while V2 avoids archive imports and remains modular. Current V2 static UI stays active; legacy PNGs move to assets/legacy. No Phase 02 work or branding changes. |
 
 Implementation clarification: ToolSpec declares typed input fields, result types, scope, risk and time budget. Existing Codex responses also receive local validation of the schema subset actually used. This does not claim a general-purpose JSON Schema validator or plugin SDK. The legacy WebView may use its existing loopback asset server; no new core control endpoint was introduced.
 

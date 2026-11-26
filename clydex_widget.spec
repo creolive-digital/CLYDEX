@@ -7,10 +7,10 @@ a = Analysis(
     binaries=[],
     datas=[
         ('studio_ui', 'studio_ui'),
-        ('clydex_hologram.png', '.'),
-        ('clydex_projection.png', '.'),
+        ('assets/legacy/clydex_hologram.png', '.'),
+        ('assets/legacy/clydex_projection.png', '.'),
     ],
-    hiddenimports=['clydex_theme'],
+    hiddenimports=['clydex.desktop.theme'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

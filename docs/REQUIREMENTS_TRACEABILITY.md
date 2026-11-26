@@ -83,3 +83,5 @@ Source: Blueprint v1.1 page references; master instructions; latest owner Phase 
 | TEST-01 / P1-07 | Partially implemented product-wide; foundation automated scope complete | 75 passing tests, lint, source syntax, JS syntax, real Tk/WebView2/credential smoke, both EXE builds and wheel resources/import. Manual release/hardware gates remain open. |
 
 All other product requirements retain their earlier classification and delivery phase. No Phase 02–08 feature is presented as implemented. Owner review and outstanding live acceptance gates remain required before advancing.
+
+Owner-requested organization follow-up: original V1 now resides in `v1-old/`; FND-01/07 entry-point compatibility is retained through root launchers and the active desktop package. Original voice regression cases moved to `tests/test_voice_routing.py`; the archive retains its independent original tests. See ADR-016 and PROJECT_STRUCTURE.md.

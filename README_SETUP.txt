@@ -144,3 +144,13 @@ V2 PHASE 01 DEVELOPMENT BRANCH
 - Phase 02 and later features, React HUD, cloud account/sync, new AI providers,
   memory collection, wake word, new artwork, plugins and devices are not shipped
   by Phase 01. See docs\DEVELOPMENT_PROGRESS.md for evidence and remaining gates.
+
+V1 ARCHIVE
+- The original e65fe46 release is preserved independently in v1-old\, including
+  its original launchers, modules, UI, artwork, requirements and build scripts.
+  Run its START_CLYDEX.bat from that folder to use the original V1 application.
+- Root launchers continue to start active V2. V2's shared widget, theme and older
+  hologram helper now live in src\clydex\desktop\. Its artwork is in assets\legacy\.
+  V2's static studio_ui\ includes the current approval and Stop controls.
+- V2 does not load code or resources from v1-old\. Archived files retain V1's
+  original behavior and approval system. See v1-old\README_ARCHIVE.md.

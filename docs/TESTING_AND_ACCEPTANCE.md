@@ -47,3 +47,12 @@ One native credential integration error was found and fixed (Unicode argument re
 - **Security boundary:** trusted in-process adapters + user-reviewed scripts, not hostile plugin isolation or OS sandboxing. Existing WebView asset serving remains loopback; no new public control API. Future clients need authenticated transport and scoped ownership tests before activation.
 
 Phase 01 engineering implementation is ready for review. Overall product and live release acceptance are pending; do not advance to Phase 02 automatically.
+
+## V1 archive relocation verification
+
+- Before moving files: active V2 suite **75 passed**. After relocation and an added regression for the widget Agent button: **76 passed** (2.505 s), proving the button targets the active root V2 launcher rather than V1.
+- Independently from `v1-old/`: original **4 tests passed**. Original Tk widget/assets and Studio READY startup smoke passed in a separate process, with weather/audio/cloud access disabled.
+- Active V2 real Tk/WebView2 smoke passed after module/resource relocation. Ruff and Python compilation passed. An unused inherited theme import was removed to satisfy lint.
+- Both active PyInstaller builds passed using the updated asset/helper paths. Verification artifacts are under `%LOCALAPPDATA%\CLYDEX\tmp\v1-archive-verification\`.
+- All **43 original archived files** match `git archive e65fe46` byte-for-byte. Relocated active PNGs match their original bytes. Official product document hashes are unchanged. Active V2 code and build scripts contain no dependencies on `v1-old/`.
+- Fresh installation and live audio/provider/browser/mail acceptance remain unverified, as at the Phase 01 checkpoint. No new product phase or remote push was performed.
