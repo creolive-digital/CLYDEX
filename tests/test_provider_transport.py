@@ -1,6 +1,12 @@
 """Real loopback HTTP against synthetic fixtures, never external AI services."""
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from datetime import datetime, timedelta, timezone
+import http.client
+import ipaddress
 import json
+from pathlib import Path
+import ssl
+import tempfile
 import threading
 import time
 import unittest
@@ -31,13 +37,22 @@ class Handler(BaseHTTPRequestHandler):
         try:
             self.send_response(self.server.status)
             self.send_header('Content-Type', 'application/json')
-            self.send_header('Content-Length', str(len(self.server.body)))
+            if self.server.chunked:
+                self.send_header('Transfer-Encoding', 'chunked')
+            else:
+                self.send_header('Content-Length', str(len(self.server.body)))
             self.end_headers()
             if self.server.delay:
                 self.server.release.wait(2)
-            self.wfile.write(self.server.body)
+            if self.server.chunked:
+                for offset in range(0, len(self.server.body), 127):
+                    part = self.server.body[offset:offset + 127]
+                    self.wfile.write(format(len(part), 'x').encode() + b'\r\n' + part + b'\r\n')
+                self.wfile.write(b'0\r\n\r\n')
+            else:
+                self.wfile.write(self.server.body)
             self.wfile.flush()
-        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+        except OSError:
             pass
 
 
@@ -45,6 +60,7 @@ class TransportTests(unittest.TestCase):
     def setUp(self):
         self.server = ThreadingHTTPServer(('127.0.0.1', 0), Handler)
         self.server.status, self.server.body, self.server.delay = 200, b'{"synthetic":true}', False
+        self.server.chunked = False
         self.server.captured = []
         self.server.entered, self.server.release = threading.Event(), threading.Event()
         self.thread = threading.Thread(target=self.server.serve_forever, kwargs={'poll_interval': .02})
@@ -128,11 +144,77 @@ class TransportTests(unittest.TestCase):
             self.request(cancel=CancellationToken(), url='http://external.invalid')
 
     def test_network_failure_and_cancellation_during_connect(self):
-        with patch('http.client.HTTPConnection.connect', side_effect=ConnectionRefusedError), self.assertRaises(ProviderFailure) as failure:
+        with patch.object(self.transport, '_connect_socket', side_effect=ConnectionRefusedError), self.assertRaises(ProviderFailure) as failure:
             self.request()
         self.assertEqual(failure.exception.kind, 'network')
-        def canceled_connect():
+        def canceled_connect(*args):
             self.token.set()
-        with patch('http.client.HTTPConnection.connect', side_effect=canceled_connect), self.assertRaises(Cancelled):
+        with patch.object(self.transport, '_connect_socket', side_effect=canceled_connect), self.assertRaises(Cancelled):
             self.request()
         self.assertFalse(self.server.captured)
+
+    def test_cancel_after_http10_connection_releases_its_socket_facade(self):
+        self.server.delay = True
+        entered, outcomes = threading.Event(), []
+        original = http.client.HTTPResponse.read1
+        def read(response, size):
+            entered.set()
+            return original(response, size)
+        def work():
+            try:
+                self.request(timeout=2)
+            except Exception as exc:
+                outcomes.append(exc)
+        with patch.object(http.client.HTTPResponse, 'read1', read):
+            worker = threading.Thread(target=work)
+            worker.start()
+            self.assertTrue(entered.wait(1))
+            self.token.set()
+            worker.join(1)
+        self.assertFalse(worker.is_alive())
+        self.assertIsInstance(outcomes[0], Cancelled)
+
+    def test_chunked_response_framing_uses_standard_parser(self):
+        self.server.chunked, self.server.body = True, b'fixture' * 1000
+        self.assertEqual(self.request(limit=10000), self.server.body)
+
+    def test_verified_local_tls_read_and_cancellation(self):
+        from cryptography import x509
+        from cryptography.hazmat.primitives import hashes, serialization
+        from cryptography.hazmat.primitives.asymmetric import rsa
+        from cryptography.x509.oid import NameOID
+        with tempfile.TemporaryDirectory() as directory:
+            key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+            name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, 'CLYDEX synthetic TLS fixture')])
+            now = datetime.now(timezone.utc)
+            cert = (x509.CertificateBuilder().subject_name(name).issuer_name(name).public_key(key.public_key())
+                .serial_number(x509.random_serial_number()).not_valid_before(now - timedelta(minutes=1))
+                .not_valid_after(now + timedelta(days=1)).add_extension(x509.SubjectAlternativeName([
+                    x509.IPAddress(ipaddress.ip_address('127.0.0.1'))]), critical=False).sign(key, hashes.SHA256()))
+            cert_path, key_path = Path(directory) / 'fixture-cert.pem', Path(directory) / 'fixture-key.pem'
+            cert_path.write_bytes(cert.public_bytes(serialization.Encoding.PEM))
+            key_path.write_bytes(key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
+                                                   serialization.NoEncryption()))
+            server_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+            server_context.load_cert_chain(str(cert_path), str(key_path))
+            self.server.socket = server_context.wrap_socket(self.server.socket, server_side=True)
+            client_context = ssl.create_default_context(cafile=str(cert_path))
+            url = self.url.replace('http:', 'https:')
+            with patch('clydex.providers.transport.ssl.create_default_context', return_value=client_context):
+                self.assertEqual(self.request(url=url), self.server.body)
+                self.server.delay = True
+                self.server.entered.clear()
+                outcomes = []
+                def work():
+                    try:
+                        self.request(url=url, timeout=2)
+                    except Exception as exc:
+                        outcomes.append(exc)
+                worker = threading.Thread(target=work)
+                worker.start()
+                self.assertTrue(self.server.entered.wait(1))
+                self.token.set()
+                worker.join(1)
+                self.server.release.set()
+                self.assertFalse(worker.is_alive())
+                self.assertIsInstance(outcomes[0], Cancelled)
