@@ -4,7 +4,9 @@
 
 CLYDEX is a Windows-first desktop assistant undergoing incremental V2 migration. Read both official specifications in `docs/` and `docs/architecture/PROJECT_STRUCTURE.md` before product or architectural changes. Product decisions in the supplied documents take precedence over legacy implementation choices. Do not overwrite those specifications.
 
-New business logic belongs under `src/clydex/`, never the repository root. Phase 01 implements `core`, `providers`, `voice`, `tools`, `integrations`, `security`, `automation`, `database` and `desktop`. Create other target packages only when implementing their approved phase. Preserve the existing `.pyw` entry points and root compatibility imports. `clydex_widget.pyw` launches `src/clydex/desktop/widget.py`; `clydex_voice_agent.pyw` launches the packaged Studio bridge. `studio_ui/` remains the active static frontend until the separately approved React/TypeScript phase. Active legacy artwork is in `assets/legacy/`.
+New business logic belongs under `src/clydex/`, never the repository root. Phase 01 implements `core`, `providers`, `voice`, `tools`, `integrations`, `security`, `automation`, `database` and `desktop`. Create other target packages only when implementing their approved phase. The owner explicitly requested removal of leftover root files: launchers retain their filenames under `scripts/windows/`; obsolete root Python import facades are retired. Import active `clydex` package modules directly.
+
+The current static frontend is under `frontend/legacy/` (including its bundled legacy fonts/icons); React/TypeScript remains a later approved phase. Active PNG artwork is in `assets/legacy/`. PyInstaller specs belong in `installer/pyinstaller/`, Inno Setup and notes in `installer/windows/`, Windows requirements in `deployment/windows/`, and setup documentation in `docs/`. Keep root files limited to project metadata, AGENTS.md and README.md. Generated build output belongs in ignored deployment artifact directories or outside source, never loose at the root.
 
 The owner-requested `v1-old/` contains the standalone original e65fe46 release, including its own launchers, modules, UI, assets, setup scripts and four tests. Keep archived original files unchanged. V2 must not import code or resources from this archive. Original V1 voice regression cases are also maintained for V2 in `tests/test_voice_routing.py`. Run archived tests separately from `v1-old/` in a fresh Python process.
 
@@ -14,16 +16,16 @@ Use `v2` for development. Keep main stable and preserve uncommitted user changes
 
 Run commands from the repository directory in Windows CMD or PowerShell:
 
-- `py -m pip install -r requirements.txt` installs the voice assistant dependencies.
-- `python -m pip install -e .` installs the headless package; `python -m pip install -e ".[dev]"` also installs lint tooling. The desktop requires dependencies from `requirements.txt`.
+- `python -m pip install -r deployment/windows/requirements.txt` installs the voice assistant dependencies.
+- `python -m pip install -e .` installs the headless package; `python -m pip install -e ".[dev]"` also installs lint tooling. The desktop requires dependencies from `deployment/windows/requirements.txt`.
 - `python -m unittest discover -v` runs baseline and foundation unit/security/regression tests.
-- `python -m ruff check src tests` lints the new package and tests; the largely unchanged legacy orchestrator is excluded from style lint during migration.
+- `python -m ruff check --no-cache src tests` lints the new package and tests; the largely unchanged legacy orchestrator is excluded from style lint during migration.
 - `python scripts/verify_windows_smoke.py --webview` checks real Tk/WebView2 startup and local controls with network/audio/private integrations disabled.
-- `py clydex_widget.pyw` launches the widget (standard library only).
-- `py clydex_voice_agent.pyw` launches the voice assistant with console output for troubleshooting.
-- `START_CLYDEX.bat` starts the packaged app using the repository's intended launcher.
+- `python scripts/windows/clydex_widget.pyw` launches the widget (standard library only).
+- `python scripts/windows/clydex_voice_agent.pyw` launches the voice assistant with console output for troubleshooting.
+- `scripts/windows/START_CLYDEX.bat` starts the packaged app using the repository's intended launcher.
 
-Build with the two existing PyInstaller specs and `installer.iss`, or `build_installer.bat`. CI runs tests/lint before building. The voice assistant requires Windows 10/11, Python 3.10+, audio devices, and a logged-in Codex CLI; consult `README_SETUP.txt`. Verify the interpreter: this workstation's default `py` currently points at a missing 3.14 installation, while `python` runs 3.13.14. Do not change the user's Python installation without authorization.
+Build with specs under `installer/pyinstaller/` and `installer/windows/installer.iss`, or `scripts/windows/build_installer.bat`. CI runs tests/lint before building. The voice assistant requires Windows 10/11, Python 3.10+, audio devices, and a logged-in Codex CLI; consult `docs/README_SETUP.txt`. Verify the interpreter: this workstation's default `py` currently points at a missing 3.14 installation, while `python` runs 3.13.14. Do not change the user's Python installation without authorization.
 
 ## Coding Style & Naming Conventions
 
@@ -39,7 +41,7 @@ Use small, reversible commits with a short imperative subject (for example, `Fix
 
 ## Security & Configuration Tips
 
-Do not commit credentials, transcripts, or local configuration secrets. The voice assistant sends prompts to the Codex service; follow the privacy notes in `README_SETUP.txt` and avoid dictating sensitive information.
+Do not commit credentials, transcripts, or local configuration secrets. The voice assistant sends prompts to the Codex service; follow the privacy notes in `docs/README_SETUP.txt` and avoid dictating sensitive information.
 
 Persistent user data belongs under `%LOCALAPPDATA%\CLYDEX\` (data, memory, cache, models, logs, backups, settings, plugins, tmp), outside source. Use Credential Manager/DPAPI for secrets; no plaintext fallback or credentials in SQLite/config/logs. Non-secret examples belong in `.env.example` and `config/`. SQLite currently stores only allowlisted voice preferences and redacted audit metadata; do not silently add conversations, memory or sensitive caches.
 

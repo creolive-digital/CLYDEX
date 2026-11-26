@@ -23,11 +23,14 @@ jobs:
         with:
           python-version: '3.11'
           cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            deployment/windows/requirements.txt
 
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r deployment/windows/requirements.txt
           pip install "pyinstaller>=6.0" pyinstaller-hooks-contrib
           pip install "ruff>=0.9,<1"
 
@@ -38,10 +41,10 @@ jobs:
 
       # ── 3. PyInstaller builds ────────────────────────────────
       - name: Build clydex_widget.exe
-        run: python -m PyInstaller --clean --noconfirm clydex_widget.spec
+        run: python -m PyInstaller --clean --noconfirm --distpath deployment/windows/artifacts/dist --workpath deployment/windows/artifacts/build installer/pyinstaller/clydex_widget.spec
 
       - name: Build clydex_voice_agent.exe
-        run: python -m PyInstaller --clean --noconfirm clydex_voice_agent.spec
+        run: python -m PyInstaller --clean --noconfirm --distpath deployment/windows/artifacts/dist --workpath deployment/windows/artifacts/build installer/pyinstaller/clydex_voice_agent.spec
 
       # ── 4. Inno Setup ────────────────────────────────────────
       - name: Install Inno Setup 6
@@ -50,8 +53,7 @@ jobs:
       - name: Compile installer
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force -Path installer_out | Out-Null
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer/windows/installer.iss
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       # ── 5. Upload ────────────────────────────────────────────
@@ -59,7 +61,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: CLYDEX_Setup
-          path: installer_out\CLYDEX_Setup.exe
+          path: deployment/windows/artifacts/installer/CLYDEX_Setup.exe
           if-no-files-found: error
           retention-days: 30
 
@@ -68,5 +70,5 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: installer_out\CLYDEX_Setup.exe
+          files: deployment/windows/artifacts/installer/CLYDEX_Setup.exe
           generate_release_notes: true

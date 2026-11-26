@@ -85,3 +85,5 @@ Source: Blueprint v1.1 page references; master instructions; latest owner Phase 
 All other product requirements retain their earlier classification and delivery phase. No Phase 02–08 feature is presented as implemented. Owner review and outstanding live acceptance gates remain required before advancing.
 
 Owner-requested organization follow-up: original V1 now resides in `v1-old/`; FND-01/07 entry-point compatibility is retained through root launchers and the active desktop package. Original voice regression cases moved to `tests/test_voice_routing.py`; the archive retains its independent original tests. See ADR-016 and PROJECT_STRUCTURE.md.
+
+Subsequent owner correction supersedes the root-launcher portion above: FND-01/07 now retain source launcher filenames under scripts/windows, with installed executable names unchanged. Root facades were explicitly retired to meet the required folder organization. Active UI, packaging, deployment dependencies and setup documentation now live in their designated directories; see ADR-017. V2 functionality and Phase 01 scope are unchanged.

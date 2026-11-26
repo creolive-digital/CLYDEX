@@ -19,11 +19,11 @@ REQUIREMENTS
 
 SETUP
 1. Unzip folder somewhere writable, e.g. Documents\CLYDEX_FINAL_EDITION.
-2. Double-click INSTALL_REQUIREMENTS.bat or in CMD: py -m pip install -r requirements.txt
+2. Double-click scripts\windows\INSTALL_REQUIREMENTS.bat or in CMD: py -m pip install -r deployment\windows\requirements.txt
 3. Check login: codex login status (log in with codex login if needed).
-4. Double-click START_CLYDEX.bat or clydex_widget.pyw.
+4. Double-click scripts\windows\START_CLYDEX.bat or scripts\windows\clydex_widget.pyw.
 5. Click Agent on the clock. Type a prompt or click Use Live Mic, then Stop recording.
-6. For errors, run in CMD: py clydex_voice_agent.pyw
+6. For errors, run in CMD: py scripts\windows\clydex_voice_agent.pyw
 
 USE
 - Try "Open Notepad", "Minimise Calculator" or "Which windows are open?"
@@ -106,8 +106,8 @@ NOTES
 - UI/voice/codex end-to-end behavior must be tested on your own Windows PC.
 
 V2 PHASE 01 DEVELOPMENT BRANCH
-- The root launch commands remain supported. Implementation is now packaged under
-  src/clydex; requirements.txt installs it in editable mode for development.
+- Launcher filenames remain supported under scripts\windows\. Implementation is now packaged under
+  src/clydex; deployment\windows\requirements.txt installs it in editable mode for development.
 - Use a verified interpreter. On the development PC, python works while the
   default py launcher points at a missing installation. Do not reinstall Python
   just to work around that launcher; use an installed interpreter explicitly.
@@ -148,9 +148,18 @@ V2 PHASE 01 DEVELOPMENT BRANCH
 V1 ARCHIVE
 - The original e65fe46 release is preserved independently in v1-old\, including
   its original launchers, modules, UI, artwork, requirements and build scripts.
-  Run its START_CLYDEX.bat from that folder to use the original V1 application.
-- Root launchers continue to start active V2. V2's shared widget, theme and older
+  Run v1-old\START_CLYDEX.bat from the checkout root to use the original V1 application.
+- Launchers under scripts\windows\ start active V2. V2's shared widget, theme and older
   hologram helper now live in src\clydex\desktop\. Its artwork is in assets\legacy\.
   V2's static studio_ui\ includes the current approval and Stop controls.
 - V2 does not load code or resources from v1-old\. Archived files retain V1's
   original behavior and approval system. See v1-old\README_ARCHIVE.md.
+
+CURRENT V2 FILE LOCATIONS
+- Launchers and Windows setup/build shortcuts: scripts\windows\.
+- PyInstaller specifications: installer\pyinstaller\.
+- Inno Setup script and installer notes: installer\windows\.
+- Desktop dependencies: deployment\windows\requirements.txt (run pip from the checkout root).
+- Active static UI: frontend\legacy\; V2 business logic: src\clydex\.
+- Obsolete root Python import facades were removed; import clydex package modules directly.
+- Root contains project metadata and README.md; original V1 remains in v1-old\.

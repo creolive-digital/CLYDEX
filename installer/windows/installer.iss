@@ -1,5 +1,5 @@
 ; Inno Setup 6 script for CLYDEX
-; Requires both PyInstaller builds to be present under dist\ before running.
+; Requires both builds under deployment/windows/artifacts/dist in the checkout.
 
 [Setup]
 AppName=CLYDEX
@@ -9,7 +9,7 @@ AppPublisherURL=https://github.com/creolive-digital/CLYDEX
 DefaultDirName={autopf}\CLYDEX
 DefaultGroupName=CLYDEX
 OutputBaseFilename=CLYDEX_Setup
-OutputDir=installer_out
+OutputDir=..\..\deployment\windows\artifacts\installer
 Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
@@ -27,12 +27,12 @@ Name: "desktopicon"; Description: "Create a &desktop shortcut for the CLYDEX wid
   GroupDescription: "Additional icons:"
 
 [Files]
-Source: "README_SETUP.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\docs\README_SETUP.txt"; DestDir: "{app}"; Flags: ignoreversion
 ; Widget — full dist folder goes into widget\
-Source: "dist\clydex_widget\*"; DestDir: "{app}\widget"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\deployment\windows\artifacts\dist\clydex_widget\*"; DestDir: "{app}\widget"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; Voice agent — full dist folder goes into agent\
-Source: "dist\clydex_voice_agent\*"; DestDir: "{app}\agent"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\deployment\windows\artifacts\dist\clydex_voice_agent\*"; DestDir: "{app}\agent"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\CLYDEX Widget";       Filename: "{app}\widget\clydex_widget.exe"

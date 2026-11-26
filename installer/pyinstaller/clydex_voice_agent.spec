@@ -2,13 +2,17 @@
 """PyInstaller spec for the CLYDEX voice agent (pywebview / Edge WebView2)."""
 from PyInstaller.utils.hooks import collect_all
 
+from pathlib import Path
+
+ROOT = Path(SPECPATH).resolve().parents[1]
+
 datas = [
-    ('studio_ui', 'studio_ui'),
-    ('assets/legacy/clydex_hologram.png', '.'),
-    ('assets/legacy/clydex_projection.png', '.'),
+    (str(ROOT / 'frontend/legacy'), 'frontend/legacy'),
+    (str(ROOT / 'assets/legacy/clydex_hologram.png'), '.'),
+    (str(ROOT / 'assets/legacy/clydex_projection.png'), '.'),
 ]
 binaries = []
-hiddenimports = ['clydex_engine', 'clydex_spectrum', 'win32timezone']
+hiddenimports = ['clydex.core.legacy_engine', 'clydex.voice.spectrum', 'win32timezone']
 
 # The package lives under src; collect migration SQL and Windows helper scripts.
 from PyInstaller.utils.hooks import collect_data_files
@@ -23,8 +27,8 @@ for _pkg in ['webview', 'faster_whisper', 'ctranslate2', 'av', 'sounddevice', 'n
     hiddenimports += _h
 
 a = Analysis(
-    ['clydex_voice_agent.pyw'],
-    pathex=['src'],
+    [str(ROOT / 'scripts/windows/clydex_voice_agent.pyw')],
+    pathex=[str(ROOT / 'src')],
     binaries=binaries,
     datas=datas,
     hiddenimports=hiddenimports,

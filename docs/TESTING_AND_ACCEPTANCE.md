@@ -56,3 +56,11 @@ Phase 01 engineering implementation is ready for review. Overall product and liv
 - Both active PyInstaller builds passed using the updated asset/helper paths. Verification artifacts are under `%LOCALAPPDATA%\CLYDEX\tmp\v1-archive-verification\`.
 - All **43 original archived files** match `git archive e65fe46` byte-for-byte. Relocated active PNGs match their original bytes. Official product document hashes are unchanged. Active V2 code and build scripts contain no dependencies on `v1-old/`.
 - Fresh installation and live audio/provider/browser/mail acceptance remain unverified, as at the Phase 01 checkpoint. No new product phase or remote push was performed.
+
+## Root cleanup verification
+
+- Active V2: **76 tests passed** (2.390 s); standalone V1: **4 passed** (0.002 s). No permission, voice, tool, storage or provider behavior was rewritten.
+- Lint without repository cache, Python compilation, JS syntax and real Tk/WebView2 smoke all passed after the launcher/frontend moves.
+- Both PyInstaller builds passed from their new `installer/pyinstaller/` locations. Build outputs stayed outside source under `%LOCALAPPDATA%/CLYDEX/tmp/organized-layout-verification/`. Inno Setup compilation/fresh installation remains unverified locally because that compiler is unavailable; its relative paths and CI commands were updated.
+- Root file allowlist passed: exactly `.env.example`, `.gitattributes`, `.gitignore`, `AGENTS.md`, `README.md` and `pyproject.toml`. Launchers, source facades, build/setup definitions, requirements and generated remnants are absent from root.
+- All 43 original V1 archive files and both original product document hashes remain unchanged. Relocated V2 resources resolve to frontend/legacy; the widget Agent-button regression targets scripts/windows/clydex_voice_agent.pyw.

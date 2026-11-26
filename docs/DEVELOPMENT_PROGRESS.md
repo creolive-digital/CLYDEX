@@ -65,3 +65,13 @@ Checkpoint status: engineering implementation delivered; owner acceptance and de
 - Moved active PNG artwork into `assets/legacy/`, original voice tests into `tests/test_voice_routing.py`, and removed duplicate root PS1 files (active packaged copies and original archived copies remain). Updated PyInstaller resources and documented actual layout.
 - Authorization is the owner's explicit V1 organization request; Phase 02 remains untouched and no remote push is authorized.
 - Follow-up validation complete: active V2 **76 tests passed**, standalone V1 **4 passed**, both versions' safe UI smoke checks passed, lint/compilation passed and both updated V2 EXEs built successfully. Archive and artwork integrity verified; existing live integration/installer acceptance gaps remain unchanged.
+
+## Owner correction — clear leftover files from the repository root
+
+- Removed seven obsolete root Python facades. Active voice regressions now import the package directly. No active business behavior was rewritten.
+- Moved .pyw launchers and .bat shortcuts into scripts/windows, .spec files into installer/pyinstaller, Inno Setup/notes into installer/windows, desktop requirements into deployment/windows and setup guidance into docs.
+- Moved the unchanged current static UI into frontend/legacy. Updated resource paths, widget-to-agent launch path, tests, smoke utility, CI and installer paths. Original V1 remains independent and unchanged.
+- Added a concise root README.md. Root now contains project metadata/instructions only. Generated build/cache/release remnants were preserved outside the checkout at `%LOCALAPPDATA%/CLYDEX/tmp/repository-cleanup-20261126-150704/`.
+- ADR-017 records the explicit owner authorization to retire the old root paths. Source launch commands are now `python scripts/windows/clydex_widget.pyw` and `python scripts/windows/clydex_voice_agent.pyw`.
+- The interrupted push did not create remote v2; these changes remain local pending the current organization work. Main is unchanged and no later development phase was started.
+- Validation completed: exactly six root metadata/documentation files, 76 V2 tests and four independent V1 tests passed, safe UI smoke/lint/compilation/JS checks passed, and both executable builds succeeded with the relocated specs/resources. Original archive and product-document integrity checks passed.

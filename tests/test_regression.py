@@ -207,7 +207,7 @@ class EngineRegressionTests(unittest.TestCase):
 class WidgetRegressionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        file = Path(__file__).resolve().parents[1] / 'clydex_widget.pyw'
+        file = Path(__file__).resolve().parents[1] / 'scripts' / 'windows' / 'clydex_widget.pyw'
         loader = importlib.machinery.SourceFileLoader('clydex_widget_test', str(file))
         spec = importlib.util.spec_from_loader(loader.name, loader)
         module = importlib.util.module_from_spec(spec)
@@ -224,7 +224,7 @@ class WidgetRegressionTests(unittest.TestCase):
         widget = self.Widget.__new__(self.Widget)
         with patch('clydex.desktop.widget.subprocess.Popen') as launch:
             widget.launch_agent()
-        expected = Path(__file__).resolve().parents[1] / 'clydex_voice_agent.pyw'
+        expected = Path(__file__).resolve().parents[1] / 'scripts' / 'windows' / 'clydex_voice_agent.pyw'
         self.assertEqual(Path(launch.call_args.args[0][1]), expected)
         self.assertEqual(Path(launch.call_args.kwargs['cwd']), expected.parent)
 

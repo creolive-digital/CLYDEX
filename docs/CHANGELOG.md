@@ -24,3 +24,9 @@ No Phase 02 features implemented. Original product document hashes unchanged. Se
 - Migrated active shared Tk implementations into `src/clydex/desktop/`, retained root compatibility launchers/imports, moved legacy V2 artwork into `assets/legacy/` and voice regression cases into `tests/`.
 - Updated build resource paths; removed redundant root Windows helper copies. Active V2 remains independent of the archive.
 - Verified 76 active V2 tests, four independent V1 tests, safe UI startup for both versions and both updated V2 EXE builds.
+
+### Root cleanup requested by owner
+
+- Retired root import shims and moved launch/setup/build files into scripts, installer, deployment and docs folders.
+- Relocated active static UI to frontend/legacy with unchanged behavior and artwork. Updated resource paths, CI and packaging.
+- Preserved generated root remnants outside source; added root README with current commands. Original V1 remains isolated in v1-old.

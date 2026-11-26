@@ -1,14 +1,18 @@
 # -*- mode: python ; coding: utf-8 -*-
 """PyInstaller spec for the CLYDEX desktop clock / weather widget."""
 
+from pathlib import Path
+
+ROOT = Path(SPECPATH).resolve().parents[1]
+
 a = Analysis(
-    ['clydex_widget.pyw'],
-    pathex=['src'],
+    [str(ROOT / 'scripts/windows/clydex_widget.pyw')],
+    pathex=[str(ROOT / 'src')],
     binaries=[],
     datas=[
-        ('studio_ui', 'studio_ui'),
-        ('assets/legacy/clydex_hologram.png', '.'),
-        ('assets/legacy/clydex_projection.png', '.'),
+        (str(ROOT / 'frontend/legacy'), 'frontend/legacy'),
+        (str(ROOT / 'assets/legacy/clydex_hologram.png'), '.'),
+        (str(ROOT / 'assets/legacy/clydex_projection.png'), '.'),
     ],
     hiddenimports=['clydex.desktop.theme'],
     hookspath=[],

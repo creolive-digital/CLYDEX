@@ -23,7 +23,7 @@ sys.path.insert(0, str(ROOT / 'src'))
 
 
 def widget_smoke() -> dict:
-    loader = importlib.machinery.SourceFileLoader('widget_smoke', str(ROOT / 'clydex_widget.pyw'))
+    loader = importlib.machinery.SourceFileLoader('widget_smoke', str(ROOT / 'scripts/windows/clydex_widget.pyw'))
     module = importlib.util.module_from_spec(importlib.util.spec_from_loader(loader.name, loader))
     loader.exec_module(module)
     with patch.object(module.ClydexWidget, 'request_weather'):
@@ -72,7 +72,7 @@ def webview_smoke() -> dict:
         core = CoreApplication(paths=RuntimePaths(Path(folder)),
                                config=AppConfig(allow_cloud=False, speak_replies=False))
         studio = Studio(core)
-        window = webview.create_window('CLYDEX foundation smoke', str(ROOT / 'studio_ui/index.html'),
+        window = webview.create_window('CLYDEX foundation smoke', str(ROOT / 'frontend/legacy/index.html'),
                                        js_api=studio, hidden=True, width=1220, height=780)
         def verify():
             try:

@@ -2,7 +2,8 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import Mock
 
-from clydex_engine import VoiceEngine, local_command
+from clydex.core.legacy_engine import VoiceEngine
+from clydex.core.commands import local_command
 
 
 class VoiceRoutingTests(unittest.TestCase):

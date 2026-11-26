@@ -32,3 +32,4 @@ node_modules/
 /logs/
 /backups/
 /tmp/
+/deployment/windows/artifacts/

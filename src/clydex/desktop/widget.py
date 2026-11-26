@@ -1,5 +1,5 @@
 """CLYDEX Mini — a desktop flip clock, timer, alarm and stopwatch.
-Python 3 standard library only. Run: python clydex_widget.pyw
+Python 3 standard library only. Run: python scripts/windows/clydex_widget.pyw
 Right-click for settings; drag anywhere on the header to move.
 """
 import json
@@ -19,7 +19,7 @@ from urllib.request import Request, urlopen
 
 RESOURCE_ROOT = (Path(sys._MEIPASS) if getattr(sys, 'frozen', False)
                  else Path(__file__).resolve().parents[3])
-ASSETS = RESOURCE_ROOT / 'studio_ui'
+ASSETS = RESOURCE_ROOT / 'frontend' / 'legacy'
 BG = '#171d1e'
 PANEL = '#252b2d'
 CYAN = '#4cd7f6'
@@ -565,10 +565,10 @@ class ClydexWidget:
             return
         # Development: both .pyw files live in the same directory.
         base = RESOURCE_ROOT
-        agent_pyw = base / 'clydex_voice_agent.pyw'
+        agent_pyw = base / 'scripts' / 'windows' / 'clydex_voice_agent.pyw'
         if not agent_pyw.is_file():
             from tkinter import messagebox
-            messagebox.showerror('CLYDEX AI', 'Place clydex_voice_agent.pyw in the same folder as the widget.')
+            messagebox.showerror('CLYDEX AI', 'The CLYDEX agent launcher is missing from scripts/windows. Restore the installation.')
             return
         python_exe = sys.executable
         if python_exe.lower().endswith('python.exe'):
