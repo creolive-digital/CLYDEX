@@ -4,3 +4,7 @@ sounddevice>=0.4.6
 faster-whisper>=1.0
 av<19
 pywebview>=5,<7
+playwright>=1.45,<2
+pywin32>=306
+msal>=1.28,<2
+requests>=2.31,<3

@@ -27,6 +27,7 @@ Name: "desktopicon"; Description: "Create a &desktop shortcut for the CLYDEX wid
   GroupDescription: "Additional icons:"
 
 [Files]
+Source: "README_SETUP.txt"; DestDir: "{app}"; Flags: ignoreversion
 ; Widget — full dist folder goes into widget\
 Source: "dist\clydex_widget\*"; DestDir: "{app}\widget"; Flags: ignoreversion recursesubdirs createallsubdirs
 

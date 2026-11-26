@@ -217,8 +217,20 @@
     </main>
   </div>
 
+<dialog id="taskReview" aria-labelledby="reviewTitle">
+  <h2 id="reviewTitle">Allow this Windows task?</h2>
+  <p id="reviewDescription"></p>
+  <details><summary>Inspect PowerShell command</summary><pre id="reviewScript"></pre></details>
+  <div><button id="cancelTask" autofocus>Cancel</button><button id="approveTask">Run task</button></div>
+</dialog>
 <dialog id="settings"><form method="dialog"><h2>Audio settings</h2><button aria-label="Close audio settings">×</button></form>
 <label for="device">Microphone input</label><select id="device"><option value="">System default</option></select>
+<label for="recognitionMode">Speech recognition</label>
+<select id="recognitionMode">
+  <option value="en">English · fast</option>
+  <option value="en-accurate">English · higher accuracy (larger model)</option>
+  <option value="auto">Auto-detect language</option>
+</select>
 <label><input type="checkbox" id="speech" checked> Speak replies</label>
 <div><button id="check">Check microphone</button><button id="sound">Windows sound settings</button></div></dialog>
 <script src="studio.js"></script></body></html>

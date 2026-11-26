@@ -3,12 +3,14 @@
 from PyInstaller.utils.hooks import collect_all
 
 datas = [
+    ('app_controls.ps1', '.'),
+    ('read_browser_tab.ps1', '.'),
     ('studio_ui', 'studio_ui'),
     ('clydex_hologram.png', '.'),
     ('clydex_projection.png', '.'),
 ]
 binaries = []
-hiddenimports = ['clydex_engine', 'clydex_spectrum']
+hiddenimports = ['clydex_engine', 'clydex_spectrum', 'win32timezone']
 
 # Collect all sub-packages, data files, and native DLLs for packages that
 # ship compiled extensions or use runtime data discovery.

@@ -380,8 +380,21 @@ let currentMode="standby", time=0;
       let lastState = '';
       let lastAnswer = 'Type a prompt or start the microphone.';
       let preview = false;
+      const reviewDialog = byId('taskReview');
+      let reviewId = null;
       function render(data) {
         frame = data;
+        if (data.review && reviewId !== data.review.id) {
+          reviewId = data.review.id;
+          byId('reviewDescription').textContent = data.review.description;
+          byId('reviewScript').textContent = data.review.script;
+          reviewDialog.querySelector('details').hidden = !data.review.script;
+          reviewDialog.querySelector('details').open = false;
+          if (!reviewDialog.open) reviewDialog.showModal();
+        } else if (!data.review && reviewDialog.open) {
+          reviewDialog.close();
+          reviewId = null;
+        }
         for (const [role,text] of data.messages) {
           appendMessage(role, role==='error' ? 'Error: '+text : text);
           if (role!=='user') lastAnswer=text;
@@ -404,6 +417,7 @@ let currentMode="standby", time=0;
         clearChatBtn.disabled=pulseTestBtn.disabled=byId('check').disabled=data.busy;
         chatForm.querySelector('button').disabled=data.busy;
         byId('device').disabled=data.busy;
+        byId('recognitionMode').disabled=data.busy;
         byId('audioSyncBadge').nextElementSibling.textContent=data.rate?(data.rate/1000).toFixed(1)+' KHZ':'AUDIO IDLE';
         toneMetrics.textContent=data.level>0?'LEVEL: '+(20*Math.log10(data.level)).toFixed(0)+' dBFS':'LEVEL: —';
         micSourceLabel.textContent=data.state==='SPEAKING'?'VOICE OUTPUT':data.recording?'LIVE INPUT':'IDLE';
@@ -412,18 +426,35 @@ let currentMode="standby", time=0;
       function bindClick(element, handler) {
         element.addEventListener('click',async()=>{try {await handler();} catch(e){appendMessage('error',String(e));}});
       }
+      async function decide(approve) {
+        if (reviewId && await api().decide(reviewId, approve)) {
+          reviewId = null;
+          reviewDialog.close();
+        }
+      }
+      bindClick(byId('approveTask'), () => decide(true));
+      bindClick(byId('cancelTask'), () => decide(false));
+      reviewDialog.addEventListener('cancel', event => {
+        event.preventDefault();
+        byId('cancelTask').click();
+      });
       bindClick(micToggleBtn,()=>api().microphone(false));
       bindClick(pulseTestBtn,()=>api().test_voice());
       bindClick(clearChatBtn,async()=>{if(await api().clear()){chatFeed.replaceChildren();updateTurnCount();lastAnswer='Type a prompt or start the microphone.';}});
       bindClick(liveMicBtn,()=>api().microphone(false));
       bindClick(byId('audioSettingsBtn'),async()=>{
         settings.showModal();
+        byId('recognitionMode').value=await api().recognition_mode(null);
         const device=byId('device'), previous=device.value;
         const inputs=await api().inputs();
         device.replaceChildren(new Option('System default',''),...inputs.map(x=>new Option(x.name,x.id)));
         device.value=previous;
       });
       byId('device').onchange=e=>api().select_input(e.target.value);
+      byId('recognitionMode').onchange=async e=>{
+        const select=e.target;
+        select.value=await api().recognition_mode(select.value);
+      };
       byId('speech').onchange=e=>api().speak_replies(e.target.checked);
       bindClick(byId('sound'),()=>api().sound_settings());
       bindClick(byId('check'),async()=>{settings.close();await api().microphone(true);});

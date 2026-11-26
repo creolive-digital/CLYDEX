@@ -20,3 +20,6 @@ CLYDEX is now installed. Before the Voice Agent will work:
    Make sure "Let apps access your microphone" is ON.
 
 The CLYDEX Widget (clock / weather) works without any of the above.
+
+For Windows task approvals, Chrome or Edge browsing, and Outlook setup,
+see README_SETUP.txt in the CLYDEX installation folder.

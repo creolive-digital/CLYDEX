@@ -1,5 +1,5 @@
-"""CLYDEX Mini Plus — compact, draggable Windows weather flip clock.
-Python 3 standard library only. Run: python clydex_widget.py
+"""CLYDEX Mini — a desktop flip clock, timer, alarm and stopwatch.
+Python 3 standard library only. Run: python clydex_widget.pyw
 Right-click for settings; drag anywhere on the header to move.
 """
 import json
@@ -9,15 +9,15 @@ from pathlib import Path
 import math
 import queue
 import threading
+import time
 import tkinter as tk
-from tkinter import font as tkfont, simpledialog, ttk
+from tkinter import messagebox, simpledialog, ttk
 from clydex_theme import StudioSkin
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-ASSETS = (Path(sys.executable).parent if getattr(sys, 'frozen', False)
-          else Path(__file__).resolve().parent) / 'studio_ui'
+ASSETS = Path(__file__).resolve().parent / 'studio_ui'
 BG = '#171d1e'
 PANEL = '#252b2d'
 CYAN = '#4cd7f6'
@@ -26,6 +26,7 @@ MUTED = '#bcc9cd'
 OUTLINE = '#3d494c'
 TOP = '#252b2d'
 BOTTOM = '#1b2122'
+AMBER = '#ffc788'
 
 WEATHER_CODES = {
  0:'CLEAR',1:'MOSTLY CLEAR',2:'PARTLY CLOUDY',3:'OVERCAST',45:'FOG',48:'FOG',
@@ -113,8 +114,10 @@ class ClydexWidget:
         self.settings_style = self.skin.button('MiniSettings',BG,PANEL,MUTED)
         style.configure(self.agent_style,font=('Space Grotesk',-11,'bold'),padding=(4,0))
         style.configure(self.settings_style,padding=0)
+        self.selected_preset_style = 'Selected.' + self.settings_style
+        style.configure(self.selected_preset_style, foreground=CYAN)
         self.root.title('CLYDEX // DESKTOP WIDGET')
-        self.root.geometry('466x270+70+70')
+        self.root.geometry('+70+70')
         self.root.resizable(False,False)
         self.root.configure(bg=BG)
         self.root.overrideredirect(True)
@@ -126,15 +129,32 @@ class ClydexWidget:
         self.dataq=queue.Queue()
         self.loading=False
         self.drag_origin=None
+        self.compact = True
+        self.page = 'Clock'
+        self.timer_duration = 25 * 60
+        self.timer_remaining = self.timer_duration
+        self.timer_end = None
+        self.alarm_at = None
+        self.stopwatch_start = None
+        self.stopwatch_elapsed = 0
+        self.lap_count = 0
+        self.alerts = []
+        self.shell = tk.Frame(self.root, bg=BG, highlightthickness=1, highlightbackground=OUTLINE)
+        self.shell.pack(fill='both', expand=True)
+        self.header(self.shell).pack(fill='x', padx=12, pady=(8, 7))
+        tk.Frame(self.shell, bg=OUTLINE, height=1).pack(fill='x')
+        self.content = tk.Frame(self.shell, bg=BG)
+        self.content.pack(fill='both', expand=True)
         self.make_ui()
         self.make_watch()
-        self.compact = False
-        self.toggle_size()
+        self.make_tools()
+        self.make_navigation()
+        self.show_page('Clock')
         self.make_menu()
         self.update_clock()
         self.request_weather()
         self.check_results()
-        self.root.bind('<Escape>',lambda e:self.root.destroy())
+        self.root.bind('<Escape>', self.escape)
         self.root.bind('<Button-3>',self.show_menu)
 
     def header(self, parent):
@@ -163,9 +183,7 @@ class ClydexWidget:
         widget.bind('<B1-Motion>',self.drag_motion)
 
     def make_ui(self):
-        main = self.full_face = tk.Frame(self.root,bg=BG,highlightthickness=1,highlightbackground=OUTLINE)
-        self.header(main).pack(fill='x',padx=16,pady=(10,7))
-        tk.Frame(main,bg=OUTLINE,height=1).pack(fill='x')
+        main = self.full_face = tk.Frame(self.content,bg=BG)
         clock = tk.Frame(main,bg=BG)
         clock.pack(pady=(9,4))
         self.full_pairs = []
@@ -201,57 +219,337 @@ class ClydexWidget:
             self.bind_drag(item)
 
     def make_watch(self):
-        face = self.watch = tk.Canvas(self.root,bg=BG,bd=0,highlightthickness=0)
-        face.create_rectangle(0,0,247,107,outline=OUTLINE)
-        face.create_window(7,3,anchor='nw',width=234,height=26,window=self.header(face))
-        face.create_rectangle(6,32,241,82,fill=BOTTOM,outline='#090f11')
-        face.create_rectangle(7,33,240,56,fill=TOP,outline='')
-        face.create_line(7,57,240,57,fill='#090f11')
+        face = self.watch = tk.Frame(self.content, bg=BG)
+        summary = tk.Frame(face, bg=BG)
+        summary.pack(fill='x', padx=16, pady=(10, 6))
+        self.watch_date = tk.Label(summary, bg=BG, fg=MUTED, font=('Ubuntu', -12))
+        self.watch_date.pack(side='left')
+        self.watch_period = tk.Label(summary, bg=BG, fg=MUTED, font=('Space Grotesk', -11))
+        self.watch_period.pack(side='right')
+        clock = tk.Frame(face, bg=BG)
+        clock.pack()
         self.watch_pairs = []
-        for x,width,size,ink in ((9,78,54,LIGHT),(97,78,54,LIGHT),(183,54,38,CYAN)):
-            pair=SplitPair(face,width,48,size,ink)
-            face.create_window(x,33,anchor='nw',window=pair)
+        for col, (width, ink) in enumerate(((99, LIGHT), (99, LIGHT), (74, CYAN))):
+            if col:
+                tk.Label(clock, text=':', bg=BG, fg=MUTED, font=('Space Grotesk', -19)).pack(side='left')
+            pair = SplitPair(clock, width, 56, 58 if col < 2 else 46, ink)
+            pair.pack(side='left')
             self.watch_pairs.append(pair)
             for item in (pair,pair.top,pair.bottom,pair.fold):
                 self.bind_drag(item)
-        for y in (49,62):
-            face.create_rectangle(90,y,92,y+2,fill=MUTED,outline='')
-        face.create_line(179,37,179,77,fill=OUTLINE)
-        face.create_image(7,95,anchor='w',image=self.icons['calendar_month'])
-        face.create_text(27,95,anchor='w',tags='date',fill=LIGHT,font=('Ubuntu',-11))
-        face.create_text(117,95,anchor='e',tags='period',fill=MUTED,font=('Space Grotesk',-10))
-        face.create_line(122,90,122,100,fill=OUTLINE)
-        face.create_image(129,95,anchor='w',image=self.icons['cloud'])
-        self.weather_font = tkfont.Font(root=self.root, family='Ubuntu', size=-11)
-        face.create_text(151,95,anchor='w',tags='city',fill=MUTED,font=self.weather_font)
-        face.create_text(240,95,anchor='e',tags='weather',fill=LIGHT,font=self.weather_font)
+        weather = tk.Frame(face, bg=BG)
+        weather.pack(fill='x', padx=17, pady=(8,0))
+        tk.Label(weather, image=self.icons['cloud'], bg=BG).pack(side='left')
+        self.watch_weather = tk.Label(weather, bg=BG, fg=LIGHT, font=('Ubuntu', -12))
+        self.watch_weather.pack(side='left', padx=4)
+        self.watch_condition = tk.Label(weather, bg=BG, fg=MUTED, font=('Ubuntu', -11))
+        self.watch_condition.pack(side='right')
         self.bind_drag(face)
 
     def toggle_size(self):
         self.compact = not self.compact
-        if self.compact:
-            self.full_face.pack_forget()
-            self.watch.pack(fill='both', expand=True)
-            self.root.geometry('248x108')
-        else:
-            self.watch.pack_forget()
-            self.full_face.pack(fill='both', expand=True)
-            self.root.geometry('466x270')
-        self.last = None
+        self.show_page(self.page)
 
     def draw_watch_time(self, now):
-        self.watch.itemconfigure('period', text='' if self.mode24 else now.strftime('%p'))
-        self.watch.itemconfigure('date', text=now.strftime('%a, %d %b'))
-        temperature = self.temp.cget('text')
-        self.watch.itemconfigure('weather', text=temperature)
-        available = 240 - 151 - 6 - self.weather_font.measure(temperature)
-        city = self.city
-        if self.weather_font.measure(city) > available:
-            city = city[:max(0, available)]
-            while city and self.weather_font.measure(city + '…') > available:
-                city = city[:-1]
-            city += '…'
-        self.watch.itemconfigure('city', text=city)
+        self.watch_period.configure(text='24h' if self.mode24 else now.strftime('%p'))
+        self.watch_date.configure(text=f"{now:%a, %d %b}")
+        city = self.city if len(self.city) <= 15 else self.city[:14] + '…'
+        self.watch_weather.configure(text=f"{city}  {self.temp.cget('text')}")
+        self.watch_condition.configure(text=self.condition.cget('text').capitalize().rstrip('.'))
+
+    def make_navigation(self):
+        tk.Frame(self.shell, bg=OUTLINE, height=1).pack(fill='x')
+        nav = tk.Frame(self.shell, bg=BG)
+        nav.pack(fill='x', padx=6, pady=(0, 4))
+        self.tabs = {}
+        for col, name in enumerate(('Clock', 'Timer', 'Alarm', 'Stopwatch')):
+            nav.columnconfigure(col, weight=1, uniform='tabs')
+            cell = tk.Frame(nav, bg=BG)
+            cell.grid(row=0, column=col, sticky='ew')
+            indicator = tk.Frame(cell, bg=BG, height=2)
+            indicator.pack(fill='x', padx=8)
+            button = tk.Button(cell, text=name, command=lambda n=name:self.show_page(n),
+                               bg=BG, fg=MUTED, activebackground=PANEL, activeforeground=LIGHT,
+                               bd=0, relief='flat', cursor='hand2', highlightthickness=1,
+                               highlightbackground=BG, highlightcolor=CYAN, pady=5,
+                               font=('Ubuntu', -12))
+            button.pack(fill='x')
+            self.tabs[name] = button, indicator
+
+    def show_page(self, name):
+        self.page = name
+        for child in self.content.winfo_children():
+            child.pack_forget()
+        face = self.watch if self.compact else self.full_face
+        if self.alerts:
+            face = self.alert_face
+        elif name != 'Clock':
+            face = self.tools[name]
+        face.pack(fill='both' if name == 'Clock' and not self.alerts else 'none', expand=True)
+        for label, (button, indicator) in self.tabs.items():
+            selected = label == name and not self.alerts
+            indicator.configure(bg=CYAN if selected else BG)
+            button.configure(fg=CYAN if selected else MUTED, state='disabled' if self.alerts else 'normal')
+        self.root.geometry('336x220' if self.compact else '466x296')
+        self.last = None
+
+    def tool_button(self, parent, text, command, primary=False):
+        button = ttk.Button(parent, text=text, command=command, cursor='hand2',
+                            style=self.agent_style if primary else self.settings_style)
+        button.pack(side='left', padx=3, ipadx=7)
+        return button
+
+    @staticmethod
+    def duration_text(seconds):
+        minutes, seconds = divmod(int(seconds), 60)
+        hours, minutes = divmod(minutes, 60)
+        return f'{hours}:{minutes:02}:{seconds:02}' if hours else f'{minutes:02}:{seconds:02}'
+
+    def make_tools(self):
+        self.tools = {name: tk.Frame(self.content, bg=BG) for name in ('Timer', 'Alarm', 'Stopwatch')}
+        timer = self.tools['Timer']
+        self.timer_text = tk.StringVar(value=self.duration_text(self.timer_duration))
+        tk.Label(timer, textvariable=self.timer_text, bg=BG, fg=LIGHT,
+                 font=('Space Grotesk', -39, 'bold')).pack(pady=(4,0))
+        self.timer_rail = tk.Canvas(timer, width=168, height=3, bg=OUTLINE, bd=0, highlightthickness=0)
+        self.timer_rail.pack(pady=(0, 5))
+        self.timer_fill = self.timer_rail.create_rectangle(0, 0, 168, 3, fill=CYAN, outline='')
+        presets = tk.Frame(timer, bg=BG)
+        presets.pack()
+        self.preset_buttons = []
+        for minutes in (5, 15, 25):
+            self.preset_buttons.append(self.tool_button(
+                presets, f'{minutes} min', lambda m=minutes:self.set_duration(m * 60)))
+        self.preset_buttons.append(self.tool_button(presets, 'Custom…', self.custom_timer))
+        self.preset_buttons[2].configure(style=self.selected_preset_style)
+        actions = tk.Frame(timer, bg=BG)
+        actions.pack(pady=(8,0))
+        self.timer_button = self.tool_button(actions, 'Start timer', self.toggle_timer, True)
+        self.tool_button(actions, 'Reset', self.reset_timer)
+
+        alarm = self.tools['Alarm']
+        self.alarm_note = tk.StringVar(value='Alarm time · 24-hour local time')
+        tk.Label(alarm, textvariable=self.alarm_note, bg=BG, fg=MUTED,
+                 font=('Ubuntu', -12)).pack(pady=(8,4))
+        fields = self.alarm_editor = tk.Frame(alarm, bg=BG)
+        fields.pack()
+        next_hour = datetime.now() + timedelta(hours=1)
+        self.alarm_hour = tk.StringVar(value=f'{next_hour.hour:02}')
+        self.alarm_minute = tk.StringVar(value='00')
+        for index, (variable, limit) in enumerate(((self.alarm_hour, 23), (self.alarm_minute, 59))):
+            if index:
+                tk.Label(fields, text=':', bg=BG, fg=AMBER, font=('Space Grotesk', -25)).pack(side='left')
+            field = tk.Spinbox(fields, from_=0, to=limit, format='%02.0f', textvariable=variable,
+                               width=3, wrap=True, justify='center', relief='flat', bd=0,
+                               bg=PANEL, fg=LIGHT,
+                               buttonbackground=PANEL, insertbackground=CYAN, highlightthickness=1,
+                               highlightbackground=OUTLINE, highlightcolor=CYAN,
+                               font=('Space Grotesk', -29, 'bold'))
+            field.pack(side='left', ipady=3)
+            field.bind('<Return>', lambda e:self.toggle_alarm())
+        self.armed_time = tk.Label(alarm, bg=BG, fg=AMBER, font=('Space Grotesk', -36, 'bold'))
+        alarm_actions = self.alarm_actions = tk.Frame(alarm, bg=BG)
+        alarm_actions.pack(pady=(9,0))
+        self.alarm_button = self.tool_button(alarm_actions, 'Set alarm', self.toggle_alarm, True)
+
+        stopwatch = self.tools['Stopwatch']
+        self.stopwatch_text = tk.StringVar(value='00:00.0')
+        tk.Label(stopwatch, textvariable=self.stopwatch_text, bg=BG, fg=LIGHT,
+                 font=('Space Grotesk', -39, 'bold')).pack(pady=(5,0))
+        self.lap_text = tk.StringVar()
+        tk.Label(stopwatch, textvariable=self.lap_text, bg=BG, fg=MUTED,
+                 font=('Ubuntu', -12)).pack()
+        watch_actions = tk.Frame(stopwatch, bg=BG)
+        watch_actions.pack(pady=(7,0))
+        self.stopwatch_button = self.tool_button(watch_actions, 'Start', self.toggle_stopwatch, True)
+        self.lap_button = self.tool_button(watch_actions, 'Lap', self.mark_lap)
+        self.lap_button.state(['disabled'])
+        self.tool_button(watch_actions, 'Reset', self.reset_stopwatch)
+
+        self.alert_face = tk.Frame(self.content, bg=BG)
+        self.alert_title = tk.Label(self.alert_face, bg=BG, fg=AMBER, font=('Space Grotesk', -28, 'bold'))
+        self.alert_title.pack(pady=(12,1))
+        self.alert_detail = tk.Label(self.alert_face, bg=BG, fg=LIGHT, font=('Ubuntu', -13))
+        self.alert_detail.pack()
+        alert_actions = tk.Frame(self.alert_face, bg=BG)
+        alert_actions.pack(pady=9)
+        self.dismiss_button = self.tool_button(alert_actions, 'Dismiss', self.dismiss_alert, True)
+        self.snooze_button = self.tool_button(alert_actions, 'Snooze 5 min', self.snooze)
+
+    def set_duration(self, seconds):
+        self.timer_duration = seconds
+        presets = (300, 900, 1500)
+        selected = presets.index(seconds) if seconds in presets else 3
+        for index, button in enumerate(self.preset_buttons):
+            button.configure(style=self.selected_preset_style if index == selected else self.settings_style)
+        self.reset_timer()
+
+    def custom_timer(self):
+        minutes, seconds = divmod(self.timer_duration, 60)
+        value = simpledialog.askstring('Custom timer', 'Duration in minutes or mm:ss',
+                                       initialvalue=f'{minutes}:{seconds:02}',
+                                       parent=self.root)
+        if value is None:
+            return
+        parts = value.strip().split(':')
+        if len(parts) in (1, 2) and all(part.isascii() and part.isdigit() and len(part) <= 4 for part in parts):
+            minutes = int(parts[0])
+            seconds = int(parts[1]) if len(parts) == 2 else 0
+            duration = 60 * minutes + seconds
+            if seconds < 60 and 0 < duration <= 24 * 3600:
+                self.set_duration(duration)
+                return
+        messagebox.showerror('Custom timer', 'Enter 1 second to 24 hours, for example 0:30 or 25.', parent=self.root)
+
+    def reset_timer(self):
+        self.timer_end = None
+        self.timer_remaining = self.timer_duration
+        self.timer_text.set(self.duration_text(self.timer_duration))
+        self.timer_rail.coords(self.timer_fill, 0, 0, 168, 3)
+        self.timer_button.configure(text='Start timer')
+        self.tabs['Timer'][0].configure(text='Timer')
+        for button in self.preset_buttons:
+            button.state(['!disabled'])
+
+    def toggle_timer(self):
+        now = time.monotonic()
+        if self.timer_end is None:
+            self.timer_end = now + (self.timer_remaining or self.timer_duration)
+            self.timer_button.configure(text='Pause')
+            self.tabs['Timer'][0].configure(text='Timer •')
+            for button in self.preset_buttons:
+                button.state(['disabled'])
+        elif now >= self.timer_end:
+            self.update_tools(now, datetime.now())
+        else:
+            self.timer_remaining = self.timer_end - now
+            self.timer_end = None
+            self.timer_button.configure(text='Resume')
+            self.tabs['Timer'][0].configure(text='Timer')
+            for button in self.preset_buttons:
+                button.state(['!disabled'])
+
+    def toggle_alarm(self):
+        if self.alarm_at is not None:
+            self.set_alarm(None)
+            return
+        try:
+            now = datetime.now()
+            target = now.replace(hour=int(self.alarm_hour.get()), minute=int(self.alarm_minute.get()),
+                                 second=0, microsecond=0)
+        except ValueError:
+            self.alarm_note.set('Use hours 00–23 and minutes 00–59')
+            return
+        self.set_alarm(target if target > now else target + timedelta(days=1))
+
+    def set_alarm(self, target):
+        self.alarm_at = target
+        if target:
+            self.alarm_hour.set(f'{target.hour:02}')
+            self.alarm_minute.set(f'{target.minute:02}')
+            self.armed_time.configure(text=f'{target:%H:%M}')
+            self.alarm_editor.pack_forget()
+            self.armed_time.pack(before=self.alarm_actions)
+        else:
+            self.armed_time.pack_forget()
+            self.alarm_editor.pack(before=self.alarm_actions)
+        self.alarm_note.set(f'Alarm set · {target:%a, %d %b}' if target else 'Alarm time · 24-hour local time')
+        self.alarm_button.configure(text='Cancel alarm' if target else 'Set alarm')
+        self.tabs['Alarm'][0].configure(text='Alarm •' if target else 'Alarm')
+
+    def stopwatch_value(self, now):
+        elapsed = self.stopwatch_elapsed
+        if self.stopwatch_start is not None:
+            elapsed += now - self.stopwatch_start
+        return f'{self.duration_text(elapsed)}.{int(elapsed * 10) % 10}'
+
+    def toggle_stopwatch(self):
+        now = time.monotonic()
+        if self.stopwatch_start is None:
+            self.stopwatch_start = now
+            self.stopwatch_button.configure(text='Pause')
+            self.lap_button.state(['!disabled'])
+            self.tabs['Stopwatch'][0].configure(text='Stopwatch •')
+        else:
+            self.stopwatch_elapsed += now - self.stopwatch_start
+            self.stopwatch_start = None
+            self.stopwatch_text.set(self.stopwatch_value(now))
+            self.stopwatch_button.configure(text='Resume')
+            self.lap_button.state(['disabled'])
+            self.tabs['Stopwatch'][0].configure(text='Stopwatch')
+
+    def mark_lap(self):
+        if self.stopwatch_start is not None:
+            self.lap_count += 1
+            self.lap_text.set(f'Lap {self.lap_count}  ·  {self.stopwatch_value(time.monotonic())}')
+
+    def reset_stopwatch(self):
+        self.stopwatch_elapsed = 0
+        self.stopwatch_start = None
+        self.lap_count = 0
+        self.lap_text.set('')
+        self.stopwatch_text.set('00:00.0')
+        self.stopwatch_button.configure(text='Start')
+        self.lap_button.state(['disabled'])
+        self.tabs['Stopwatch'][0].configure(text='Stopwatch')
+
+    def update_tools(self, monotonic_now, now):
+        if self.timer_end is not None:
+            remaining = max(0, math.ceil(self.timer_end - monotonic_now))
+            if remaining != self.timer_remaining:
+                self.timer_remaining = remaining
+                self.timer_text.set(self.duration_text(remaining))
+                self.timer_rail.coords(self.timer_fill, 0, 0, 168 * remaining / self.timer_duration, 3)
+            if remaining == 0:
+                self.reset_timer()
+                self.raise_alert('Timer', f'{self.duration_text(self.timer_duration)} countdown finished')
+        if self.alarm_at is not None and now >= self.alarm_at:
+            scheduled = self.alarm_at
+            self.set_alarm(None)
+            self.raise_alert('Alarm', f'Scheduled for {scheduled:%H:%M}')
+        if self.stopwatch_start is not None and self.page == 'Stopwatch':
+            self.stopwatch_text.set(self.stopwatch_value(monotonic_now))
+
+    def raise_alert(self, kind, detail):
+        self.alerts.append((kind, detail))
+        if len(self.alerts) == 1:
+            self.show_alert()
+
+    def show_alert(self):
+        kind, detail = self.alerts[0]
+        self.alert_title.configure(text='Time’s up' if kind == 'Timer' else 'Alarm')
+        self.alert_detail.configure(text=detail)
+        if kind == 'Alarm':
+            self.snooze_button.pack(side='left', padx=3, ipadx=7)
+        else:
+            self.snooze_button.pack_forget()
+        self.show_page(self.page)
+        self.root.attributes('-topmost', True)
+        self.root.lift()
+        self.dismiss_button.focus_set()
+        self.root.bell()
+
+    def dismiss_alert(self):
+        if self.alerts:
+            self.alerts.pop(0)
+        if self.alerts:
+            self.show_alert()
+        else:
+            self.root.attributes('-topmost', self.on_top)
+            self.show_page(self.page)
+
+    def snooze(self):
+        if self.alerts and self.alerts[0][0] == 'Alarm':
+            self.set_alarm(datetime.now() + timedelta(minutes=5))
+            self.dismiss_alert()
+
+    def escape(self, event):
+        if self.alerts:
+            self.dismiss_alert()
+        elif self.page != 'Clock':
+            self.show_page('Clock')
+        else:
+            self.root.destroy()
 
     def launch_agent(self):
         if getattr(sys, 'frozen', False):
@@ -311,8 +609,9 @@ class ClydexWidget:
 
     def update_clock(self):
         now=datetime.now()
+        self.update_tools(time.monotonic(), now)
         value=now.strftime('%H%M%S' if self.mode24 else '%I%M%S')
-        if value!=self.last:
+        if value!=self.last and self.page == 'Clock' and not self.alerts:
             if self.compact:
                 self.draw_watch_time(now)
             pairs = self.watch_pairs if self.compact else self.full_pairs
