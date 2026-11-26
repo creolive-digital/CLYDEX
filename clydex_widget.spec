@@ -3,7 +3,7 @@
 
 a = Analysis(
     ['clydex_widget.pyw'],
-    pathex=[],
+    pathex=['src'],
     binaries=[],
     datas=[
         ('studio_ui', 'studio_ui'),

@@ -104,3 +104,43 @@ NOTES
   audio playback may fail: check sounddevice installation and Windows sound settings.
 - Requires network access for weather and typical Codex CLI usage.
 - UI/voice/codex end-to-end behavior must be tested on your own Windows PC.
+
+V2 PHASE 01 DEVELOPMENT BRANCH
+- The root launch commands remain supported. Implementation is now packaged under
+  src/clydex; requirements.txt installs it in editable mode for development.
+- Use a verified interpreter. On the development PC, python works while the
+  default py launcher points at a missing installation. Do not reinstall Python
+  just to work around that launcher; use an installed interpreter explicitly.
+- Runtime storage is %LOCALAPPDATA%\CLYDEX\, outside the project. Copy
+  config\clydex.example.json to settings\config.json under that runtime directory
+  if you want to customize non-secret settings. Unknown settings are rejected.
+  .env.example documents environment variables; .env files are not auto-loaded.
+- Voice preferences are stored in the local metadata database; an existing HKCU
+  recognition preference is read only as a fallback. No registry values are deleted.
+- Sensitive reads, native drafts, PowerShell, close/control actions and private
+  context transfers require an exact, expiring, one-time approval. Inspect the
+  displayed action/data before approving. Rejecting a later step leaves any
+  earlier completed changes in place. Approvals do not sandbox PowerShell.
+- Stop task cancels pending reviews/work and requests interruption of active work.
+  Native COM, audio/model code or external apps can take time to return; completed
+  changes are not undone. Stopping recording normally still transcribes the clip.
+- Set CLYDEX_ALLOW_CLOUD=false or CLYDEX_PRIVACY_MODE=true to block Codex calls.
+  Deterministic local commands still work. disabled_scopes in config.json can
+  disable individual capabilities (for example shell.powershell or mail.inbox).
+  Restart after changing policy configuration. No cloud fallback is added.
+- Only one Core instance may own a user's runtime directory. Close the existing
+  assistant before opening another instance. The widget remains independent.
+- Local SQLite stores allowlisted voice preferences and audit metadata only.
+  Do not place credentials, conversations, private documents or audio in it.
+  The credential storage API uses Windows Credential Manager; Codex still uses
+  its existing CLI login. No new provider account is activated by this migration.
+- Developer checks:
+    python -m unittest discover -v
+    python -m ruff check src tests
+    python scripts/verify_windows_smoke.py --webview
+  Install the optional lint tooling with: python -m pip install -e ".[dev]"
+  Add --credentials to smoke-test native Credential Manager with a synthetic
+  value that is deleted immediately. UI smoke tests disable weather/cloud/audio.
+- Phase 02 and later features, React HUD, cloud account/sync, new AI providers,
+  memory collection, wake word, new artwork, plugins and devices are not shipped
+  by Phase 01. See docs\DEVELOPMENT_PROGRESS.md for evidence and remaining gates.

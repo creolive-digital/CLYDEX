@@ -389,7 +389,7 @@ let currentMode="standby", time=0;
           byId('reviewDescription').textContent = data.review.description;
           byId('reviewScript').textContent = data.review.script;
           reviewDialog.querySelector('details').hidden = !data.review.script;
-          reviewDialog.querySelector('details').open = false;
+          reviewDialog.querySelector('details').open = true;
           if (!reviewDialog.open) reviewDialog.showModal();
         } else if (!data.review && reviewDialog.open) {
           reviewDialog.close();
@@ -442,6 +442,14 @@ let currentMode="standby", time=0;
       bindClick(pulseTestBtn,()=>api().test_voice());
       bindClick(clearChatBtn,async()=>{if(await api().clear()){chatFeed.replaceChildren();updateTurnCount();lastAnswer='Type a prompt or start the microphone.';}});
       bindClick(liveMicBtn,()=>api().microphone(false));
+      const stopTaskBtn = document.createElement('button');
+      stopTaskBtn.id = 'stopTaskBtn';
+      stopTaskBtn.type = 'button';
+      stopTaskBtn.textContent = 'Stop task';
+      stopTaskBtn.setAttribute('aria-label', 'Stop the current task and cancel pending actions');
+      stopTaskBtn.className = liveMicBtn.className;
+      liveMicBtn.parentElement.appendChild(stopTaskBtn);
+      bindClick(stopTaskBtn,()=>api().stop());
       bindClick(byId('audioSettingsBtn'),async()=>{
         settings.showModal();
         byId('recognitionMode').value=await api().recognition_mode(null);

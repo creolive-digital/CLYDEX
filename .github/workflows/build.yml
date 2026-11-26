@@ -2,7 +2,7 @@ name: Build CLYDEX Installer
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, v2 ]
     tags:    [ 'v*' ]        # push a tag like v1.0 to auto-create a Release
   workflow_dispatch:          # lets you click "Run workflow" in the GitHub UI
 
@@ -29,6 +29,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install "pyinstaller>=6.0" pyinstaller-hooks-contrib
+          pip install "ruff>=0.9,<1"
+
+      - name: Foundation tests and lint
+        run: |
+          python -m unittest discover -v
+          python -m ruff check src tests
 
       # ── 3. PyInstaller builds ────────────────────────────────
       - name: Build clydex_widget.exe

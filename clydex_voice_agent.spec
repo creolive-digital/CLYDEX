@@ -12,6 +12,10 @@ datas = [
 binaries = []
 hiddenimports = ['clydex_engine', 'clydex_spectrum', 'win32timezone']
 
+# The package lives under src; collect migration SQL and Windows helper scripts.
+from PyInstaller.utils.hooks import collect_data_files
+datas += collect_data_files('clydex')
+
 # Collect all sub-packages, data files, and native DLLs for packages that
 # ship compiled extensions or use runtime data discovery.
 for _pkg in ['webview', 'faster_whisper', 'ctranslate2', 'av', 'sounddevice', 'numpy']:
@@ -22,7 +26,7 @@ for _pkg in ['webview', 'faster_whisper', 'ctranslate2', 'av', 'sounddevice', 'n
 
 a = Analysis(
     ['clydex_voice_agent.pyw'],
-    pathex=[],
+    pathex=['src'],
     binaries=binaries,
     datas=datas,
     hiddenimports=hiddenimports,
