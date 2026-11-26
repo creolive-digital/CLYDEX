@@ -1,0 +1,49 @@
+# Testing and acceptance
+
+## Baseline
+
+Windows, Python 3.13.14, baseline e65fe46: `python -m unittest discover -v`, **4 passed** (0.003 s). No existing automated failures. `py` default launcher is broken (OI-08); not a new source regression.
+
+## Phase 01 acceptance plan
+
+| Gate | Acceptance evidence needed |
+|---|---|
+| T1 Contracts/config | Invalid inputs rejected; deterministic immutable action digests; runtime paths outside source; old registry preference preserved. |
+| T2 Authorization | Deny unknown/unscoped tools; reject replay, changed args/target/identity, expiry; decline/cancel/stop has no effect; concurrent consume succeeds at most once. |
+| T3 Data/logging | SQLite migrations transactional/reopen/schema guard; safe settings/audit only; secrets never written into config/logs/DB; Credential Manager round-trip with mock plus Windows validation if available. |
+| T4 Execution | Bounded serial queue and events, timeout/cancel, shutdown; exceptions mapped; no unsafe retry; provider privacy enforced. |
+| T5 Regression | Original four tests; local app routing, planner tools, approval bridge and widget time/weather with mocks; no actual mailbox mutation or shell tasks. |
+| T6 Packaging | Editable package import, legacy root import, PyInstaller analysis/build if available, JS syntax, lint and full suite; CI configuration inspected. |
+| T7 Windows manual | Widget, clock/time tools, weather, WebView startup/audio/Codex, window/control, Chrome/Edge, Outlook draft, approval expiry and emergency stop. Report individually verified vs unverified. |
+| T8 Performance/security | Queue limits and prompt/data boundary tests; no added public listener. No fabricated latency/RAM/GPU targets; reference hardware gate remains open. |
+
+Unit/security checks do not prove live hardware/integration or production acceptance. Do not send messages, run destructive commands, fetch private mailbox content or call paid providers to test without explicit scope. Foundation checkpoint report must list actual results and remaining manual checks.
+
+## Executed Phase 01 evidence — 2026-11-26
+
+Environment: Windows 10 kernel 10.0.19045, Python 3.13.14, Intel Core i7-7500U, approximately 19.9 GiB installed RAM reported, Intel HD Graphics 620 and NVIDIA GeForce 930MX. This is the observed workstation, not an owner-approved performance target. Tools installed for verification: Ruff 0.17.6, setuptools 84.2.1, wheel 0.48.0, PyInstaller 6.22.3 and hooks-contrib 2026.10. CI remains Python 3.11 and has not been run remotely for this change.
+
+| Check | Actual result |
+|---|---|
+| `python -m unittest discover -q` | **75 passed**, 0 failures/errors/skips; final recorded run 2.381 s. Includes original four tests. No coverage percentage claimed. |
+| `python -m ruff check src tests` | Passed. Largely unchanged `legacy_engine.py` excluded from style lint; not a whole-repository lint claim. |
+| `python -m compileall -q src tests scripts clydex_voice_agent.pyw clydex_widget.pyw` | Passed. |
+| `node --check studio_ui/studio.js` | Passed. |
+| `python scripts/verify_windows_smoke.py --webview` | Passed: real Tk startup, clock, compact/full, timer start/pause/resume/expiry, alarm arm/cancel, stopwatch/lap/reset; hidden WebView2 startup, local assets, actual bridge export, Stop control and exact-action details. Weather mocked, no mic or cloud request. |
+| `python scripts/verify_windows_smoke.py --credentials` | Passed: native Credential Manager synthetic write/read/delete; absence checked after deletion. Also reruns widget smoke. No real credentials inspected. |
+| Editable package install | Passed with regular build isolation. Initial no-isolation attempt failed because setuptools was absent; resolved tooling gap. |
+| Wheel/resource/isolated import | Passed: built wheel contains migration SQL, both PS1 helpers and Studio; `python -I` imported extracted wheel from a temporary directory outside the checkout. |
+| PyInstaller widget and voice-agent specs | Both built successfully. Agent rebuilt after final runtime fixes. SQL and PS1 files verified under frozen `_internal/clydex/`; no relevant missing-clydex/msal/playwright/win32cred/sqlite warnings found. Builds stored outside source under `%LOCALAPPDATA%\CLYDEX\tmp\phase01-verification\`. |
+| Original documents | SHA256 unchanged against intake values. |
+
+One native credential integration error was found and fixed (Unicode argument required by CredWrite). A test cleanup connection leak and a mock return-type mismatch were corrected during development; final suite is green. These were development issues, distinct from the green four-test baseline.
+
+## Remaining acceptance gates
+
+- **Unverified live integrations:** actual microphone/speaker/SAPI sound quality, local Whisper inference/download/English-accent accuracy, Codex service/login and offline behavior, real Chrome/Edge interaction/tab reading, real window focus/accessibility operations and Outlook/Graph inbox/draft behavior. Existing implementations remain, but mocks and imports are not live acceptance.
+- **Unverified human UX:** accessibility/keyboard/DPI, approval review usability for large payloads, cancellation responsiveness during actual STT/COM/browser calls, long idle/gaming/lock privacy. UI smoke does not establish these.
+- **Unverified release:** compiled EXE interactive flows, Inno Setup compilation (tool absent), fresh install/uninstall on clean Windows, signing, updates/recovery and CI 3.11 execution. Successful EXE builds do not establish installation correctness.
+- **Performance:** deterministic queue/event bounds tested; local script/build/suite timings observed. No CPU/GPU/RAM/voice-latency regression budget established or claimed. Numeric thresholds require reference-hardware approval and profiling.
+- **Security boundary:** trusted in-process adapters + user-reviewed scripts, not hostile plugin isolation or OS sandboxing. Existing WebView asset serving remains loopback; no new public control API. Future clients need authenticated transport and scoped ownership tests before activation.
+
+Phase 01 engineering implementation is ready for review. Overall product and live release acceptance are pending; do not advance to Phase 02 automatically.

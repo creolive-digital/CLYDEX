@@ -1,0 +1,3 @@
+# Preserve the owner's official specifications byte-for-byte.
+/docs/CLYDEX_Codex_Master_Instructions_v1.1.md -text
+/docs/CLYDEX_Master_Product_Blueprint_v1.1.pdf binary
