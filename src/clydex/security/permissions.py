@@ -1,0 +1,88 @@
+"""One-time, action-bound consent. Only the trusted local bridge may decide reviews."""
+from dataclasses import dataclass
+import threading
+import time
+from typing import Callable
+import uuid
+
+from clydex.core.contracts import ActionRequest, Risk, ToolSpec
+from clydex.core.errors import PermissionDenied
+
+
+@dataclass(frozen=True)
+class Approval:
+    id: str
+    digest: str
+    user_id: str
+    device_id: str
+    expires_at: float
+
+
+class PermissionService:
+    """In-memory authority, never model output or a persisted reusable capability.
+
+    This boundary supervises trusted Python adapters; it is not a sandbox for
+    arbitrary code running under the same Windows user.
+    """
+
+    def __init__(self, timeout: float = 120, clock: Callable[[], float] = time.monotonic):
+        if not 0 < timeout <= 900:
+            raise ValueError('Invalid approval lifetime.')
+        self.timeout = timeout
+        self.clock = clock
+        self._lock = threading.Lock()
+        self._pending: dict[str, tuple[Approval, bool | None]] = {}
+
+    def issue(self, action: ActionRequest) -> Approval:
+        with self._lock:
+            self._pending = {key: pair for key, pair in self._pending.items()
+                             if pair[0].expires_at > self.clock()}
+            if len(self._pending) >= 64:
+                raise PermissionDenied('Too many pending approvals.')
+            approval = Approval(uuid.uuid4().hex, action.digest, action.context.user_id,
+                                action.context.device_id, self.clock() + self.timeout)
+            self._pending[approval.id] = approval, None
+            return approval
+
+    def decide(self, approval: Approval, approve: bool) -> bool:
+        with self._lock:
+            pair = self._pending.get(approval.id)
+            if (type(approve) is not bool or pair is None or pair[0] != approval
+                    or pair[1] is not None or approval.expires_at <= self.clock()):
+                return False
+            self._pending[approval.id] = approval, approve
+            return True
+
+    def consume(self, approval: Approval, action: ActionRequest) -> None:
+        with self._lock:
+            pair = self._pending.pop(approval.id, None)
+            if (pair is None or pair != (approval, True) or approval.expires_at <= self.clock()
+                    or approval.digest != action.digest or approval.user_id != action.context.user_id
+                    or approval.device_id != action.context.device_id):
+                raise PermissionDenied('Approval is absent, expired, changed or already consumed.')
+
+    def revoke(self, approval: Approval) -> None:
+        with self._lock:
+            self._pending.pop(approval.id, None)
+
+    def revoke_all(self) -> None:
+        with self._lock:
+            self._pending.clear()
+
+
+# No model-controlled risk/scope fields. Only these installed capabilities exist.
+TOOL_SPECS = (
+    ToolSpec('app.launch', 'apps.launch', Risk.LOW, 25, (('name', str), ('app_id', str)), (type(None),)),
+    ToolSpec('app.read', 'apps.inspect', Risk.SENSITIVE, 25, (('action', str), ('target', str)), (list,)),
+    ToolSpec('app.manage', 'apps.windows', Risk.LOW, 10, (('operation', str), ('window', dict)), (str,)),
+    ToolSpec('app.interact', 'apps.modify', Risk.HIGH, 25,
+             (('operation', str), ('window', dict), ('control', dict), ('text', str)), (bool,)),
+    ToolSpec('browser.read', 'browser.visible', Risk.SENSITIVE, 70,
+             (('target', str), ('channel', str), ('existing', bool)), (dict,)),
+    ToolSpec('mail.read', 'mail.inbox', Risk.SENSITIVE, 180, (('unread', bool),), (list,)),
+    ToolSpec('mail.draft', 'mail.drafts', Risk.HIGH, 180,
+             (('number', int), ('body', str), ('message_key', list)), (str,)),
+    ToolSpec('shell.run', 'shell.powershell', Risk.HIGH, 120, (('script', str),), (dict,)),
+    ToolSpec('provider.codex', 'cloud.codex', Risk.SENSITIVE, 180,
+             (('instructions', str), ('data', dict), ('schema', dict), ('fast', bool)), (dict,)),
+)

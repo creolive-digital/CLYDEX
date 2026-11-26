@@ -1,0 +1,9 @@
+{
+  "recognition_mode": "en",
+  "speak_replies": true,
+  "allow_cloud": true,
+  "privacy_mode": false,
+  "approval_timeout": 120,
+  "event_capacity": 256,
+  "disabled_scopes": []
+}
