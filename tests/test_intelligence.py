@@ -404,6 +404,21 @@ class CoordinatorTests(unittest.TestCase):
         self.assertEqual(len(reviews), 2)
         self.assertIn('provider.ollama', reviews[1]['script'])
 
+    def test_fallback_cannot_weaken_original_cost_ceiling(self):
+        self.registry.configs['openai'] = configured('openai', max_request_cost=.5,
+            input_price_per_million=1, output_price_per_million=1)
+        self.registry.configs['openrouter'] = configured('openrouter', input_price_per_million=100,
+                                                       output_price_per_million=100)
+        self.registry.credentials.set('provider.openrouter', 'synthetic')
+        self.registry.configure_routing({'fallbacks': ['openrouter']})
+        provider = Mock()
+        provider.respond.side_effect = ProviderFailure('network')
+        self.registry.build = Mock(return_value=provider)
+        _, errors, reviews = self.reviewed(self.respond)
+        self.assertIsInstance(errors[0], PermissionDenied)
+        self.assertEqual(len(reviews), 1)
+        self.assertEqual(provider.respond.call_count, 1)
+
     def test_local_memory_taints_following_history_and_prevents_cloud_leak(self):
         memory = Mock()
         memory.relevant.return_value = [{'value': 'local preferences', 'local_only': True}]

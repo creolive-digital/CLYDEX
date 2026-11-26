@@ -8,7 +8,7 @@ class ProviderRouter:
         self.registry = registry
 
     def select(self, context, *, privacy: bool, allow_cloud: bool, task_type: str, size: int,
-               candidates: tuple[str, ...] | None = None):
+               candidates: tuple[str, ...] | None = None, request_cost_ceiling: float | None = None):
         routing = self.registry.routing
         offline = routing.offline or routing.profile == 'offline'
         if candidates is None:
@@ -25,9 +25,12 @@ class ProviderRouter:
             if self.registry.health.get(name) in ('network', 'timeout', 'authentication', 'model_unavailable', 'missing'):
                 continue
             try:
-                OutboundPolicy.check(config, context.for_provider(config.capabilities.local),
+                estimate = OutboundPolicy.check(config, context.for_provider(config.capabilities.local),
                                      privacy=privacy or routing.privacy,
                                      offline=offline, allow_cloud=allow_cloud, task_type=task_type, size=size)
+                if request_cost_ceiling is not None and not config.capabilities.local and (
+                        estimate is None or estimate > request_cost_ceiling):
+                    continue
             except PermissionDenied:
                 continue
             return config

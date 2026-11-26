@@ -28,6 +28,7 @@ class IntelligenceCoordinator:
             config = ProviderRouter(registry).select(context, privacy=engine.config.privacy_mode,
                                                      allow_cloud=engine.config.allow_cloud, task_type=task, size=size)
         tried, attempt = set(), 0
+        request_cost_ceiling = config.max_request_cost
         while True:
             engine.cancel_token.check()
             actual = context.for_provider(config.capabilities.local)
@@ -37,7 +38,8 @@ class IntelligenceCoordinator:
                 offline=bool(routing and (routing.offline or routing.profile == 'offline')),
                 allow_cloud=engine.config.allow_cloud, task_type=task, size=size)
             arguments = dict(instructions=instructions, data=actual.data(), schema=schema, fast=schema is PLAN,
-                             configuration=canonical_json(config.public_dict()), attempt=attempt)
+                             configuration=canonical_json(dict(config.public_dict(), original_request_cost_ceiling=request_cost_ceiling)),
+                             attempt=attempt)
             self.state = dict(provider=config.id, model=config.model, status='requesting', usage={},
                               memory_used=len(json.loads(actual.memory_json)), estimated_ceiling=cost)
             engine.events.put(('provider_state', dict(self.state)))
@@ -90,7 +92,8 @@ class IntelligenceCoordinator:
                 if not fallbacks or exc.kind in ('authentication', 'invalid_request', 'invalid_response'):
                     raise
                 config = ProviderRouter(registry).select(actual, privacy=engine.config.privacy_mode,
-                    allow_cloud=engine.config.allow_cloud, task_type=task, size=size, candidates=fallbacks)
+                    allow_cloud=engine.config.allow_cloud, task_type=task, size=size, candidates=fallbacks,
+                    request_cost_ceiling=request_cost_ceiling)
                 attempt += 1  # Every fallback gets its own exact-action consent.
 
     def check_provider(self, engine, name: str) -> str:
