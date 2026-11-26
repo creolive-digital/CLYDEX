@@ -72,6 +72,7 @@ def run_process(args: list[str], *, input: str, cwd, timeout: float,
         creationflags=(getattr(subprocess, 'CREATE_NO_WINDOW', 0) | (4 if os.name == 'nt' else 0)),
         start_new_session=os.name != 'nt')
     job = None
+    assigned = False
     workers = []
     try:
         if os.name == 'nt':
@@ -81,6 +82,7 @@ def run_process(args: list[str], *, input: str, cwd, timeout: float,
             info['BasicLimitInformation']['LimitFlags'] = win32job.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
             win32job.SetInformationJobObject(job, win32job.JobObjectExtendedLimitInformation, info)
             win32job.AssignProcessToJobObject(job, int(process._handle))
+            assigned = True
             _resume_owned_process(process.pid)
         overflow = threading.Event()
         guard = threading.Lock()
@@ -139,13 +141,15 @@ def run_process(args: list[str], *, input: str, cwd, timeout: float,
                                            captured[0].decode('utf-8', 'replace'),
                                            captured[1].decode('utf-8', 'replace'))
     finally:
-        if job is not None:
+        if job is not None and assigned:
             win32job.TerminateJobObject(job, 1)
             while win32job.QueryInformationJobObject(job, win32job.JobObjectBasicAccountingInformation)[
                     'ActiveProcesses']:
                 time.sleep(.01)
             job.Close()
-        elif process.poll() is None:
+        elif job is not None:
+            job.Close()
+        if process.poll() is None:
             if os.name == 'nt':
                 try:
                     subprocess.run(['taskkill.exe', '/PID', str(process.pid), '/T', '/F'],
