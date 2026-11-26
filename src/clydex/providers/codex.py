@@ -62,7 +62,8 @@ class CodexProvider:
             if os.name == 'nt' and str(codex).lower().endswith(('.cmd', '.bat')):
                 command = ['cmd.exe', '/d', '/c'] + command
             try:
-                process = run_process(command, cwd=folder, input=prompt, timeout=request.timeout, cancel=cancel)
+                process = run_process(command, cwd=folder, input=prompt, timeout=request.timeout, cancel=cancel,
+                                      watch_files=((output, 262144),))
             except (OSError, subprocess.TimeoutExpired) as exc:
                 raise ProviderError('Codex failed or timed out.') from exc
             if process.returncode or not output.exists() or output.stat().st_size > 262144:

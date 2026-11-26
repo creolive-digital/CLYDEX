@@ -11,6 +11,9 @@ import re
 import subprocess
 import time
 
+from clydex.core.processes import run_process
+from clydex.automation.tasks import CancellationToken
+
 import pywintypes
 import win32api
 import win32con
@@ -85,12 +88,11 @@ def controls_request(window, mode='inspect', **data):
     if win32gui.IsIconic(window.hwnd):
         raise ValueError(f'Restore “{window.title}” to use its controls.')
     try:
-        process = subprocess.run(
+        process = run_process(
             ['powershell.exe', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass',
              '-File', str(Path(__file__).with_name('app_controls.ps1'))],
             input=json.dumps(dict(hwnd=window.hwnd, pid=window.pid, title=window.title, mode=mode, **data)),
-            text=True, encoding='utf-8', errors='replace', capture_output=True, timeout=20,
-            creationflags=subprocess.CREATE_NO_WINDOW)
+            cwd=Path.home(), timeout=20, cancel=CancellationToken())
     except subprocess.TimeoutExpired as exc:
         raise ValueError('The application timed out. Check its window before trying again.') from exc
     if process.returncode:

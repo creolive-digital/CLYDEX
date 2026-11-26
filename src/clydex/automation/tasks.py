@@ -93,9 +93,15 @@ class SupervisedQueue:
                 handle.future.cancel()
                 self._queue.task_done()
 
-    def close(self) -> None:
+    def close(self, timeout: float = 1) -> bool:
         with self._lock:
             self._closed = True
         self.cancel_all()
         if threading.current_thread() is not self._thread:
-            self._thread.join(timeout=1)
+            self._thread.join(timeout=timeout)
+        return not self._thread.is_alive()
+
+    def wait_closed(self) -> None:
+        if threading.current_thread() is self._thread:
+            raise RuntimeError('A worker cannot wait for its own shutdown.')
+        self._thread.join()

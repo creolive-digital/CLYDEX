@@ -20,6 +20,7 @@ from clydex.core.config import AppConfig
 from clydex.core.contracts import ActionRequest, ProviderRequest, RequestContext, canonical_json
 from clydex.core.errors import Cancelled, PermissionDenied, SpeechInputError, failure_for
 from clydex.core.events import EventChannel
+from clydex.core.processes import run_process
 from clydex.automation.executor import ToolExecutor
 from clydex.automation.tasks import CancellationToken
 from clydex.providers.codex import CodexProvider
@@ -129,6 +130,8 @@ class VoiceEngine:
         future = self._model_future
         if self._model_name == name and future is not None and (not future.done() or future.exception() is None):
             return future
+        if future is not None and not future.done():
+            raise RuntimeError('Another speech model is still loading. Wait before changing models.')
         future = Future()
         self._model_name, self._model_future = name, future
 
@@ -201,13 +204,14 @@ class VoiceEngine:
 
         matches = find_matches()
         if not matches or self._catalog_time is None or time.monotonic() - self._catalog_time >= 120:
-            catalog = subprocess.run(
+            catalog = run_process(
                 ['powershell.exe', '-NoProfile', '-NonInteractive', '-Command',
                  '[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false); '
                  'ConvertTo-Json -Compress -InputObject @(Get-StartApps | Select-Object Name,AppID)'],
-                capture_output=True, text=True, encoding='utf-8', check=True, timeout=20,
-                creationflags=subprocess.CREATE_NO_WINDOW,
+                input='', cwd=Path.home(), timeout=20, cancel=self.cancel_token,
             )
+            if catalog.returncode:
+                raise RuntimeError('Windows application discovery failed.')
             self._start_apps = json.loads(catalog.stdout)
             self._catalog_time = time.monotonic()
             matches = find_matches()
@@ -310,6 +314,16 @@ class VoiceEngine:
         self.closed = True
         self.cancel()
         self.browser.close()
+
+    def wait_closed(self):
+        try:
+            self.browser.wait_closed()
+        finally:
+            if self._model_future is not None:
+                try:
+                    self._model_future.result()
+                except Exception:
+                    pass
 
     def chat_reply(self, question):
         if not isinstance(question, str) or not question.strip() or len(question) > 16000:

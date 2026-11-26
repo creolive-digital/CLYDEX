@@ -2,6 +2,9 @@
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import subprocess
+
+from clydex.core.processes import run_process
+from clydex.automation.tasks import CancellationToken
 from urllib.parse import urlsplit
 
 
@@ -41,10 +44,10 @@ def read_browser_tab(title_hint='', channel=''):
             continue  # An unrelated window may have closed or belong to another user.
         script = Path(__file__).with_name('read_browser_tab.ps1')
         try:
-            read = subprocess.run(
+            read = run_process(
                 ['powershell.exe', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass',
-                 '-File', str(script), str(hwnd)], capture_output=True, text=True, encoding='utf-8',
-                errors='replace', timeout=20, creationflags=subprocess.CREATE_NO_WINDOW)
+                 '-File', str(script), str(hwnd)], input='', cwd=Path.home(),
+                timeout=20, cancel=CancellationToken())
         except subprocess.TimeoutExpired as exc:
             raise RuntimeError('The browser took too long to expose its page text. Select the tab and try again.') from exc
         if not win32gui.IsWindow(hwnd) or win32gui.GetWindowText(hwnd) != title:
@@ -67,8 +70,6 @@ def run_windows_task(script, cancel=None):
         'if (-not $?) { exit 1 }'
     )
     try:
-        from clydex.automation.tasks import CancellationToken
-        from clydex.core.processes import run_process
         result = run_process(
             ['powershell.exe', '-NoLogo', '-NoProfile', '-NonInteractive', '-Command', wrapper],
             input=script, cwd=Path.home(), timeout=120, cancel=cancel or CancellationToken())
@@ -85,8 +86,11 @@ class DesktopBrowser:
         self.worker = ThreadPoolExecutor(max_workers=1, thread_name_prefix='clydex-browser')
         self.driver = self.browser = self.page = None
         self.channel = None
+        self._close_future = None
 
     def visit(self, url, channel):
+        if self._close_future is not None:
+            raise RuntimeError('The browser is closing.')
         if url:
             parts = urlsplit(url)
             if (parts.scheme not in ('http', 'https') or not parts.hostname
@@ -124,8 +128,14 @@ class DesktopBrowser:
                 'visible_text': self.page.locator('body').inner_text(timeout=10000)[:16000]}
 
     def close(self):
+        if self._close_future is not None:
+            return
         def stop():
             if self.driver:
                 self.driver.stop()
-        self.worker.submit(stop)
+        self._close_future = self.worker.submit(stop)
         self.worker.shutdown(wait=False)
+
+    def wait_closed(self):
+        if self._close_future is not None:
+            self._close_future.result()

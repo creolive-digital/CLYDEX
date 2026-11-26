@@ -5,6 +5,7 @@ service owns configuration, persistence, queue and shutdown for one desktop user
 """
 import logging
 import os
+import threading
 
 from clydex.automation.tasks import SupervisedQueue
 from clydex.core.config import AppConfig, RuntimePaths
@@ -33,6 +34,9 @@ class CoreApplication:
         self.paths.ensure()
         self._instance = InstanceLock(self.paths.directory('settings') / 'core.lock')
         self._closed = False
+        self._shutdown_done = threading.Event()
+        self._close_lock = threading.Lock()
+        self._shutdown_failure = False
         try:
             self.config = config or AppConfig.load(self.paths)
             self.logger = configure_logging(self.paths.directory('logs'))
@@ -71,18 +75,42 @@ class CoreApplication:
         self.engine.cancel()
         self.queue.cancel_all()
 
-    def close(self) -> None:
-        if self._closed:
-            return
-        self._closed = True
-        self.stop()
-        try:
-            self.engine.close()
-        finally:
+    def close(self) -> bool:
+        with self._close_lock:
+            if self._closed:
+                return self._shutdown_done.is_set()
+            self._closed = True
+            self.stop()
+            try:
+                self.engine.close()
+            except Exception:
+                self._shutdown_failure = True
+                self.logger.exception('operation_failed')
             self.queue.close()
+            self._finalizer = threading.Thread(target=self._finish_close,
+                                               name='clydex-shutdown', daemon=False)
+            self._finalizer.start()
+        return self._shutdown_done.wait(1)
+
+    def _finish_close(self) -> None:
+        try:
+            self.queue.wait_closed()
+            self.engine.wait_closed()
+            if self._shutdown_failure:
+                raise RuntimeError('Native shutdown failed.')
             self.logger.info('core_stopped')
             self._close_logging()
             self._instance.close()
+            self._shutdown_done.set()
+        except Exception:
+            self.logger.exception('operation_failed')
+            self.engine.events.put(('error', 'Core shutdown is incomplete; ownership remains locked.'))
+            # Fail closed, including process lifetime, rather than hand native
+            # control to a new instance after a failed cleanup.
+            threading.Event().wait()
+
+    def wait_closed(self, timeout: float | None = None) -> bool:
+        return self._shutdown_done.wait(timeout)
 
     def _close_logging(self) -> None:
         logger = logging.getLogger('clydex')

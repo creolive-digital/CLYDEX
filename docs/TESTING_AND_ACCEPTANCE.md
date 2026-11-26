@@ -1,5 +1,13 @@
 # Testing and acceptance
 
+## Phase 02 foundation admission
+
+Baseline 0c0213d: 76 tests passed, lint and safe Windows UI smoke passed. GitHub Actions [45795129836](https://github.com/creolive-digital/CLYDEX/actions/runs/45795129836) passed Python 3.11 checks, both EXE builds and Inno Setup compilation/artifact upload (no release). CI evidence resolves the earlier unknown compiler/build gate; clean interactive installation is still unverified.
+
+H-01/H-02: fixed early instance-lock release. Non-daemon shutdown finalization now waits for the actual queue, browser and model-load completion; failures retain ownership. Windows child processes start suspended, enter an owned kill-on-close job, then resume; cancellation/deadline cleanup waits for the job to empty. stdin and combined output are bounded; generated Codex answer files are watched. Fixed Windows helpers use the same bounded runner. Concurrent speech model loads are rejected rather than orphaned.
+
+Hardening evidence: **80 tests passed** (4.975 s), lint and real Tk/WebView2 smoke passed. New tests exercise unfinished native work/replacement-instance rejection, stdout flooding, child timeout and answer-file overflow. Existing migration rollback/reopen/newer-version guard and exact-approval tests remain green. Engineering blockers H-01–03 are resolved; proceed with authorized Phase 02. Live audio/account behavior, clean-install UX, signed release, long-run native cancellation and agreed hardware budgets remain external acceptance gates, not claims of successful live validation.
+
 ## Baseline
 
 Windows, Python 3.13.14, baseline e65fe46: `python -m unittest discover -v`, **4 passed** (0.003 s). No existing automated failures. `py` default launcher is broken (OI-08); not a new source regression.

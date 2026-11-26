@@ -1,5 +1,22 @@
 # Development progress
 
+## Phase 02 intake and Phase 01 hardening (2026-11-26)
+
+Owner authorizes Phase 02 only after foundation blockers are resolved. Baseline is clean `v2` at `0c0213d5a7637ecb944eddde9a4d049f9f91e1f7`; main and v1-old are protected. All required product/management documents were reread. No remote push/merge/release is authorized for this phase.
+
+- H-01: fix shutdown ordering so the per-user lock stays held until queue/native browser/model workers finish; test noncooperative work and replacement-instance rejection.
+- H-02: bound child stdin/stdout/stderr and generated answer files, enforce timeouts/cancellation and terminate owned child processes; test output flooding, timeout and cancellation with harmless local processes.
+- H-03: verify existing transactional migrations, all 76 regressions and safe Tk/WebView2 smoke. Initial results: 76 passed (2.572 s), lint passed, UI smoke passed.
+- CI evidence: [run 45795129836](https://github.com/creolive-digital/CLYDEX/actions/runs/45795129836), reviewed baseline SHA, successful Python 3.11 tests/lint, both EXE builds, Inno Setup compilation and installer artifact upload. Clean installation, actual audio/accounts and reference hardware budgets remain external acceptance gates.
+
+After H-01–03: P2-01 provider/context contracts and trusted outbound policy; P2-02 six HTTP adapters plus existing Codex, registry/config/health/streaming; P2-03 explicit routing profiles/privacy/cost/fallback; P2-04 additive SQLite migration and owner-scoped conversations; P2-05 manual/opt-in memory with provenance and bounded local retrieval; P2-06 existing engine/queue/desktop UI integration; P2-07 mocked and local HTTP boundary/security/regression tests, packaging and documentation checkpoint. Dependencies follow this order; no duplicate tool orchestrator.
+
+Planned touched paths: core/application, processes, contracts, config, context and a provider coordinator; automation/tasks, security policy/specs, database/store and additive migrations; providers/, conversations/, memory/; desktop/studio and frontend/legacy functional controls; tests/, config templates, existing management/architecture docs. No branding, voice redesign, cloud infrastructure or archive changes.
+
+Engineering defaults: retain Codex as the only enabled provider; never contact any provider while configuring/listing; new accounts/models blank and disabled; paid use requires explicit configuration and per-request consent; automatic memory off; temporary conversation by default. Persistent sessions/manual memories require explicit UI action. Credentials stay in Credential Manager. Tests use synthetic context and deterministic fixtures only. Specific decisions and official API sources will be recorded before activation.
+
+H-01–03 engineering admission completed: 80 tests, lint and safe native UI smoke passed. Shutdown ownership now waits for actual native completion; owned Windows jobs and bounded child I/O close the known process gaps. SQLite baseline rollback tests remain green. Proceed to P2-01; external human/device/account acceptance remains explicitly open.
+
 ## 2026-11-26 — baseline and plan
 
 - P0-01 complete: read all 26 PDF pages and entire master instructions; inspected embedded approved reference images.
