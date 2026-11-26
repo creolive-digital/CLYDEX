@@ -1,5 +1,31 @@
 # Testing and acceptance
 
+## Phase 02 final verification (2026-11-26)
+
+Baseline: clean reviewed V2 `0c0213d`, **76 passing tests**. Engineering admission after hardening `3d38311`: **80 passing**. Additional native job-descendant/assignment-failure tests and Phase 02 contracts bring the final suite to **132 passed**, no failures/errors/skips (recorded run 8.023 s, Windows/Python 3.13.14). No coverage percentage or successful live-provider inference is claimed.
+
+| Check | Actual evidence |
+|---|---|
+| Full unit/regression suite | `python -m unittest discover -q`: 132 passed. Original voice/tool/security/queue/database cases retained. |
+| Provider contracts | Six HTTP request/response/header/schema and SSE/NDJSON adapters; malformed/incomplete/refused responses, missing/bad credentials, bounded bodies, errors and safe metadata. Codex existing mock contract/process tests retained. |
+| Policy and routing | Manual/all four profiles, capability/health/context/price filtering, offline/privacy across every provider, no unauthorized cloud fallback, fresh review on explicit retry/fallback, no tool side effect replay, local-only memory excluded and derived-history leakage prevented. |
+| Real synthetic HTTP boundary | Local ephemeral `127.0.0.1` server: actual Ollama wire format, redirect refusal, 401/403/404/429/500 normalization, stream/size limits, stalled socket deadline/cancel and cancellation during connection. No external AI service contacted. |
+| Conversations/memory | Temporary no-SQL default, consented persistence/resume/metadata/search/export, rename/archive/delete/retention, parameterized SQL, cross-owner rejection, memory provenance/revisions/categories/consent/suggestions/retrieval/disabling and known-secret filters. |
+| Migration/rollback | Schema-1 fixture with settings and audit rows upgrades to 3; failed third migration rolls second back and retains schema 1/data; idempotent reopen and newer-schema refusal. No real owner profile migrated for testing. |
+| Native encryption/credential | Actual DPAPI round-trip of synthetic data, wrong-owner entropy rejection, encrypted SQLite bytes; native Credential Manager dummy write/read/delete and absence check. No real credential inspected/used. |
+| Native process/shutdown | Noncooperative task retains instance lock, timeout/flood/generated-file caps, descendants terminated before runner returns and failed Windows job assignment cleans suspended child. |
+| Functional bridge | Actual exact reviews for denied/approved provider settings, credential exclusion, queued history creation/resume/export, manual memory policy/delete and routing privacy; Core queue remains single authority. |
+| Lint/syntax | Ruff `--no-cache src tests`, Python compileall, `node --check frontend/legacy/{studio,intelligence}.js` passed. Legacy engine retains existing style-lint exclusion; syntax/regressions run. |
+| Safe native UI | `python scripts/verify_windows_smoke.py --webview --credentials` passed: Tk clock/timer/alarm/stopwatch controls; WebView2/Stop/review, seven provider controls, temporary defaults and reviewed DPAPI session creation. Network/audio/weather/private services disabled or mocked. |
+| Wheel | Build passed without new dependencies; schema 3/modules present, isolated `python -I` headless imports passed. Wheel SHA256 `5fb102b33ddf717311a723517895751b325365deefa31acac237aa8a32b4e009`. |
+| Frozen packaging | Both final PyInstaller EXEs built successfully from current source. Archive/module checks confirm coordinator, registry/codecs, conversations/memory, encryption and controls; DPAPI extension and all three migrations/frontend JS present. Artifacts/logs under `%LOCALAPPDATA%/CLYDEX/tmp/phase02-verification/`. |
+| CI | Reviewed [baseline run 45795129836](https://github.com/creolive-digital/CLYDEX/actions/runs/45795129836) passed Python 3.11, EXEs and Inno/artifact upload. Current workflow adds Python compilation and JS syntax checks. Current changes not pushed, so no new remote CI result. |
+| Integrity/organization | Original specification hashes unchanged; main ref unchanged; 43 original archived files match reviewed intake byte-for-byte; assets untouched; exactly six root files. Generated wheel build directory preserved outside source. Preexisting archive CRLF provenance discrepancy recorded as OI-24. |
+
+Development defects corrected: annotation shadowing by repository `list`, fixture SQLite connection cleanup, HTTP/1.0 socket ownership preventing prompt cancellation, arbitrary usage keys, local-only context leaking through history, native job assignment failure cleanup and current Claude version/auth/workspace shape. These were introduced/discovered during development, distinct from the passing 76-test baseline. Final tests pass.
+
+Remaining gates: actual Codex login/model and all six HTTP providers, real local Ollama isolation/inference, paid/private transfer approvals, human UI/accessibility/DPI, audio/STT/TTS, Windows apps/browser/Outlook live behavior, current Inno compilation/fresh install/uninstall/frozen interaction, reference-hardware performance/long-run profiling, OS DNS interruption, provider billing/retention agreements, audit retention and cross-account recovery. No real credentials, private email, destructive operation or production resource was used to fill these gaps. No Phase 03 readiness or release certification is inferred from synthetic tests.
+
 ## Phase 02 foundation admission
 
 Baseline 0c0213d: 76 tests passed, lint and safe Windows UI smoke passed. GitHub Actions [45795129836](https://github.com/creolive-digital/CLYDEX/actions/runs/45795129836) passed Python 3.11 checks, both EXE builds and Inno Setup compilation/artifact upload (no release). CI evidence resolves the earlier unknown compiler/build gate; clean interactive installation is still unverified.

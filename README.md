@@ -2,6 +2,8 @@
 
 Windows-first personal AI assistant. Active code is in `src/clydex/`; the original V1 release is preserved independently in `v1-old/`.
 
+Phase 02 engineering is ready for review: multi-provider routing, encrypted local conversations and consented memory are available through **AI & Memory** in the existing desktop UI. Codex remains the default; new providers are disabled, chats start temporary, and automatic memory suggestions are off. See [provider setup and privacy](docs/PROVIDER_CONFIGURATION.md) and the [Phase 02 checkpoint report](docs/PHASE_02_COMPLETION_REPORT.md) for verified behavior and remaining acceptance gates.
+
 From the checkout root:
 
 ```powershell

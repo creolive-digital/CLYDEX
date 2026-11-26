@@ -1,5 +1,19 @@
 # Current state analysis
 
+## Current Phase 02 assessment (2026-11-26)
+
+Current implementation baseline was clean `v2` at reviewed `0c0213d`; the e65fe46 audit below is historical. All required specifications/management documents were reread before edits. The original 76 tests and reviewed baseline GitHub Actions run passed. Hardening commit `3d38311` addressed early instance-lock release, child output bounds and owned process termination before Phase 02 began. No main/archive changes or new provider activation occurred.
+
+CoreApplication now owns the existing serial queue/VoiceEngine plus ProviderRegistry, IntelligenceCoordinator, owned ConversationService and MemoryService. The coordinator supplies model responses to the existing tool loop; permissions/executor remain the only effect authority. Six HTTP protocols use shared bounded transport/codecs rather than duplicated orchestration or new SDK dependencies. Capabilities, model/config limits, explicit priorities, cached network/model health and cost/privacy policies determine routing. New services depend on UI-independent contracts, the existing LocalStore and credential abstraction; UI adds controls through the same local bridge.
+
+SQLite migrates settings/audit schema 1 to 3 transactionally, preserving original rows. Consented conversation titles/messages and personal memory payloads are DPAPI-encrypted; runtime defaults remain temporary/no automatic collection. Owner-scoped repositories, parameterized SQL, provenance/revisions, deletion tombstones and separate services establish local boundaries suitable for a later sync adapter without implementing cloud synchronization. No keys/raw audio/sensitive tool output are stored as conversation or memory payloads.
+
+Security review identified and fixed a new HTTP/1.0 cancellation socket-ownership defect, usage metadata allowlist gap and potential local-only memory leakage through derived chat history. These are development findings; the original baseline was green. All are covered by deterministic tests. Exact consent remains required for new providers and private context; retry/fallback never replays tools. Existing OS scopes were not widened; added scopes cover provider settings/health and approved local data only.
+
+Performance controls now include bounded child I/O/files, streaming input/output caps, coalesced telemetry, bounded routing/retry, up to five retrieved memories, maximum 1,000 active memories, recent-history search and explicit export limits. Encryption/search costs and live inference latency are not certified against reference-hardware budgets. Hard cancellation of OS DNS resolution remains a technical validation limit; ownership stays locked while it finishes. Native COM/STT effects still cannot be rolled back by cancellation.
+
+Desktop controls are functional in frontend/legacy without replacing artwork or building React. Packaging includes existing resources plus new SQL/adapters. Live models/accounts, microphone/TTS quality, clean installation, hardware budgets, missing approved standalone reference assets and account/data/cost decisions remain external acceptance gates. Full current evidence and Phase 03 readiness appear in DEVELOPMENT_PROGRESS and TESTING_AND_ACCEPTANCE. The remainder of this file preserves the initial audit.
+
 Audit date: 2026-11-26. Specification: full 26-page Blueprint v1.1 and Codex master instructions v1.1. Implementation baseline: `e65fe46e19e554066a43926f4a0e5335843096c8`. Dedicated branch: `v2`. At intake only the owner-supplied `docs/` directory was untracked; no source changes were present. Original documents must remain byte-for-byte unchanged.
 
 ## Baseline evidence

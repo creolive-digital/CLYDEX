@@ -1,6 +1,6 @@
 # Project structure and public interfaces
 
-Phase 01 incremental structure, followed by the owner-requested V1 archive relocation. Target follows the owner's mandatory layout; only functional packages exist. Root compatibility launchers, build/install entry points and supplied documents are retained.
+Current Phase 02 structure after foundation hardening and owner-requested root cleanup. Target follows the owner's mandatory layout; only functional packages exist. Source launchers remain under scripts/windows and the supplied specifications/archive remain unchanged.
 
 ## Actual structure
 
@@ -14,13 +14,16 @@ CLYDEX/
   src/clydex/
     core/                         headless application, contracts, config, events,
                                   safe logging/errors, processes, legacy orchestrator
-    providers/                    existing Codex CLI adapter
+    providers/                    Codex + six HTTP codecs, transport, registry, router
+    conversations/                encrypted owned sessions/messages and retention
+    memory/                       encrypted provenance, consent, suggestions, retrieval
     voice/                        real PCM/FFT spectrum
     tools/                        Windows, browser, PowerShell adapters and PS1 resources
     integrations/                 existing Outlook integration
-    security/                     exact approvals, scopes and Credential Manager
+    security/                     exact approvals, outbound policy, Credential Manager,
+                                  DPAPI encryption and private persistence filter
     automation/                   bounded queue, cancellation and tool execution
-    database/                     SQLite metadata access and embedded migrations
+    database/                     SQLite metadata and schema 1–3 embedded migrations
     desktop/                      Studio bridge, widget, Tk theme/hologram helpers
   frontend/legacy/                existing HTML/CSS/JS desktop frontend, bundled
                                   fonts/icons/licenses; no UI redesign
@@ -53,9 +56,10 @@ There are no loose Python modules, launchers, batch files, .spec files, installe
 | Location | Responsibility | Current / introduction gate |
 |---|---|---|
 | `src/clydex/core/` | Application services and orchestration | Implemented foundation; legacy orchestration retained incrementally |
-| `providers/` | Seven model adapters/routing | Codex adapter now; remaining adapters Phase 2 |
+| `providers/` | Seven model adapters/routing | Implemented Phase 02; six new adapters disabled, live validation pending |
 | `voice/` | STT/TTS/activation/audio | Spectrum now; existing engine STT/SAPI retained until Phase 3 |
-| `memory/`, `personality/` | Memory/history, adaptive behavior | Phase 2–3 |
+| `conversations/`, `memory/` | Session persistence and consented personal memory | Implemented Phase 02; encryption, owner-bound repositories and local retrieval |
+| `personality/` | Adaptive behavior | Phase 3; no placeholder package |
 | `tools/`, `automation/` | OS/developer adapters and supervised execution/workflows | Existing tools/queue now; expanded tools/studio Phase 6 |
 | `knowledge/` | Ingestion/retrieval | Phase 5 |
 | `security/` | Permissions/credentials/audit/auth | Local consent/secret foundation now; cloud/device auth later |
@@ -82,7 +86,7 @@ Desktop → CoreApplication → VoiceEngine adapter → provider/tool adapters �
 
 Public interfaces: `CoreApplication.submit/stop/close`; `VoiceEngine.chat_reply/text_worker/record_worker/pending_review/decide/cancel/close`; `AIProvider.respond(ProviderRequest, Cancellation)`; `ToolExecutor.execute(ActionRequest, operation, review, token)`; `LocalStore.get_setting/set_setting/audit`; `CredentialStore.get/set/delete`. Direct legacy helpers are trusted internal adapters, not remotely callable APIs or a security sandbox. Obsolete root import facades are retired by the owner's explicit cleanup request; active callers import the package directly. Only `Studio` is exported to the existing trusted WebView bridge.
 
-Runtime storage: `%LOCALAPPDATA%\CLYDEX\{data,memory,cache,models,logs,backups,settings,plugins,tmp}`. Directories are created for the approved runtime organization; memory/cache/plugins directories do not indicate implemented features. SQLite contains preferences/audit metadata only. Logs are capped at 1 MiB × 4 files; no raw prompts, payloads or exception text. Model files use the models directory; Codex temporary files use tmp and are cleaned after the call. PyWebView may run its existing loopback asset server; no new public core/OS endpoint is introduced.
+Runtime storage: `%LOCALAPPDATA%\CLYDEX\{data,memory,cache,models,logs,backups,settings,plugins,tmp}`. SQLite schema 3 contains settings/audit plus explicitly retained DPAPI-encrypted conversation/memory payloads. Default conversations remain temporary. Provider/routing JSON is non-secret under settings; keys remain in Credential Manager. Logs are capped at 1 MiB × 4 files; no raw prompts, payloads or exception text. Model files use models; Codex temporary files use tmp and are cleaned after the call. PyWebView retains its existing loopback asset server; no new public core/OS endpoint is introduced.
 
 ## Migration and rollback
 
@@ -90,6 +94,16 @@ Install from the checkout root with `python -m pip install -r deployment/windows
 
 PyInstaller specs resolve source paths relative to their own installer/pyinstaller location. They include the active frontend at frontend/legacy and packaged SQL/PS1 resources. Inno Setup resolves relative paths from installer/windows; local/CI build outputs use deployment/windows/artifacts. Installed widget/agent EXE names and sibling layout are unchanged. The widget's Agent button targets the relocated V2 launcher in development and the existing sibling EXE when installed.
 
-All 43 original V1 files under v1-old remain byte-for-byte equal to the Git baseline. Its original launchers, UI, artwork, requirements and build scripts run independently, and active V2 never imports archive code. README_ARCHIVE.md is separate archive documentation.
+All 43 original V1 files under v1-old remain byte-for-byte equal to the reviewed V2 intake 0c0213d. Compared with original e65fe46 Git blobs, 31 text files have preexisting CRLF-only differences (OI-24); older raw-byte provenance claims are qualified by this finding. Its launchers, UI, artwork, requirements and build scripts remain independent; V2 never imports archive code. README_ARCHIVE.md is unchanged archive documentation.
 
-No user data, registry setting or database schema was changed by this organization cleanup. Save V2 work and switch to main for a complete baseline checkout, or run the independent V1 archive. Future data migrations still require explicit restore and acceptance evidence.
+The organization cleanup did not change user schemas. Phase 02 now adds transactional 1→3 migrations; settings/audit are preserved, failures roll back and downgrades are refused. Only isolated synthetic profiles were migrated during verification. See PROVIDER_CONFIGURATION.md for backup/restore guidance; never downgrade a real schema-3 database in place.
+
+## Phase 02 module interfaces
+
+`core/orchestrator.IntelligenceCoordinator.respond/check_provider` serves model requests inside the existing VoiceEngine/ToolExecutor, not a separate agent loop. `core/context.ContextBundle` separates six context compartments and enforces local-only provenance on derived history. `core/data_actions.OwnedDataActions` constructs exact current-user local data operations; model plan enums do not expose memory/settings mutation.
+
+`providers/base` defines immutable validated configuration/capabilities and safe failures. `registry.ProviderRegistry.configure/configure_routing/build/check/snapshot` owns non-secret settings, credential lookup and observed health. `router.ProviderRouter.select` is deterministic trusted policy. Six named provider adapters share actual protocol codecs in `http_provider` and bounded TLS/loopback transport in `transport`; Codex retains the existing child-process path. No provider imports UI/database or grants permissions.
+
+`conversations/models`, `repository.ConversationRepository` and `service.ConversationService` implement owned session CRUD, safe pair persistence, resume/search/export/retention and temporary defaults. `memory/models`, `repository.MemoryRepository`, `service.MemoryService` and `retrieval.retrieve` implement owned encrypted records, revisions/provenance, consent/category policy, RAM proposals and bounded lexical retrieval. Repositories depend on LocalStore and an injected cipher; production uses `security/encryption.LocalCipher` with Windows DPAPI only. These local record/provenance/tombstone boundaries support a future synchronization adapter; no cloud transport or conflict engine is implemented.
+
+`desktop/intelligence.IntelligenceControls` extends Studio using the same serial queue and existing approval dialog. Static controls live in `frontend/legacy/intelligence.js` plus the existing index/CSS; external strings use text nodes. UI never calls provider HTTP directly. Package SQL migrations remain under `src/clydex/database/migrations/`; there is no duplicate root database directory or unnecessary future module.

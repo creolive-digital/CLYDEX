@@ -1,5 +1,23 @@
 # Open issues and requirement conflicts
 
+## Current Phase 02 disposition (supersedes historical rows where stated)
+
+| ID | Current issue / resolution | Owner or technical gate |
+|---|---|---|
+| OI-02,04 | Latest owner explicitly authorizes Phase 01 hardening then Phase 02. Foundations passed engineering admission. | Resolved for this scope; stop before Phase 03. No push authorized. |
+| OI-08,15 | Reviewed baseline CI 45795129836 passed Python 3.11, both EXEs and Inno compilation. Current work is local, so no new CI result exists. | Local compiler still absent; current installer compilation, clean install/uninstall and frozen live flows remain unverified. Default `py` remains broken; use `python`. |
+| OI-13 | Child I/O and answer-file bounds, deadline/cancel and owned descendant cleanup implemented and tested; native shutdown now retains the instance lock. | Broad dependency pinning/signing/updater and account scope review remain later release work. |
+| OI-11,17 | Provider configuration/budget and conversation retention controls implemented; automatic memory off, temporary default, no real keys or live inference used. | Owner selects actual models/accounts/prices/retention, permits live tests/private transfer and elects automatic suggestions. Audit retention still unresolved. |
+| OI-18 | Established HTTP sockets honor deadline/cancel; OS DNS/connect may delay completion beyond configured timeout. | Native DNS interruption is not certified. Queue/instance remains owned until completion, preventing overlap. Test on target networks before live acceptance. |
+| OI-19 | Local Ollama can itself proxy cloud models. Literal loopback and cloud-name rejection alone cannot prove locality. | Owner runs server with OLLAMA_NO_CLOUD=1 and confirms local model/deployment; no endpoint contacted during development. |
+| OI-20 | Account/model/schema compatibility and provider-side retention, billing, OpenRouter upstream policies not live-verified. | All new adapters disabled; real credentials, paid calls and private context require explicit owner authorization. Listed model does not prove successful inference. |
+| OI-21 | Secret-pattern filtering cannot identify every possible private/financial/mail value. | Temporary default, explicit saving, DPAPI, sensitive-turn exclusion and review reduce exposure; owner must avoid storing secrets. Deletion does not revoke exports/backups/provider-held data. |
+| OI-22 | Bounded history/retrieval and local DPAPI encryption are deliberate first local implementation. No vector search/sync/cross-device DPAPI recovery. | UI lists 500 recent sessions/searches 10,000 recent messages; resume 100; model window six; export full session up to 8 MiB allowance; 1,000 active memories. Later expansion needs profiling/design. |
+| OI-23 | New functional settings/history/memory controls passed safe native startup/bridge checks. | Human DPI/keyboard/screen-reader usability, large approval payloads and frozen executable interactions remain owner acceptance. |
+| OI-24 | Historical archive notes claim raw byte identity with e65fe46. Current verification finds 31 preexisting CRLF-only text differences from those original blobs. All 43 original archived files are byte-identical to reviewed 0c0213d. | Record provenance clarification; protected archive remains untouched. No substantive V1 content difference detected after newline normalization. |
+
+OI-01 approved standalone reference assets remain missing; branding/artwork unchanged. OI-07 trusted-adapter/OS sandbox boundary, OI-09 voice selection, OI-10 hosting/SQL decisions, OI-12 hardware performance and OI-14 native rollback limits remain open. No blocker is hidden as successful live verification.
+
 | ID | Issue / conflict | Disposition / dependency |
 |---|---|---|
 | OI-01 | Both specified standalone approved visual reference PNGs are missing. Blueprint embeds screenshots, not production assets. Existing UI differs from approved final branding. | Record; preserve current artwork. Owner supplies references and licensed production assets before Phase 4. No invented replacement. |

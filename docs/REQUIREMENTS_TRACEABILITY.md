@@ -1,5 +1,26 @@
 # Requirements traceability
 
+Current status: Phase 02 engineering checkpoint below supersedes historical baseline/Phase 01-only statements. Live activation and account/hardware acceptance remain separate gates.
+
+## Phase 02 checkpoint
+
+| Requirement / task | Current classification | Acceptance evidence / remaining limits |
+|---|---|---|
+| FND-05 / H1-01,02 | Implemented hardening | Native queue/lock ordering, process output/file limits, descendant termination and failed job-assignment cleanup regressions. No instant COM/STT rollback claim. |
+| FND-06 / P2-05 | Implemented local migration | Schema 1→3 preserves settings/audit; third migration failure rolls back whole batch; native encrypted payload round-trip and newer-schema refusal tested. |
+| AI-01 / P2-01,02,07 | Implemented adapters/configuration; Requires technical validation for live accounts/models | Seven providers, capability/config validation, Credential Manager and explicit model health UI. Six HTTP codecs/headers/body/structured/stream responses simulated. No successful live inference claimed. |
+| AI-02 / P2-03,04 | Implemented configured routing | Manual plus four profiles, task/context/model/health/price filters, offline/privacy enforced across explicit fallback. Prices/priorities/account spending limits are owner configuration. |
+| AI-03 / P2-02,04 | Implemented supported streaming/error/cancel/limits; Requires technical validation for native DNS hard deadline | Six HTTP stream codecs and terminal validation, normalized failures, socket cancel/timeout, Codex process limits; at most one reviewed rate-limit retry. CLI streaming/usage unavailable, reported honestly. |
+| SEC-01,02 / P2-04,07 | Implemented for Phase 02 paths | Trusted specs, immutable context/config review, deny-before-transmit, no tool replay, prompt-injection data separation and derived local-only history isolation. Existing OS authority boundary unchanged. |
+| MEM-01 / P2-06,07 | Implemented local memory and conservative collection | Six categories, current-user commands/UI, provenance/confirmation, revisions/owner scope, opt-in categories and per-proposal review, retrieval/disable/delete tests. No silent unrestricted inference. |
+| MEM-02 / P2-05,06 | Implemented local portion; cloud sync Not implemented in this phase | DPAPI payloads in SQLite, no credentials/audio/sensitive tool turns, owned tombstones/provenance and repository interfaces; future sync adapter remains Phase 05. |
+| Conversation requirements / P2-05,07 | Implemented with documented bounds | Temporary/saved sessions, titles/times/provider metadata, resume/search/rename/archive/delete/export/retention. Native bridge and deterministic ownership/data tests. Limits in PROVIDER_CONFIGURATION. |
+| OFF-01 / P2-03 | Implemented offline model selection/policy; Requires technical validation for actual local inference | Literal loopback Ollama with local-only confirmation, cloud model names rejected; owner-controlled server/model still needs live/hardware verification. Existing STT/TTS unchanged. |
+| TEST-01 / P2-08 | Implemented automated Phase 02 scope; overall product Partially implemented | Full regression plus adapter/local HTTP/consent/migration/native UI/DPAPI/credential checks; packaging results in TESTING_AND_ACCEPTANCE. No live/human performance certification. |
+| FND-07 / P2-09 | Implemented required organization | Only functional conversations/memory packages added; root remains six files. V1/archive/assets/specifications unchanged. |
+
+All later-phase HUD/voice redesign/cloud/plugins/devices requirements retain their historical delivery phases. Phase 03 is awaiting owner checkpoint review, not automatically authorized.
+
 Source: Blueprint v1.1 page references; master instructions; latest owner Phase 01 and mandatory structure instructions. Status vocabulary: Implemented / Partially implemented / Not implemented / Requires refactoring / Requires technical validation / Blocked or requires owner approval. Baseline states below; Phase 1 results are appended after verification.
 
 | ID | Source / requirement | Baseline status and evidence | Phase / task |

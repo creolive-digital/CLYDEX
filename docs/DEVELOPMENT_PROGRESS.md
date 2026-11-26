@@ -1,5 +1,22 @@
 # Development progress
 
+## Phase 02 engineering completion checkpoint (2026-11-26)
+
+Objective: extend the single existing Core with multi-model intelligence, persistent owned conversations and consented personal memory after resolving Phase 01 engineering blockers. H1-01–03 and P2-01–09 are complete in the declared automated/native scope. **132 tests pass**, lint/compilation/JS checks pass, native Tk/WebView2/DPAPI/synthetic credential checks pass, wheel/isolated imports and both EXE builds pass. Details and the complete changed-file manifest are in PHASE_02_COMPLETION_REPORT.md and TESTING_AND_ACCEPTANCE.md.
+
+Local commits: `3d38311` shutdown/process hardening; `023fb4d` failed job-assignment/descendant verification; `fe6f969` provider/data/UI implementation; `e0eb512` original cost-ceiling protection across fallback. Documentation/checkpoint changes follow these locally. No push, merge or release; main, the independent archive, approved art and supplied specification bytes remain unchanged from intake. OI-24 qualifies older archive provenance claims: 31 text files already differed from original V1 Git blobs only in CRLF endings.
+
+- P2-01/02: Codex default preserved; six opt-in HTTP adapters, immutable registry/configuration, explicit model/capability/health, safe auth/limits/schema validation/streaming. Current official protocol references and provider dependencies are recorded; no new SDK dependency or selected model invented.
+- P2-03/04: manual/four-profile routing, observed health and capability/context/budget filters; shared outbound compartments, local-only memory and derived-history isolation, same-policy explicit fallbacks, original per-request ceiling and fresh exact review; no side-effect replay.
+- P2-05: transactional SQLite 1→3 with settings/audit preserved and failed-batch rollback; DPAPI session payloads, temporary default, resume/search/title/archive/delete/export/retention controls. Only synthetic profiles used for migration tests.
+- P2-06: six memory categories, provenance/ownership/status/timestamps, revisions, review/correction/forget/disable, local retrieval and opt-in literal suggestions with per-item review. Automatic suggestions remain off in defaults and no owner profile was enabled.
+- P2-07: functional legacy UI controls use the existing queue/approval dialog. No full HUD, avatar replacement, voice redesign, cloud service, plugins or devices.
+- P2-08/09: full regressions, actual synthetic loopback HTTP, native safety checks, packaging, CI check updates and all eight management documents/AGENTS/actual-target structure maintained. No new remote CI run is claimed.
+
+ADRs 018–028 record scope, ownership, codecs, routing, outbound policy, encrypted local data, conservative memory collection, derived-context privacy, functional UI and bounded native behavior. P2-08 evidence distinguishes simulation from real native integration. Existing voice/tool paths are regression-tested; actual audio/accounts/browser/mail/hardware usability remain unverified. Socket cancellation is verified; OS DNS/connect may still delay timeout completion while Core ownership remains held.
+
+Remaining owner gates: review this checkpoint, choose actual models/accounts/prices/retention and provider data policies, authorize live credentials/paid/private tests and optional automatic suggestions, validate local-only Ollama, accept live Windows/audio/UI/hardware behavior and current installer/frozen flows. Missing reference assets, audit retention, signing/recovery and reference budgets remain open. Phase 03 readiness is architectural only; await owner review plus local voice/licensing/language/hardware decisions. **Stop at this Phase 02 checkpoint.**
+
 ## Phase 02 intake and Phase 01 hardening (2026-11-26)
 
 Owner authorizes Phase 02 only after foundation blockers are resolved. Baseline is clean `v2` at `0c0213d5a7637ecb944eddde9a4d049f9f91e1f7`; main and v1-old are protected. All required product/management documents were reread. No remote push/merge/release is authorized for this phase.
@@ -9,7 +26,7 @@ Owner authorizes Phase 02 only after foundation blockers are resolved. Baseline 
 - H-03: verify existing transactional migrations, all 76 regressions and safe Tk/WebView2 smoke. Initial results: 76 passed (2.572 s), lint passed, UI smoke passed.
 - CI evidence: [run 45795129836](https://github.com/creolive-digital/CLYDEX/actions/runs/45795129836), reviewed baseline SHA, successful Python 3.11 tests/lint, both EXE builds, Inno Setup compilation and installer artifact upload. Clean installation, actual audio/accounts and reference hardware budgets remain external acceptance gates.
 
-After H-01–03: P2-01 provider/context contracts and trusted outbound policy; P2-02 six HTTP adapters plus existing Codex, registry/config/health/streaming; P2-03 explicit routing profiles/privacy/cost/fallback; P2-04 additive SQLite migration and owner-scoped conversations; P2-05 manual/opt-in memory with provenance and bounded local retrieval; P2-06 existing engine/queue/desktop UI integration; P2-07 mocked and local HTTP boundary/security/regression tests, packaging and documentation checkpoint. Dependencies follow this order; no duplicate tool orchestrator.
+Current task IDs are consolidated in DEVELOPMENT_ROADMAP: P2-01 registry/configuration; P2-02 adapters; P2-03 routing; P2-04 outbound security; P2-05 conversations/migrations; P2-06 personal memory; P2-07 desktop controls; P2-08 verification; P2-09 documentation. H-01–03 and H1-01–03 refer to the same admission gates. Dependencies follow this order; no duplicate tool orchestrator.
 
 Planned touched paths: core/application, processes, contracts, config, context and a provider coordinator; automation/tasks, security policy/specs, database/store and additive migrations; providers/, conversations/, memory/; desktop/studio and frontend/legacy functional controls; tests/, config templates, existing management/architecture docs. No branding, voice redesign, cloud infrastructure or archive changes.
 

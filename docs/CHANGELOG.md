@@ -1,5 +1,16 @@
 # Changelog
 
+## V2 Phase 02 — engineering checkpoint (2026-11-26)
+
+- Hardened shutdown ownership and Windows child jobs, including failed assignment cleanup, bounded combined output/generated files and descendant termination.
+- Added the existing Codex default plus disabled OpenAI/Claude/Gemini/Ollama/OpenRouter/custom adapters, immutable registry/configuration, capability routing, health/status, JSON schema validation and supported HTTP streaming.
+- Added common outbound privacy/cost/consent policy, separate context compartments, reviewed retry/fallback and local-only derived-history protection. Existing Windows privileges unchanged.
+- Added transactional SQLite schema 1→3, consented DPAPI-encrypted conversations, temporary defaults, history search/resume/export/retention/archive/delete and owner-scoped personal memory/provenance/revisions.
+- Added explicit memory commands, six categories, local retrieval and opt-in literal suggestions reviewed before saving. No automatic collection or new account enabled.
+- Extended the existing frontend/desktop bridge with functional settings/history/memory controls and same supervised queue/approval UI; no artwork redesign or React/voice/cloud expansion.
+- Expanded deterministic/security/native verification, CI compilation/JS checks and all development/architecture/configuration documentation. Exact final evidence and limitations are in TESTING_AND_ACCEPTANCE and DEVELOPMENT_PROGRESS.
+- Main, the independent V1 archive and original product specifications remain unchanged. No remote push/merge/release or paid/private live provider call.
+
 ## V2 Phase 01 — in development (2026-11-26)
 
 - Established `v2` branch from e65fe46; preserved original specifications and existing source baseline.
