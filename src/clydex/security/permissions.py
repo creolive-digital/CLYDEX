@@ -7,6 +7,7 @@ import uuid
 
 from clydex.core.contracts import ActionRequest, Risk, ToolSpec
 from clydex.core.errors import PermissionDenied
+from clydex.providers.base import PROVIDER_IDS
 
 
 @dataclass(frozen=True)
@@ -83,6 +84,17 @@ TOOL_SPECS = (
     ToolSpec('mail.draft', 'mail.drafts', Risk.HIGH, 180,
              (('number', int), ('body', str), ('message_key', list)), (str,)),
     ToolSpec('shell.run', 'shell.powershell', Risk.HIGH, 120, (('script', str),), (dict,)),
-    ToolSpec('provider.codex', 'cloud.codex', Risk.SENSITIVE, 180,
-             (('instructions', str), ('data', dict), ('schema', dict), ('fast', bool)), (dict,)),
+    ToolSpec('provider.health', 'providers.health', Risk.SENSITIVE, 30, (('configuration', str),), (str,)),
+    ToolSpec('provider.configure', 'providers.settings', Risk.HIGH, 30,
+             (('name', str), ('configuration', str), ('credential_digest', str), ('remove_key', bool)), (dict,)),
+    ToolSpec('conversation.manage', 'local.history', Risk.HIGH, 30,
+             (('operation', str), ('id', str), ('title', str), ('persistent', bool), ('days', int)), (dict,)),
+    ToolSpec('memory.manage', 'local.memory', Risk.HIGH, 30,
+             (('operation', str), ('id', str), ('category', str), ('value', str), ('local_only', bool),
+              ('revision', int), ('origin', str), ('source_id', str), ('source_kind', str)), (dict,)),
+    ToolSpec('memory.configure', 'local.memory.policy', Risk.HIGH, 30,
+             (('enabled', bool), ('automatic', bool), ('categories', list)), (dict,)),
 )
+TOOL_SPECS += tuple(ToolSpec('provider.' + name, 'cloud.' + name if name != 'ollama' else 'local.ollama',
+    Risk.SENSITIVE, 900, (('instructions', str), ('data', dict), ('schema', dict), ('fast', bool),
+                         ('configuration', str), ('attempt', int)), (dict,)) for name in PROVIDER_IDS)

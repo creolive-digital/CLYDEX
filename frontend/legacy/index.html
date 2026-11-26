@@ -233,4 +233,83 @@
 </select>
 <label><input type="checkbox" id="speech" checked> Speak replies</label>
 <div><button id="check">Check microphone</button><button id="sound">Windows sound settings</button></div></dialog>
-<script src="studio.js"></script></body></html>
+<button id="intelligenceOpen" class="intelligence-open">AI &amp; Memory</button>
+<span id="intelligenceTelemetry" role="status" class="intelligence-telemetry">Temporary conversation · Codex default</span>
+<dialog id="intelligencePanel" aria-labelledby="intelligenceTitle">
+<form method="dialog"><h2 id="intelligenceTitle">AI &amp; Memory</h2><button aria-label="Close AI and memory settings">Close</button></form>
+<p id="intelligenceNotice" role="status">Changes use the existing action approval system.</p>
+<button id="intelligenceRefresh">Refresh</button><p id="policyCeiling"></p>
+<details open><summary>Providers and model</summary>
+<label>Provider <select id="providerId"></select></label><p id="providerStatus" role="status"></p>
+<label><input id="p_enabled" type="checkbox"> Enable this provider</label>
+<label>Model identifier <input id="p_model" autocomplete="off" maxlength="200"></label>
+<label>Endpoint <input id="p_endpoint" type="url" autocomplete="off"></label>
+<label>OpenRouter approved upstream <input id="p_upstream" autocomplete="off"></label>
+<label>Replace API key <input id="providerKey" type="password" autocomplete="new-password" maxlength="1280"></label>
+<label><input id="removeKey" type="checkbox"> Remove stored API key</label>
+<label><input id="p_allow_paid" type="checkbox"> Permit this provider's billed requests, with review</label>
+<label><input id="p_stream" type="checkbox"> Receive streamed responses</label>
+<label><input id="p_local_only_confirmed" type="checkbox"> I run Ollama locally with OLLAMA_NO_CLOUD=1 and a local model</label>
+<p>No new provider is enabled by default. Model identifiers must come from your provider. Connection checks verify model listing, not successful inference.</p>
+<details><summary>Limits, billing and compatibility</summary>
+<label>Timeout (seconds) <input id="p_timeout" type="number" min="1" max="900"></label>
+<label>Request limit (bytes) <input id="p_max_request_bytes" type="number" min="1024" max="262144"></label>
+<label>Response limit (bytes) <input id="p_max_response_bytes" type="number" min="1024" max="1048576"></label>
+<label>Output token limit <input id="p_max_output_tokens" type="number" min="1" max="32768"></label>
+<label>Retries after rate-limit rejection (0–1) <input id="p_retries" type="number" min="0" max="1"></label>
+<label>Maximum estimated request cost (provider currency; blank disables ceiling) <input id="p_max_request_cost" type="number" min="0" step="any"></label>
+<label>Input price per million tokens <input id="p_input_price_per_million" type="number" min="0" step="any"></label>
+<label>Output price per million tokens <input id="p_output_price_per_million" type="number" min="0" step="any"></label>
+<p>Estimates use configured prices, not live billing. A ceiling requires both prices. Set spending limits with the provider too.</p>
+<label>Task types (comma separated: conversation, planning, summary) <input id="p_task_types"></label>
+<label>Claude API version <input id="p_api_version"></label>
+<label>Claude workspace ID (required for an unscoped key) <input id="p_workspace_id"></label>
+<label>Compatible token parameter <select id="p_token_parameter"><option>max_tokens</option><option>max_completion_tokens</option></select></label>
+</details><button id="providerSave">Review provider settings</button><button id="providerCheck">Review connection check</button>
+</details>
+<details><summary>Routing and privacy</summary>
+<label>Manual provider <select id="routingSelected"></select></label>
+<label><input id="r_automatic" type="checkbox"> Automatic capability and health routing</label>
+<label>Profile <select id="routingProfile"><option value="fast">Fast</option><option value="balanced">Balanced</option><option value="advanced">Advanced</option><option value="offline">Offline</option></select></label>
+<label><input id="r_privacy" type="checkbox"> Privacy mode — block cloud requests</label>
+<label><input id="r_offline" type="checkbox"> Offline — local Ollama only</label>
+<p>Use provider IDs separated by commas. Automatic routing uses the first eligible configured provider. No cloud fallback is implicit.</p>
+<label>Fast priority <input id="r_fast"></label><label>Balanced priority <input id="r_balanced"></label>
+<label>Advanced priority <input id="r_advanced"></label><label>Offline priority <input id="r_offline_order"></label>
+<label>Explicit fallback providers <input id="r_fallbacks"></label><button id="routingSave">Review routing policy</button>
+</details>
+<details><summary>Conversations</summary><p id="sessionState"></p>
+<label>Title <input id="conversationTitle" maxlength="120"></label>
+<button id="historyTemporary">New temporary conversation</button><button id="historyPersistent">Review new saved conversation</button>
+<label>Search recent history <input id="historyQuery" maxlength="200"></label><button id="historySearch">Search</button>
+<p>Lists up to 500 recent sessions. Search inspects up to 10,000 recent messages. Resume loads the last 100 messages.</p>
+<label>Saved conversations <select id="historyList" size="5"></select></label>
+<button id="historyResume">Resume</button><button id="historyRename">Rename</button><button id="historyArchive">Archive</button>
+<button id="historyUnarchive">Unarchive</button><button id="historyDelete">Delete</button>
+<label>Retention days (0 disables automatic deletion, otherwise 1–3650) <input id="retentionDays" type="number" value="0" min="0" max="3650"></label>
+<button id="historyRetention">Review retention and purge</button>
+<button id="historyExport">Prepare JSON export of selected / current conversation</button>
+<label>Export — select and copy to your chosen location <textarea id="conversationExport" readonly rows="5"></textarea></label>
+<p>Exports contain private text. No automatic upload. Sensitive tool/mail turns and credential-like text are omitted from saved history.</p>
+</details>
+<details><summary>Personal memory</summary>
+<label><input id="memoryEnabled" type="checkbox"> Enable manual memory and retrieval</label>
+<label><input id="memoryAutomatic" type="checkbox"> Suggest memories from literal statements I make (each requires review)</label>
+<fieldset><legend>Categories allowed for automatic suggestions</legend>
+<label><input data-memory-category type="checkbox" value="preferences"> Preferences</label>
+<label><input data-memory-category type="checkbox" value="profile"> Profile</label>
+<label><input data-memory-category type="checkbox" value="projects"> Projects</label>
+<label><input data-memory-category type="checkbox" value="routines"> Routines</label>
+<label><input data-memory-category type="checkbox" value="work"> Work</label>
+<label><input data-memory-category type="checkbox" value="facts"> Confirmed facts</label></fieldset>
+<button id="memoryPolicy">Review memory policy</button>
+<label>Saved memories <select id="memoryList" size="4"></select></label><p id="memoryProvenance"></p>
+<label>Category for new memory <select id="memoryCategory"><option value="preferences">Preferences</option><option value="profile">Profile</option><option value="projects">Projects</option><option value="routines">Routines</option><option value="work">Work</option><option value="facts">Confirmed facts</option></select></label>
+<label>Memory text <textarea id="memoryValue" maxlength="2000" rows="3"></textarea></label>
+<label><input id="memoryLocal" type="checkbox" checked> Local only — never include this record in cloud context</label>
+<button id="memoryAdd">Add with review</button><button id="memoryUpdate">Update selected</button><button id="memoryDelete">Forget selected</button>
+<label>Unsaved suggestions <select id="proposalList" size="3"></select></label>
+<button id="proposalAccept">Review and save locally</button><button id="proposalDismiss">Dismiss suggestion</button>
+<p>Suggestions remain in memory until reviewed and disappear at shutdown. Disabling retrieval retains saved records for review/deletion. Do not save passwords, tokens or financial secrets.</p>
+</details></dialog>
+<script src="studio.js"></script><script src="intelligence.js"></script></body></html>

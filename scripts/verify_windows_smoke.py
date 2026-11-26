@@ -88,7 +88,35 @@ def webview_smoke() -> dict:
                 assert ready, 'WebView bridge or Stop control unavailable'
                 assert window.evaluate_js("document.querySelector('#taskReview details').open")
                 assert studio.snapshot()['state'] == 'READY'
-                result.update(webview='passed', checks='WebView2 startup, local assets, bridge, Stop, review UI')
+                window.evaluate_js("document.getElementById('intelligenceOpen').click()")
+                deadline = time.monotonic() + 5
+                while not window.evaluate_js("document.getElementById('intelligencePanel').open"):
+                    assert time.monotonic() < deadline, 'Intelligence controls failed to open'
+                    time.sleep(.05)
+                assert window.evaluate_js("document.getElementById('providerId').options.length") == 7
+                assert not core.memory.policy()['automatic']
+                assert core.conversations.current.temporary
+                window.evaluate_js("document.getElementById('conversationTitle').value='Synthetic smoke session';"
+                                   "document.getElementById('historyPersistent').click()")
+                deadline = time.monotonic() + 5
+                review = None
+                while time.monotonic() < deadline:
+                    review = core.engine.pending_review()
+                    if review:
+                        break
+                    time.sleep(.05)
+                assert review and 'conversation.manage' in review['script']
+                assert studio.decide(review['id'], True)
+                deadline = time.monotonic() + 5
+                while studio.snapshot()['busy']:
+                    assert time.monotonic() < deadline, 'Conversation operation did not finish'
+                    time.sleep(.05)
+                assert not core.conversations.current.temporary
+                assert core.conversations.current.title == 'Synthetic smoke session'
+                assert b'Synthetic smoke session' not in core.store.path.read_bytes()
+                assert all(not c.enabled for name, c in core.providers.configs.items() if name != 'codex')
+                result.update(webview='passed', checks='WebView2 startup, local assets, bridge, Stop, review UI, '
+                              'seven provider controls, temporary defaults, reviewed encrypted session creation')
             except Exception as exc:
                 result['error_type'] = type(exc).__name__
             finally:
@@ -97,7 +125,8 @@ def webview_smoke() -> dict:
         timer.daemon = True
         timer.start()
         try:
-            webview.start(verify, gui='edgechromium', private_mode=True)
+            with patch.object(window, 'show'):
+                webview.start(verify, gui='edgechromium', private_mode=True)
         finally:
             timer.cancel()
             core.close()

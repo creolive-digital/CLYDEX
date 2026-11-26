@@ -3,6 +3,7 @@
 No public listener, no UI import and no automatic cloud/provider startup. The
 service owns configuration, persistence, queue and shutdown for one desktop user.
 """
+import getpass
 import logging
 import os
 import threading
@@ -14,6 +15,14 @@ from clydex.core.instance import InstanceLock
 from clydex.core.logging import configure_logging
 from clydex.database.store import LocalStore
 from clydex.security.credentials import CredentialStore
+from clydex.security.encryption import LocalCipher
+from clydex.providers.registry import ProviderRegistry
+from clydex.core.orchestrator import IntelligenceCoordinator
+from clydex.core.data_actions import OwnedDataActions
+from clydex.conversations.repository import ConversationRepository
+from clydex.conversations.service import ConversationService
+from clydex.memory.repository import MemoryRepository
+from clydex.memory.service import MemoryService
 
 
 def legacy_recognition_mode() -> str | None:
@@ -42,7 +51,19 @@ class CoreApplication:
             self.logger = configure_logging(self.paths.directory('logs'))
             self.store = LocalStore(self.paths.directory('data') / 'core.sqlite3')
             self.credentials = CredentialStore()
+            self.providers = ProviderRegistry(self.paths, self.credentials)
+            owner = getpass.getuser()
+            cipher = LocalCipher()
+            self.conversations = ConversationService(ConversationRepository(self.store, owner, cipher))
+            self.memory = MemoryService(MemoryRepository(self.store, owner, cipher))
+            self.conversations.purge_expired()
             self.engine = engine or VoiceEngine(config=self.config, paths=self.paths, store=self.store)
+            self.engine.conversation_service = self.conversations
+            self.engine.memory_service = self.memory
+            self.data_actions = OwnedDataActions(self.engine, self.conversations, self.memory)
+            self.engine.data_actions = self.data_actions
+            if engine is None:
+                self.engine.intelligence = IntelligenceCoordinator(self.providers, self.memory)
             mode = self.store.get_setting('recognition_mode') or legacy_recognition_mode()
             if mode:
                 self.engine.speech_mode = mode

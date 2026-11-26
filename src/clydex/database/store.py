@@ -8,6 +8,8 @@ import threading
 
 
 class LocalStore:
+    SCHEMA_VERSION = 3
+    MIGRATIONS = ('001_foundation.sql', '002_conversations.sql', '003_memory.sql')
     def __init__(self, path: Path):
         self.path = Path(path)
         self._lock = threading.RLock()
@@ -15,10 +17,10 @@ class LocalStore:
         with self._lock, self.connect() as connection:
             connection.execute('BEGIN IMMEDIATE')
             version = connection.execute('PRAGMA user_version').fetchone()[0]
-            if version > 1:
+            if version > self.SCHEMA_VERSION:
                 raise RuntimeError('Database is newer than this application. Downgrade refused.')
-            if version == 0:
-                script = files('clydex.database').joinpath('migrations/001_foundation.sql').read_text('utf-8')
+            for migration in self.MIGRATIONS[version:]:
+                script = files('clydex.database').joinpath('migrations/' + migration).read_text('utf-8')
                 try:
                     for statement in script.split(';'):
                         if statement.strip():
@@ -32,6 +34,7 @@ class LocalStore:
         connection = sqlite3.connect(self.path, timeout=5)
         connection.execute('PRAGMA foreign_keys=ON')
         connection.execute('PRAGMA busy_timeout=5000')
+        connection.execute('PRAGMA secure_delete=ON')
         try:
             with connection:
                 yield connection
@@ -60,9 +63,9 @@ class LocalStore:
                                (key, json.dumps(value)))
 
     def audit(self, action_id: str, tool: str, outcome: str) -> None:
+        from clydex.security.permissions import TOOL_SPECS
         if (len(action_id) != 64 or any(c not in '0123456789abcdef' for c in action_id)
-                or tool not in ('app.launch', 'app.read', 'app.manage', 'app.interact',
-                                'browser.read', 'mail.read', 'mail.draft', 'shell.run', 'provider.codex', 'unknown')
+                or tool not in {spec.name for spec in TOOL_SPECS} | {'unknown'}
                 or outcome not in ('requested', 'approved', 'denied', 'executed', 'failed', 'cancelled')):
             raise ValueError('Audit metadata is not allowlisted.')
         with self._lock, self.connect() as connection:

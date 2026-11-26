@@ -29,11 +29,11 @@ class EventChannel:
     def put(self, event: CoreEvent | tuple) -> None:
         event = event if isinstance(event, CoreEvent) else CoreEvent(*event)
         with self._lock:
-            if event.kind in ('status', 'audio_stream'):
+            if event.kind in ('status', 'audio_stream', 'provider_state', 'provider_delta'):
                 self._items = [e for e in self._items if e.kind != event.kind]
             if len(self._items) >= self.capacity:
                 index = next((i for i, e in enumerate(self._items)
-                              if e.kind in ('status', 'audio_stream')), 0)
+                              if e.kind in ('status', 'audio_stream', 'provider_state', 'provider_delta')), 0)
                 self._items.pop(index)
                 self.dropped += 1
             self._items.append(event)

@@ -1,4 +1,15 @@
 html,body { height:100%; margin:0; color-scheme:dark; }
+.intelligence-open {position:fixed;right:14px;bottom:10px;z-index:10;background:#173640;color:#4cd7f6;border:1px solid #4cd7f6;border-radius:14px;padding:5px 14px;}
+.intelligence-telemetry {position:fixed;left:12px;bottom:2px;font-size:10px;max-width:60vw;overflow:hidden;white-space:nowrap;pointer-events:none;}
+#intelligencePanel {margin:auto;width:min(760px,92vw);max-height:88vh;overflow:auto;background:#171d1e;color:#dee3e6;border:1px solid #4cd7f6;border-radius:16px;padding:22px;}
+#intelligencePanel::backdrop {background:#030609cc;}
+#intelligencePanel form {display:flex;justify-content:space-between;align-items:center;}
+#intelligencePanel label {display:block;margin:10px 0;}
+#intelligencePanel input:not([type=checkbox]),#intelligencePanel select,#intelligencePanel textarea {display:block;width:100%;background:#252b2d;color:inherit;border:1px solid #536065;border-radius:5px;padding:6px;box-sizing:border-box;}
+#intelligencePanel button {border:1px solid #4cd7f6;border-radius:10px;padding:5px 10px;margin:5px;color:#4cd7f6;background:#172c32;}
+#intelligencePanel summary {cursor:pointer;font-weight:600;padding:12px 0;}
+#intelligencePanel p {font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;}
+#intelligencePanel :focus-visible {outline:2px solid #4cd7f6;outline-offset:2px;}
 body {font-family:Ubuntu,"Segoe UI",sans-serif;}
 .material-symbols-outlined {font-family:"Material Symbols Outlined";font-feature-settings:"liga";font-weight:normal;}
 body>div.grid {height:100dvh;min-height:0;grid-template-columns:clamp(265px,31vw,400px) minmax(0,1fr);}

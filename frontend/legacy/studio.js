@@ -384,6 +384,7 @@ let currentMode="standby", time=0;
       let reviewId = null;
       function render(data) {
         frame = data;
+        window.dispatchEvent(new CustomEvent('clydex-intelligence', {detail: data.intelligence_events || []}));
         if (data.review && reviewId !== data.review.id) {
           reviewId = data.review.id;
           byId('reviewDescription').textContent = data.review.description;
@@ -426,6 +427,11 @@ let currentMode="standby", time=0;
       function bindClick(element, handler) {
         element.addEventListener('click',async()=>{try {await handler();} catch(e){appendMessage('error',String(e));}});
       }
+      window.addEventListener('clydex-transcript', event => {
+        chatFeed.replaceChildren();
+        for (const row of event.detail) appendMessage(row.role === 'user' ? 'user' : 'bot', row.content);
+        updateTurnCount();
+      });
       async function decide(approve) {
         if (reviewId && await api().decide(reviewId, approve)) {
           reviewId = null;

@@ -69,7 +69,7 @@ class EngineRegressionTests(unittest.TestCase):
         self.assertEqual(self.engine.chat_reply('Hello'), 'Hello.')
         self.assertEqual(self.engine.provider.respond.call_count, 1)
         request = self.engine.provider.respond.call_args.args[0]
-        self.assertEqual(json.loads(request.data_json)['request'], 'Hello')
+        self.assertEqual(json.loads(request.data_json)['current_user_prompt'], 'Hello')
 
     def test_privacy_and_cloud_disabled_prevent_provider_call(self):
         for config in (AppConfig(privacy_mode=True), AppConfig(allow_cloud=False)):

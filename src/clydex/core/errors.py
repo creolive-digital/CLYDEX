@@ -34,7 +34,8 @@ def failure_for(exc: Exception) -> Failure:
     if isinstance(exc, PermissionDenied):
         return Failure(exc.code, 'Permission was denied, canceled or expired. No further action was run.')
     if isinstance(exc, ProviderError):
-        return Failure(exc.code, 'Codex could not complete the request. Check login, connection and CLI version.')
+        return Failure(exc.code, 'The AI provider could not complete the request. Check configuration, '
+                       'credentials, model, connection and request limits.')
     if isinstance(exc, SpeechInputError):
         return Failure(exc.code, 'Speech was unclear or unavailable. Check the microphone and repeat.')
     if isinstance(exc, (ValueError, TypeError, KeyError)):

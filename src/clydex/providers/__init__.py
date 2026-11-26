@@ -1,1 +1,1 @@
-"""Provider adapters. Phase 01 implements existing Codex only; no automatic fallback."""
+"""Codex and six opt-in HTTP providers, registry and policy-constrained routing."""

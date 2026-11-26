@@ -64,7 +64,7 @@ class PersistenceTests(unittest.TestCase):
         store = LocalStore(self.path)
         self.assertEqual(store.get_setting('recognition_mode'), 'en-accurate')
         with store.connect() as db:
-            self.assertEqual(db.execute('PRAGMA user_version').fetchone()[0], 1)
+            self.assertEqual(db.execute('PRAGMA user_version').fetchone()[0], LocalStore.SCHEMA_VERSION)
             self.assertEqual(db.execute('PRAGMA foreign_keys').fetchone()[0], 1)
 
     def test_secrets_and_arbitrary_audit_content_rejected(self):
@@ -81,11 +81,11 @@ class PersistenceTests(unittest.TestCase):
 
     def test_newer_database_is_not_downgraded(self):
         with self.store.connect() as db:
-            db.execute('PRAGMA user_version=2')
+            db.execute('PRAGMA user_version=999')
         with self.assertRaises(RuntimeError):
             LocalStore(self.path)
         with self.store.connect() as db:
-            self.assertEqual(db.execute('PRAGMA user_version').fetchone()[0], 2)
+            self.assertEqual(db.execute('PRAGMA user_version').fetchone()[0], 999)
 
     def test_failed_migration_rolls_back(self):
         other = Path(self.folder.name) / 'failed.sqlite3'

@@ -5,12 +5,13 @@ import threading
 
 
 from clydex.core.application import CoreApplication
+from clydex.desktop.intelligence import IntelligenceControls
 
 
 RECOGNITION_MODES = ('en', 'en-accurate', 'auto')
 
 
-class Studio:
+class Studio(IntelligenceControls):
     def __init__(self, core=None):
         self._core = core or CoreApplication()
         self._engine = self._core.engine
@@ -103,6 +104,7 @@ class Studio:
             if self._busy:
                 return False
             self._engine.history.clear()
+            self._engine.history_local_only = False
             self._engine.apps.clear()
             self._engine.inbox.messages.clear()
             return True
@@ -110,6 +112,7 @@ class Studio:
     def snapshot(self):
         with self._lock:
             messages = []
+            intelligence_events = []
             while True:
                 try:
                     kind, value = self._engine.events.get_nowait()
@@ -128,6 +131,8 @@ class Studio:
                     self._state = 'READY'
                 elif kind in ('user','bot','mic_info','error'):
                     messages.append([kind,value])
+                elif kind in ('provider_state', 'provider_delta', 'history_state', 'memory_suggestion', 'intelligence_result'):
+                    intelligence_events.append([kind, value])
             level, bands, wave = 0., [], []
             stream = self._stream
             if stream and self._state in ('RECORDING','CHECKING MIC','SPEAKING'):
@@ -138,7 +143,7 @@ class Studio:
                 import webview
                 if webview.windows:
                     webview.windows[0].show()
-            return dict(messages=messages, state=self._state, busy=self._busy,
+            return dict(messages=messages, intelligence_events=intelligence_events, state=self._state, busy=self._busy,
                         recording=self._recording, rate=stream.rate if stream else 0,
                         level=level, bands=list(bands), wave=wave, review=review)
 
