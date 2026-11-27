@@ -23,14 +23,14 @@ Run commands from the repository directory in Windows CMD or PowerShell:
 - `python -m unittest discover -v` runs baseline and foundation unit/security/regression tests.
 - `python -m ruff check --no-cache src tests` lints the new package and tests; the largely unchanged legacy orchestrator is excluded from style lint during migration.
 - `python scripts/verify_windows_smoke.py --webview` checks real Tk/WebView2 startup and local controls with network/audio/private integrations disabled.
-- `npm --prefix frontend ci`, `npm --prefix frontend test` and `npm --prefix frontend run build` verify/build the local HUD (Node 24 in CI).
+- `npm --prefix frontend ci`, `npm --prefix frontend test` and `npm --prefix frontend run build` verify/build the local HUD (Node 24 build baseline).
 - `python scripts/verify_hud_smoke.py --output <outside-source-directory>` checks actual WebView2 HUD, native modes/review/privacy, shared tools, rendering suspension/fallback and joined shutdown with a disposable profile. It captures only the application client area.
 - `python scripts/verify_voice_native.py` enumerates devices/voices, synthesizes a fixed SAPI phrase to RAM and checks joined native hotkey/tray registration; it opens no microphone or speaker.
 - `python scripts/windows/clydex_widget.pyw` launches the widget (standard library only).
 - `python scripts/windows/clydex_voice_agent.pyw` launches the voice assistant with console output for troubleshooting.
 - `scripts/windows/START_CLYDEX.bat` starts the packaged app using the repository's intended launcher.
 
-Build with specs under `installer/pyinstaller/` and `installer/windows/installer.iss`, or `scripts/windows/build_installer.bat`. CI runs tests/lint before building. The voice assistant requires Windows 10/11, Python 3.10+, audio devices, and a logged-in Codex CLI; consult `docs/README_SETUP.txt`. Verify the interpreter: this workstation's default `py` currently points at a missing 3.14 installation, while `python` runs 3.13.14. Do not change the user's Python installation without authorization.
+Build with specs under `installer/pyinstaller/` and `installer/windows/installer.iss`, or `scripts/windows/build_installer.bat`. The owner removed the GitHub Actions build workflow from `v2`; run local tests/lint and build checks before publication. The voice assistant requires Windows 10/11, Python 3.10+, audio devices, and a logged-in Codex CLI; consult `docs/README_SETUP.txt`. Verify the interpreter: this workstation's default `py` currently points at a missing 3.14 installation, while `python` runs 3.13.14. Do not change the user's Python installation without authorization.
 
 ## Coding Style & Naming Conventions
 

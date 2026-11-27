@@ -1,5 +1,9 @@
 # Development progress
 
+## Owner-requested workflow removal (2026-11-27)
+
+After confirming Phase 04 GitHub Actions run 45987118593 succeeded on `v2` at `d39e1d5`, the owner requested removal of the unnecessary action. Remove `.github/workflows/build.yml` from `v2` and publish the removal. Local test/build scripts remain available; historical CI evidence is retained. No application code, main branch, archive, tag or release changes. Validation is limited to the workflow deletion, documentation and clean Git diff; application tests are not rerun for this configuration/documentation-only change.
+
 ## Owner-authorized Phase 04 publication (2026-11-27)
 
 Following the Phase 04 handoff, the owner explicitly requested a GitHub push. Publish the completed engineering checkpoint and its documentation/screenshots on `v2` only. Engineering commit: `2b04092` (cinematic HUD and shared native display modes). The pre-publication review covered 91 modified/new paths (3,538,752 bytes), with no generated/runtime/archive/specification paths and no high-signal credential matches. Existing evidence remains 201 V2 tests, 16 frontend tests, four separate archive tests, successful local builds and declared native checks. New remote CI remains pending until GitHub runs this publication. Preserve the supplied upstream OFL notice byte-for-byte, including its existing trailing space. No main merge, tag, release, provider activation or later phase is authorized.
