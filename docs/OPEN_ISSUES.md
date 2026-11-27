@@ -1,5 +1,19 @@
 # Open issues and requirement conflicts
 
+## Phase 04 checkpoint disposition (2026-11-27)
+
+| IDs | Engineering disposition | Owner / external acceptance |
+|---|---|---|
+| OI-01,34 | Both exact approved reference PNGs now supplied/preserved. React presents the exact face with a labeled reference fallback and licensed local fonts/icons. Renderer never substitutes a generic face. | Original production artwork/redistribution provenance and matching optimized rig/bones/morphs/animations still needed. Blink, facial/head articulation, emotion and full body remain incomplete. |
+| OI-35 | Six native modes share one Core/window/tool state; tray is reviewed, pending review restores a full window; geometry supports logical negative monitor coordinates. | Mixed-DPI/multiple-monitor hardware matrix, screen reader, taskbar/work-area behavior, long-idle and physical Windows lock/disconnect acceptance. Floating mode is framed/on-top, not transparent compositor integration. |
+| OI-36 | Frame-rate/particle/detail controls, idle/focus/gaming reduction, minimized/reduced-motion suspension and actual WebGL context-loss fallback verified. | Reference-hardware long-run CPU/GPU/RAM/thermal/latency and live audio synchronization benchmarks. Python working set excludes WebView subprocesses; global CPU is not app CPU. Lazy Three chunk exceeds Vite's advisory 500 kB warning threshold. |
+| OI-37 | Procedural original cue categories and generic native tray balloons implemented; sound muted by default, DND/lock/background protected. | Audible volume/quality and assistive notification acceptance; browser autoplay requires gesture and shutdown cue is best effort. No OS notification history content is persisted. |
+| OI-38 | Local React/TS tests/build and PyInstaller integration updated; legacy fallback retained. Windows MIME registry `text/plain` defect and startup timer-reset defect fixed and covered. | No Phase 04 remote CI because no push authorized. Inno compiler absent locally; fresh install/uninstall and signed release remain external. Supplied reference rights require owner confirmation before redistribution. |
+| OI-39 | One full verification run under concurrent workloads hit Windows temporary-directory sharing failure after the existing descendant-process assertions; isolated six hardening tests and subsequent complete suite passed. | Cause not established as a live descendant regression; retain evidence and monitor recurrence. No test was weakened or arbitrary cleanup sleep added. |
+| OI-40 | Native active-timer mode test exposed an intermittent hang in PyWebView's worker-thread TopMost setter. UI-thread dispatch added, covered by an affinity regression test and actual native mode repetition. | Continue native long-run mode/driver stress acceptance; synthetic tests alone cannot qualify Windows message-loop behavior. |
+
+Phase 03 acoustic/model/language/wake/provider gates OI-25–29,32 remain open. Stop at Phase 04 review. No paid activation, private transmission, large asset download, push/merge/tag/release or later phase is authorized by this implementation. Older phase-stop/asset-missing statements below are historical.
+
 ## Phase 03 checkpoint disposition (2026-11-27)
 
 | IDs | Engineering disposition | External owner/technical acceptance |

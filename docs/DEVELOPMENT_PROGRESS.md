@@ -1,5 +1,39 @@
 # Development progress
 
+## Owner-authorized Phase 04 publication (2026-11-27)
+
+Following the Phase 04 handoff, the owner explicitly requested a GitHub push. Publish the completed engineering checkpoint and its documentation/screenshots on `v2` only. Engineering commit: `2b04092` (cinematic HUD and shared native display modes). The pre-publication review covered 91 modified/new paths (3,538,752 bytes), with no generated/runtime/archive/specification paths and no high-signal credential matches. Existing evidence remains 201 V2 tests, 16 frontend tests, four separate archive tests, successful local builds and declared native checks. New remote CI remains pending until GitHub runs this publication. Preserve the supplied upstream OFL notice byte-for-byte, including its existing trailing space. No main merge, tag, release, provider activation or later phase is authorized.
+
+Historical "local/uncommitted/not pushed" statements below and in the captured verification JSON describe the original implementation checkpoint before this subsequent publication authorization.
+
+## Phase 04 owner review checkpoint (2026-11-27)
+
+P4-01–09 engineering delivered within the approved reference-avatar fallback: local React/TS HUD, actual shared backend controls, exact approvals/privacy, one-window six modes, reusable widget owner, real audio/state rendering metadata, adaptive cleanup/fallback, startup/optional private sounds and notifications, packaging/CI and documentation. The rig/facial/full-body/precise-lip-sync asset work remains explicitly gated. See PHASE_04_COMPLETION_REPORT, UI_DESIGN_SYSTEM, AVATAR_RENDERING, FRONTEND_ARCHITECTURE and actual native evidence.
+
+Final verification: 201 Python tests (26.385 s), four fresh archive tests (0.004 s), 16 frontend tests (16.84 s), TS/Vite build (2.46 s), lint/compilation/legacy syntax, native HUD/legacy/launcher checks and builds as declared in TESTING_AND_ACCEPTANCE. Native tests exercise all six modes, two detected monitors, active shared timer, encrypted synthetic memory CRUD/UI refresh, review recovery, lock-probe shield and render suspension/context-loss fallback. Windows TopMost thread affinity was a reproduced development blocker and is fixed with native dispatch plus regression coverage. Actual working-set/frame samples are retained; no acoustic/model/provider quality or full GPU benchmark is invented.
+
+Original specs, main, archive, legacy UI/art and supplied PNG bytes preserved. New work is local/uncommitted for review; no push/merge/tag/release, private production data, paid request, large asset or Phase 05 implementation. Stop here. Admission plan and historical phase records follow.
+
+## Phase 04 admission and bounded implementation plan (2026-11-27)
+
+Owner authorizes the cinematic desktop phase on `v2` at reviewed `5258c8f1513363c000a3b6fcdabdf4a6c2d18b90`; supersedes historical Phase 03 stops, without push/merge/tag/release authority. Intake source is clean except two owner-supplied untracked reference PNGs under assets/branding and assets/avatars, which are preserved. They are references, not a rigged model; the avatar screenshot contains corner controls that must not become production artwork. No replacement face, invented rig or large optional model download.
+
+Admission: all **185 V2 tests passed** (16.772 s). Reviewed CI 45954460043 succeeds at the exact checkpoint through Python 3.11 tests/lint, both EXEs, Inno and artifact upload; release skipped. Acoustic/model/language/provider/production acceptance remains external. Inspected existing Studio/Core/coordinator/permissions/data/personality/voice events and native ownership before changes.
+
+| Task | Implementation / verification plan |
+|---|---|
+| P4-01 | Audit/specification/CI/regression admission, preserved assets and provenance/licensing inventory. |
+| P4-02 | Local React/TypeScript/Vite frontend, reusable tokens/components and a validated minimal bridge facade; legacy fallback. |
+| P4-03 | Functional command center, actual chat/provider/history/memory/voice/personality/permission/settings screens and exact-action approval UX. |
+| P4-04 | Approved static reference presentation plus lifecycle/audio-reactive WebGL surroundings; renderer contract, cleanup/fallback/adaptive quality; rig-dependent facial features explicitly pending. |
+| P4-05 | One-window full/window/widget/floating/mini/tray display control, safe geometry/monitor persistence, approval visibility and shared Core/voice/tool ownership. |
+| P4-06 | Real component startup states, skip/silent/reduced motion, optional neutral greeting and original synthesized notification tones with independent controls. |
+| P4-07 | Bounded private in-memory notification center/native generic notifications and reuse existing clock/weather/timer/alarm/stopwatch state without restarting it per view. |
+| P4-08 | Frontend unit/component/browser and Python security/regression tests; real Windows screenshots/modes/startup, measured rendering/resource data, build/installer resources. |
+| P4-09 | UI_DESIGN_SYSTEM, AVATAR_RENDERING, FRONTEND_ARCHITECTURE, completion report, all management/setup/architecture records and actual evidence. Stop at Phase 04. |
+
+Planned paths: frontend package/src/tests/build tooling; local font/license resources; desktop HUD bridge/display/preferences/notifications/widget adapter and tests; existing launcher/packaging/CI; management docs/evidence. No changes to original specifications, main, archive, legacy art, provider activation or cloud/plugin/device phases. Build output stays ignored under deployment/windows/artifacts, never mixed with source. Reference PNG bytes remain unchanged. Frontend assets and dependencies are local/package-locked, with no runtime CDN requirement.
+
 ## Owner-authorized checkpoint publication (2026-11-27)
 
 After the Phase 03 engineering handoff, the owner explicitly requested a GitHub push. Publish the existing provider-cancellation hardening and reviewed Phase 03 implementation/documentation on `v2` only; no main merge, tag or release. Pre-publication review found 67 changed/new paths relative to the reviewed Phase 02 checkpoint, no generated/runtime artifacts and no high-signal credential patterns. Local source verification remains 185 passing V2 tests plus four separate archive tests; current remote CI is not yet claimed.

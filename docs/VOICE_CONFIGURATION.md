@@ -90,3 +90,6 @@ A native desktop/session probe fails closed on lock, secure desktop, disconnecte
 Diagnostic events/logs contain status/codes, not transcripts or raw audio. Phase 04 receives typed lifecycle events, real amplitude/spectrum and playback frame counts. Optional `SpeechTiming` fields allow future phoneme/viseme timing; no engine currently supplies validated phoneme synchronization and no humanoid renderer was added.
 
 Before rollback, close CLYDEX and preserve its runtime settings/data in the owner's protected backup location. Phase 03 adds no database migration. Keep new voice/personality JSON when running an earlier V2 commit; do not downgrade schema 3 or delete downloaded models/user data. Main and the independent V1 archive remain unchanged. Further phases, release, push and paid/private live tests need separate authorization.
+# Phase 04 navigation note
+
+The current HUD separates **Voice** (devices/models/languages/activation) and **Personality** into their own navigation pages. Talk/Finish recording, Stop and Unmute/Mute use the same existing services and reviews described below. The legacy **Voice & Personality** interface remains available with `--legacy`. No acoustic/model/language capability is upgraded merely by the new visual interface. See PHASE_04_COMPLETION_REPORT for native UI evidence.

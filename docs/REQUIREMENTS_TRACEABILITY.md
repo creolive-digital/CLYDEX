@@ -1,5 +1,19 @@
 # Requirements traceability
 
+## Phase 04 checkpoint (2026-11-27)
+
+| Requirement / task | Engineering classification | Evidence / remaining boundary |
+|---|---|---|
+| FND-01,05; UI-01 / P4-01,02 | Implemented local React/TS/Vite migration and minimal bridge | Same Core/Studio/queue; shared contract validation, packaged assets/licenses, Windows MIME correction, legacy fallback. Reviewed checkpoint CI succeeded; local results in report. |
+| UI-01; AI-01–03; MEM-01,02 / P4-03 | Implemented functional management | Seven providers/routing/profiles, conversation/history, encrypted owned memory/consent, voice/activation/personality, settings/permissions and actual generic notifications. Existing effects/reviews reused. Live account acceptance pending. |
+| D01,D03,D13–20,D44–49; VO-04 / P4-04 | Implemented explicitly labeled reference presentation and WebGL field | Supplied PNGs preserved; real state/amplitude/spectrum/frame events, rendering budgets/disposal/fallback. No matching rig, articulated face/full-body, blink or precise lip synchronization; asset gate OI-34. |
+| UI-01; LIFE-01 / P4-05,07 | Implemented six native display pathways and shared time tools | Window/fullscreen/widget/floating/mini/tray, native review recovery, bounded persisted geometry/monitor, one Core/window/Tk adapter. Physical mixed-DPI/monitor, transparency and OS accessibility qualification remain pending. |
+| FEED-01; LIFE-01 / P4-06,07 | Implemented startup and private feedback | Actual constructed/gated/unverified component statuses, skip/silent/reduced motion, neutral optional local greeting, procedural cues and generic tray balloons. Autoplay and best-effort browser shutdown sound limits apply. |
+| SEC-01–03 / P4-02,03,05,08 | Preserved exact-action/privacy boundaries | Unknown bridge fields rejected; Cancel initial focus; expiry/digest/data/target shown; lock clears forms/context; Stop/mute retained; startup disabled scopes cannot be relaxed. No real lock or adversarial hardware certification claimed. |
+| TEST-01 / P4-08,09 | Implemented declared local verification/documentation | Python and frontend tests, production/EXE builds, actual Windows client-area screenshots and native modes/cleanup. Inno unavailable locally; new remote CI and owner/live acceptance pending. |
+
+Historical rows below retain their original dates/classifications. Phase 05 cloud, vault, plugins, mobile and robot remain outside this checkpoint.
+
 ## Phase 03 checkpoint (2026-11-27)
 
 | Requirement / task | Current classification | Evidence / remaining boundary |

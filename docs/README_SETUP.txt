@@ -1,5 +1,28 @@
 CLYDEX V2 — Windows 10/11
 =======================================
+PHASE 04 HUD
+- Build local assets from the checkout with Node 24:
+    npm --prefix frontend ci
+    npm --prefix frontend run build
+  Then run python scripts/windows/clydex_voice_agent.pyw.
+  Packaged builds include the HUD; no Node or CDN is needed at runtime.
+- Use --legacy for the preserved static interface; missing source build also
+  selects legacy. --silent mutes startup; --reduced-motion disables motion.
+- Overview/Conversation, Intelligence, Memory, Voice, Personality, Notifications
+  and Settings connect to the same existing Core and exact-action approvals.
+  Voice controls are Talk / Finish recording, Stop and Unmute / Mute.
+  Enabling microphone policy requires review; unmute remains per session.
+- Display mode selects window, full screen, Smart Widget, Floating Hologram,
+  Mini Voice Bar or System Tray. Tray needs reviewed native tray controls.
+  A pending approval restores the full window. Modes share one Core and one
+  set of timers; the standalone fallback widget remains an independent app.
+- The supplied humanoid reference is preserved, with actual audio-reactive
+  surrounding graphics. No rigged face/full body or precise lip sync is bundled.
+  See FRONTEND_ARCHITECTURE.md, UI_DESIGN_SYSTEM.md and AVATAR_RENDERING.md.
+- Sound is muted by default. Reviewed preferences support DND/volume/themes,
+  FPS/detail/particles/resource saving and reduced motion. Optional procedural
+  cues need a user gesture; shutdown audio is best effort. No sounds are fetched.
+
 WHAT YOU GET
 - Phase 03 modular local voice and Voice & Personality controls. Read
   VOICE_CONFIGURATION.md for setup, supported capabilities and acceptance limits.

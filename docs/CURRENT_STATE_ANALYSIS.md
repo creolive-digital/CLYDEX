@@ -1,5 +1,13 @@
 # Current state analysis
 
+## Current Phase 04 assessment (2026-11-27)
+
+The owner authorized the React/TypeScript HUD on reviewed `v2` checkpoint `5258c8f`. Admission passed 185 tests and verified successful Phase 03 CI run 45954460043. The supplied logo/face PNGs exist and are preserved; no rigged model exists. Historical statements below that Phase 04 is unauthorized or all reference assets are missing are superseded.
+
+The primary interface is now a locally bundled React/Vite command center using a three-method validated HudBridge and the same Studio/Core/coordinator/providers/data/personality/voice/executor. Management screens expose existing functionality, exact review and Stop/mute. One native window supports six display modes; one owned Tk adapter reuses widget state. Native lock policy remains authoritative. WebGL supplies audio-reactive surroundings around the explicitly labeled approved reference; it does not fabricate a production rig, blinking or phoneme synchronization. Legacy UI and artwork remain intact.
+
+Current tests/builds/screenshots, scope and hardware/asset limitations are recorded in PHASE_04_COMPLETION_REPORT. This is a local owner review checkpoint: no new CI run, provider activation, paid request, private transmission, push, tag, release or Phase 05 implementation.
+
 ## Phase 03 assessment (2026-11-27)
 
 Intake found `v2` at `aa084d4` with extensive preexisting uncommitted Phase 03 work. It was preserved and audited; no assumption of a clean reviewed checkpoint was made. Isolated HEAD passes 135 tests; reviewed `6b8c452` CI run 45807025777 succeeded. The current working-tree baseline had 178 tests with one intermittent model-loader test failure and a consequent cleanup error; unnecessary heavyweight imports in injected adapters and test cleanup were corrected. Historical analysis below remains provenance, not the current phase authorization.

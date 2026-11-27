@@ -1,0 +1,25 @@
+{
+  "python": {
+    "passed": 201,
+    "seconds": 26.385
+  },
+  "frontend": {
+    "passed": 16,
+    "kind": "Vitest/jsdom"
+  },
+  "archive": {
+    "passed": 4,
+    "seconds": 0.004,
+    "kind": "separate process"
+  },
+  "preserved_sha256": {
+    "assets/branding/clydex_logo_reference.png": "e49d7bdda1b73b24ce74c67e0e63be5f8a0e0e1735f7ce4b66757ef027c3754f",
+    "assets/avatars/clydex_avatar_reference.png": "c9e20e5b061fc50c1cbf3fdf851f15ca6fcea9a008552ee7f0cf596685fc0d5f",
+    "docs/CLYDEX_Master_Product_Blueprint_v1.1.pdf": "258831e9659dc66145c80d2759c5bc6857be7798d6400f0b5ae876586ec45d2c",
+    "docs/CLYDEX_Codex_Master_Instructions_v1.1.md": "6bd06df66c55d714b708984bfd72349a8ef2e503deb410a84abb284e7c470680"
+  },
+  "main_unchanged": true,
+  "legacy_and_archive_source_unchanged": true,
+  "phase03_ci_reviewed": 45954460043,
+  "phase04_pushed": false
+}

@@ -60,3 +60,6 @@ Before upgrading a real profile, close CLYDEX and back up the database and setti
 - Custom compatible [Chat Completions contract](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create).
 
 No successful live connection, real key validity, chosen model availability, paid service activation or provider data-retention agreement is asserted by these references.
+# Phase 04 navigation note
+
+The current HUD exposes provider configuration and routing in **Intelligence**, history in **Conversation** or Intelligence's history tab, and consented records in **Memory**. Exact reviews, stored-key protections, startup privacy ceilings and the seven adapters below are unchanged. The legacy **AI & Memory** interface remains available with `--legacy`. No new provider is activated or remotely verified by the UI migration.

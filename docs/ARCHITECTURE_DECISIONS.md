@@ -1,5 +1,20 @@
 # Architecture decisions
 
+## Phase 04 decisions (2026-11-27)
+
+| ADR | Decision | Rationale / consequence |
+|---|---|---|
+| 040 | Local React/TS/Vite frontend, locked dependencies and bundled fonts/images/icons; preserve static fallback. | Incremental native desktop migration with no CDN or duplicate backend. Build output is ignored deployment artifact, not source. |
+| 041 | Exactly three HUD bridge methods with shared versioned JSON inventory, strict parameters and existing Studio/executor routing. | No arbitrary dispatch/filesystem/shell/credential retrieval; central approvals, privacy and startup scope ceilings remain authoritative. |
+| 042 | One native event collector, bounded transient chat/notifications, one frontend poller; lock clears/unmounts private presentation. | Avoid draining-event races and stale private views. Native protection/review restoration does not depend on background browser scheduling. |
+| 043 | Use the exact approved reference face plus separately disposable Three.js surroundings; no alternate mesh. | User-approved fallback while licensed matching production rig is absent. Facial/full-body/phoneme capabilities remain explicitly pending; actual PCM metadata drives energy effects only. |
+| 044 | One native window for six modes; lazy single owned Tk adapter reuses existing widget logic. | No duplicate Core/mic/queue/timers on view switching. Tray requires native indicator; approvals restore a full window. Geometry uses bounded logical monitors; startup returns to standard window. |
+| 045 | Original procedural cues and bounded generic notifications with muted/DND/lock/background controls. | No copyrighted/missing audio assets or private notification content. Browser gesture/shutdown restrictions are disclosed. |
+| 046 | Correct JavaScript MIME associations explicitly; verify the production bundle in actual WebView2. | Windows registry classified `.js` as text/plain despite successful Vite build. Native evidence is required in addition to jsdom/compiler checks. |
+| 047 | Marshal Windows on-top property changes through the native UI dispatcher. | Actual active-timer mode testing reproduced an intermittent hang: PyWebView's WinForms TopMost setter runs directly on the caller. Explicit Invoke corrects thread affinity; deterministic dispatch regression and native mode checks verify the fix. |
+
+Phase 04 owner authorization supersedes historical phase stops below. No infrastructure/data architecture or identity decision changed.
+
 Status: Phase 03 decisions below supersede historical phase stops. Approved product identity, database technology and central execution authority remain unchanged.
 
 ## Phase 03 decisions (2026-11-27)

@@ -1,5 +1,24 @@
 # Testing and acceptance
 
+## Phase 04 local owner review verification (2026-11-27)
+
+Reviewed `5258c8f` admission: 185 tests in 16.772 s; successful exact-checkpoint CI [45954460043](https://github.com/creolive-digital/CLYDEX/actions/runs/45954460043). New work remains local, so no new remote CI result is claimed. Detailed results, actual screenshots and limits are in PHASE_04_COMPLETION_REPORT and `docs/evidence/phase04/`.
+
+| Check | Actual evidence |
+|---|---|
+| V2 regressions/security/unit | **201 passed, 26.385 s**; includes 16 HUD cases and original four voice regressions. Ruff/compileall/legacy JS checks passed. |
+| Fresh archive Python process | **4 passed, 0.004 s**; no archive source changes. |
+| Frontend mocked/component/lifecycle | **16 passed, 16.84 s**, Vitest/jsdom; TS compile and Vite production build passed (2.46 s final build). Chunk-size advisory remains for lazy Three.js. |
+| Native Windows HUD | Actual production bundle/bridge, loaded providers/voice settings, encrypted synthetic memory add/delete/UI refresh, six modes, running shared timer, two-monitor moves, native approval/Cancel focus/tray restoration, synthetic lock, context-loss fallback and joined native resources passed. Widget Stop is visibly fixed while scrolling. No mic/speaker/network/provider calls. |
+| Rendering/resource sample | 27 frames/2 s idle (15 FPS cap); 0/1 s minimized and reduced motion after final static redraw; Python working set 105,263,104 bytes before widget startup. This excludes WebView/GPU. System CPU90.4%/RAM65% are machine-wide, not attributable app utilization. Raw values retained. |
+| Retained native fallback | Tk clock/timer/alarm/stopwatch plus legacy WebView2 providers/history/personality/voice reviews/privacy smoke passed on serial rerun; weather mocked. |
+| `.pyw` main path | Isolated Studio factory, actual Windows launcher path and silent/reduced flags, three bridge methods/Stop/muted defaults and joined shutdown passed. |
+| Packaging | Clean widget/agent PyInstaller builds and headless wheel with versioned HUD contract verified; all 14 final packaged frontend files match the production bundle and embedded native dispatch/restore/Tk modules were checked. Actual frozen agent native window/quiet startup/clean exit passed in a disposable profile; no frozen DOM/audio/provider certification. Inno is absent locally; updated CI/install definition is not a successful new installer execution. |
+
+Fixed native findings include the registry JavaScript MIME mapping, startup timer reset, native initial focus and a cross-thread TopMost hang (ADR-047). One concurrent full-suite run hit temporary-directory sharing after existing process assertions; isolated six hardening tests and later complete suites passed without test weakening. One concurrent legacy smoke assertion failed; serial native fallback passed. These failures are recorded separately from final passing results.
+
+External acceptance remains: production rig/rights, articulated facial/full-body/phoneme features, physical lock/disconnect, mixed DPI/work-area/long-run/accessibility, audible cues, actual language/model/wake/voice/provider performance, fresh install/Inno and current remote CI when explicitly authorized. Browser/jsdom and synthetic lock tests do not establish native/audio production correctness. Do not activate later phases, paid services or large optional assets to close these gates.
+
 ## Phase 03 final engineering verification (2026-11-27)
 
 Windows 10 / Python 3.13.14, `v2` at committed `aa084d4` plus preserved Phase 03 working changes. Reviewed Phase 02 checkpoint remains `6b8c452`; GitHub Actions [45807025777](https://github.com/creolive-digital/CLYDEX/actions/runs/45807025777) is confirmed successful at that SHA, including Python 3.11 checks, both EXEs, Inno compilation and artifact upload (release skipped). No Phase 03 changes were pushed, so no current remote CI result is claimed.

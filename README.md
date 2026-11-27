@@ -2,6 +2,16 @@
 
 Windows-first personal AI assistant. Active code is in `src/clydex/`; the original V1 release is preserved independently in `v1-old/`.
 
+Phase 04 adds the local React cinematic HUD with functional management screens, six display modes, exact approvals and the approved reference avatar presentation. A production facial/full-body rig remains pending. Build the frontend before launching:
+
+```powershell
+npm --prefix frontend ci
+npm --prefix frontend run build
+python scripts/windows/clydex_voice_agent.pyw
+```
+
+Use `--legacy` for the preserved static interface, `--silent` for quiet startup or `--reduced-motion`. See [Phase 04 evidence and limitations](docs/PHASE_04_COMPLETION_REPORT.md) and [frontend architecture](docs/FRONTEND_ARCHITECTURE.md). No new provider, microphone or model is enabled by the HUD.
+
 Phase 03 adds modular local voice, controlled follow-up conversation, interrupt/mute/lock privacy, native activation adapters and nine personality profiles through **Voice & Personality** in the existing desktop UI. Microphone/background activation starts off; speech models require separate reviewed preparation. SAPI remains the local fallback. No validated Hey CLYDEX model or approved cinematic neural voice is bundled. See [voice setup and limitations](docs/VOICE_CONFIGURATION.md) and the [Phase 03 checkpoint](docs/PHASE_03_COMPLETION_REPORT.md).
 
 Multi-provider routing, encrypted conversations and consented memory remain available through **AI & Memory**. Codex remains the default; new providers are disabled, chats start temporary, and automatic memory suggestions are off. See [provider setup and privacy](docs/PROVIDER_CONFIGURATION.md). Live hardware/provider and production acceptance remain pending.
@@ -19,7 +29,8 @@ Windows shortcuts and the build command are in [scripts/windows](scripts/windows
 | Folder | Contents |
 |---|---|
 | `src/clydex/` | Active V2 Python packages |
-| `frontend/legacy/` | Current static desktop UI and bundled fonts/icons |
+| `frontend/src/`, `frontend/tests/` | React/TypeScript HUD and deterministic frontend tests |
+| `frontend/legacy/` | Preserved static desktop fallback and bundled fonts/icons |
 | `assets/` | Active artwork and future approved production assets |
 | `config/` | Non-secret configuration examples |
 | `tests/` | V2 automated tests |
@@ -32,3 +43,5 @@ Windows shortcuts and the build command are in [scripts/windows](scripts/windows
 See [setup](docs/README_SETUP.txt), [actual and target structure](docs/architecture/PROJECT_STRUCTURE.md), and [testing evidence](docs/TESTING_AND_ACCEPTANCE.md). User data belongs outside the checkout under `%LOCALAPPDATA%\CLYDEX\`.
 
 Check changes with `python -m unittest discover -v`, `python -m ruff check --no-cache src tests`, and `python scripts/verify_windows_smoke.py --webview`.
+
+Frontend checks: `npm --prefix frontend test` and `npm --prefix frontend run build`. Native HUD verification: `python scripts/verify_hud_smoke.py --output "$env:LOCALAPPDATA/CLYDEX/tmp/hud-verification"` (PowerShell; disposable profile, no microphone/provider/weather calls).

@@ -1,5 +1,9 @@
 # Development roadmap
 
+## Current Phase 04 disposition (2026-11-27)
+
+The explicit Phase 04 owner instruction supersedes historical checkpoint stops below. P4-01 audit/admission, P4-02 frontend/bridge, P4-03 functional screens, P4-04 reference renderer, P4-05 display modes, P4-06 startup/sounds, P4-07 shared widget/notifications, P4-08 declared verification and P4-09 documentation are implemented for local review. The authorized fallback is a labeled owner reference with an extensible renderer; facial/full-body rigging, blinking and precise lip sync remain asset-dependent, not completed features. Live voice/provider acceptance is unchanged. See PHASE_04_COMPLETION_REPORT. Stop at Phase 04; Phase 05–08 remain unimplemented/unapproved.
+
 ## Current Phase 03 disposition (2026-11-27)
 
 Latest owner instruction supersedes historical Phase 02 stops. P3-01 admission, P3-02 audio/STT/VAD, P3-03 local TTS, P3-04 lifecycle/privacy/cancel, P3-05 activation adapters, P3-06 personality/languages, P3-07 Core/UI integration, P3-08 declared verification and P3-09 documentation are delivered in the engineering scope. Activation/voice assets and live language/acoustic/performance acceptance remain external gates, not completed models or certification. See PHASE_03_COMPLETION_REPORT for evidence and conditional capabilities. Stop at Phase 03; all Phase 04–08 rows remain future work. Historical rows below describe their original checkpoint dates.

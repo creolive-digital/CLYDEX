@@ -1,5 +1,13 @@
 # Changelog
 
+## V2 Phase 04 — local owner review checkpoint (2026-11-27)
+
+- Added local React/TypeScript/Vite cinematic Cyber Cyan HUD, approved logo/face references, hybrid typography and reusable accessible controls; retained legacy fallback.
+- Integrated existing chat/providers/routing/history/memory/consent/voice/personality/settings/permissions with a validated three-method bridge and existing exact approvals.
+- Added one-window six-mode native display control, persisted bounded geometry/monitor preferences and one owned adapter reusing Tk time tools without duplicating state.
+- Added actual voice/audio-reactive surroundings, render budgets/cleanup/context-loss fallback, real initialization states, generic notifications and optional original sound cues.
+- Added frontend/Python tests, native screenshots, build/installer resource updates and Phase 04 architecture/design/asset evidence. Production rig/facial animation, live voice/providers, full hardware/accessibility/fresh-install acceptance remain external. No push/release or Phase 05 work.
+
 ## V2 Phase 03 — engineering checkpoint (2026-11-27)
 
 - Extracted bounded local audio, Whisper, SAPI/Piper, VAD, wake, devices, lifecycle, privacy and real spectrum events behind typed headless contracts; existing Core/coordinator/tools remain the authority.

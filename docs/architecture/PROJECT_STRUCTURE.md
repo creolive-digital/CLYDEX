@@ -1,5 +1,11 @@
 # Project structure and public interfaces
 
+## Phase 04 extension
+
+The current primary frontend is `frontend/src/` (React/TypeScript), with `app`, `components`, `features`, `hooks`, `services`, `stores`, `themes` and `styles`. `frontend/tests/` contains deterministic Vitest/jsdom tests. Package/lock/TS/Vite configuration stays under `frontend/`. Vite emits to ignored `deployment/windows/artifacts/frontend/`; it never mixes generated files into source. Fonts/license notices are bundled; expected owner logo/face references are supplied under `assets/branding/` and `assets/avatars/` and remain unchanged. No unnecessary model/texture/sound placeholder directories were created.
+
+New active desktop modules are `hud.py` (validated minimal facade and single event collector), `hud_contract.json`, `display.py`, `preferences.py`, `notifications.py`, `system_info.py` and `widget_service.py` (one owned adapter to existing Tk time tools). Launcher defaults to the built HUD, retaining `--legacy`. `scripts/verify_hud_smoke.py` verifies the production bundle in native Windows WebView2. CI and installer builds include npm tests/build and package both frontends plus local licenses/contract resources. The directory inventory below remains the historical Phase 03 baseline; its "no UI redesign" description is superseded by this authorized extension. See FRONTEND_ARCHITECTURE for contracts and ownership.
+
 Current Phase 03 structure after incremental voice/personality extraction. Target follows the owner's mandatory layout; only functional packages exist. Source launchers remain under scripts/windows and the supplied specifications/archive remain unchanged.
 
 ## Actual structure

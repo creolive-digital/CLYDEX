@@ -1,0 +1,10 @@
+{
+  "frontend_files_verified": 14,
+  "shared_contract": true,
+  "embedded_native_dispatch": true,
+  "embedded_geometry_restore": true,
+  "widget_and_tk_resources": true,
+  "binary_smoke": true,
+  "window_and_clean_exit": true,
+  "limits": "Native binary window/quiet startup/shutdown only; no DOM automation, audio or provider acceptance"
+}
