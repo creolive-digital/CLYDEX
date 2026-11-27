@@ -5,13 +5,15 @@ import threading
 
 
 from clydex.core.application import CoreApplication
+from clydex.core.errors import PermissionDenied
 from clydex.desktop.intelligence import IntelligenceControls
+from clydex.desktop.voice_settings import VoiceControls
 
 
 RECOGNITION_MODES = ('en', 'en-accurate', 'auto')
 
 
-class Studio(IntelligenceControls):
+class Studio(VoiceControls, IntelligenceControls):
     def __init__(self, core=None):
         self._core = core or CoreApplication()
         self._engine = self._core.engine
@@ -20,11 +22,12 @@ class Studio(IntelligenceControls):
         self._recording = False
         self._state = 'READY'
         self._stream = None
-        self._device = None
+        self._device = self._core.voice.config.input_device
         self._shown_review = None
+        self._init_voice_controls()
 
     def _start(self, state, work, *args):
-        if self._busy:
+        if self._busy or self._core.queue.busy or self._core.voice.privacy.refresh():
             return False
         self._busy = True
         self._state = state
@@ -51,10 +54,17 @@ class Studio(IntelligenceControls):
                 return True
             if self._busy:
                 return False
+            try:
+                self._core.voice.privacy.capture_allowed(self._core.voice.config)
+            except PermissionDenied:
+                self._core.voice.events.emit('warning', code='unmute_or_enable_microphone_first')
+                return False
             self._engine.stop_event.clear()
             self._recording = True
-            return self._start('OPENING MICROPHONE', self._engine.record_worker,
-                               self._device, bool(check))
+            started = self._start('OPENING MICROPHONE', self._engine.record_worker, self._device, bool(check))
+            if not started:
+                self._recording = False
+            return started
 
     def test_voice(self):
         def play():
@@ -77,6 +87,10 @@ class Studio(IntelligenceControls):
         with self._lock:
             if not self._busy:
                 self._device = None if device == '' else int(device)
+                self._core.voice.devices.validate(self._device, 'input')
+                if self._core.voice.snapshot()['background_armed']:
+                    self._core.voice.mute()
+                self._core.voice.settings.configure({'input_device': self._device})
 
     def speak_replies(self, enabled):
         if type(enabled) is not bool:
@@ -91,6 +105,8 @@ class Studio(IntelligenceControls):
             if not self._busy and mode in RECOGNITION_MODES and mode != self._engine.speech_mode:
                 self._core.store.set_setting('recognition_mode', mode)
                 self._engine.speech_mode = mode
+                self._core.voice.settings.configure({'mode': mode,
+                    'recognition_language': 'auto' if mode == 'auto' else 'en'})
             return self._engine.speech_mode
 
     def sound_settings(self):
@@ -113,6 +129,7 @@ class Studio(IntelligenceControls):
         with self._lock:
             messages = []
             intelligence_events = []
+            voice_events = []
             while True:
                 try:
                     kind, value = self._engine.events.get_nowait()
@@ -133,17 +150,26 @@ class Studio(IntelligenceControls):
                     messages.append([kind,value])
                 elif kind in ('provider_state', 'provider_delta', 'history_state', 'memory_suggestion', 'intelligence_result'):
                     intelligence_events.append([kind, value])
+                elif kind in ('voice_event', 'voice_telemetry'):
+                    voice_events.append([kind, value])
             level, bands, wave = 0., [], []
             stream = self._stream
             if stream and self._state in ('RECORDING','CHECKING MIC','SPEAKING'):
                 level, bands, wave = stream.read_display()
             review = self._engine.pending_review()
+            voice = self._core.voice.snapshot()
+            self._activations.update(voice)
+            self._busy = self._core.queue.busy
+            self._recording = voice['state'] == 'listening' and self._busy
+            if voice['locked']:
+                review, messages, intelligence_events, voice_events = None, [], [], []
             if review and review['id'] != self._shown_review:
                 self._shown_review = review['id']
                 import webview
                 if webview.windows:
                     webview.windows[0].show()
-            return dict(messages=messages, intelligence_events=intelligence_events, state=self._state, busy=self._busy,
+            return dict(messages=messages, intelligence_events=intelligence_events, voice_events=voice_events, voice=voice,
+                        state=self._state, busy=self._busy,
                         recording=self._recording, rate=stream.rate if stream else 0,
                         level=level, bands=list(bands), wave=wave, review=review)
 

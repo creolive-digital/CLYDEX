@@ -384,6 +384,14 @@ let currentMode="standby", time=0;
       let reviewId = null;
       function render(data) {
         frame = data;
+        window.dispatchEvent(new CustomEvent('clydex-voice', {detail: data}));
+        const locked = Boolean(data.voice?.locked);
+        byId('privacyShield').hidden = !locked;
+        if (locked) {
+          document.querySelectorAll('dialog[open]').forEach(d => d.close());
+          reviewId = null;
+          return;
+        }
         window.dispatchEvent(new CustomEvent('clydex-intelligence', {detail: data.intelligence_events || []}));
         if (data.review && reviewId !== data.review.id) {
           reviewId = data.review.id;

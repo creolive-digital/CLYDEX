@@ -18,6 +18,15 @@ CLYDEX is now installed. Before the Voice Agent will work:
 3. MICROPHONE PERMISSIONS
    Windows Settings > Privacy & security > Microphone
    Make sure "Let apps access your microphone" is ON.
+   Then open Voice & Personality in CLYDEX, review microphone opt-in,
+   and explicitly unmute this session. Stop or mute cancels pending work.
+
+4. LOCAL SPEECH MODELS
+   No speech model is downloaded automatically. Review model preparation
+   in Voice & Personality; the approval shows the model and storage directory.
+   SAPI uses installed Windows voices. Cinematic neural voice and Hey CLYDEX
+   wake models require separately approved, licensed, validated local assets.
+   See VOICE_CONFIGURATION.md. Wake/background capture starts disabled.
 
 The CLYDEX Widget (clock / weather) works without any of the above.
 

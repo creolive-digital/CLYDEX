@@ -21,6 +21,8 @@ class IntelligenceControls:
 
     def intelligence_settings(self):
         with self._lock:
+            if self._core.voice.privacy.refresh():
+                return {'locked': True}
             if self._busy:
                 return {'busy': True}
             return dict(self._core.providers.snapshot(), memory_policy=self._core.memory.policy(),
@@ -74,7 +76,7 @@ class IntelligenceControls:
 
     def conversations(self, query=''):
         with self._lock:
-            return [] if self._busy else self._core.conversations.repository.list(query)
+            return [] if self._busy or self._core.voice.privacy.refresh() else self._core.conversations.repository.list(query)
 
     def resume_conversation(self, key):
         with self._lock:
@@ -99,12 +101,14 @@ class IntelligenceControls:
 
     def export_conversation(self, key=None):
         with self._lock:
-            if self._busy:
+            if self._busy or self._core.voice.privacy.refresh():
                 return ''
             return self._core.conversations.export(key)
 
     def memories(self):
         with self._lock:
+            if self._core.voice.privacy.refresh():
+                return {'locked': True}
             if self._busy:
                 return {'busy': True}
             return dict(records=self._core.memory.repository.list(), proposals=list(self._core.memory.pending.values()),

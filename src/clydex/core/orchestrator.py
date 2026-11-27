@@ -16,16 +16,22 @@ class IntelligenceCoordinator:
         self.state = {'provider': 'codex', 'model': '', 'status': 'idle', 'usage': {}, 'memory_used': 0}
 
     def respond(self, engine, instructions: str, data: dict, schema: dict):
+        task = 'planning' if schema is PLAN else 'summary' if 'results' in data else 'conversation'
+        personality = getattr(engine, 'personality', None)
+        privacy_mode = engine.config.privacy_mode or bool(personality and personality.privacy_mode)
+        if personality:
+            instructions += '\n' + personality.instructions(task)
+            if personality.context():
+                data = dict(data, response_preferences=personality.context())
         memories = self.memory.relevant(str(data.get('request', ''))) if self.memory else []
         context = ContextBundle.from_legacy(data, memories,
             local_only=bool(data.get('history') and getattr(engine, 'history_local_only', False)))
-        task = 'planning' if schema is PLAN else 'summary' if 'results' in data else 'conversation'
         size = len((instructions + canonical_json(context.data()) + canonical_json(schema)).encode('utf-8')) + 1024
         registry = self.registry
         if registry is None:
             config = ProviderConfig('codex', enabled=True)
         else:
-            config = ProviderRouter(registry).select(context, privacy=engine.config.privacy_mode,
+            config = ProviderRouter(registry).select(context, privacy=privacy_mode,
                                                      allow_cloud=engine.config.allow_cloud, task_type=task, size=size)
         tried, attempt = set(), 0
         request_cost_ceiling = config.max_request_cost
@@ -34,7 +40,7 @@ class IntelligenceCoordinator:
             actual = context.for_provider(config.capabilities.local)
             routing = registry.routing if registry else None
             cost = OutboundPolicy.check(config, actual,
-                privacy=engine.config.privacy_mode or bool(routing and routing.privacy),
+                privacy=privacy_mode or bool(routing and routing.privacy),
                 offline=bool(routing and (routing.offline or routing.profile == 'offline')),
                 allow_cloud=engine.config.allow_cloud, task_type=task, size=size)
             arguments = dict(instructions=instructions, data=actual.data(), schema=schema, fast=schema is PLAN,
@@ -91,7 +97,7 @@ class IntelligenceCoordinator:
                 fallbacks = tuple(name for name in registry.routing.fallbacks if name not in tried) if registry else ()
                 if not fallbacks or exc.kind in ('authentication', 'invalid_request', 'invalid_response'):
                     raise
-                config = ProviderRouter(registry).select(actual, privacy=engine.config.privacy_mode,
+                config = ProviderRouter(registry).select(actual, privacy=privacy_mode,
                     allow_cloud=engine.config.allow_cloud, task_type=task, size=size, candidates=fallbacks,
                     request_cost_ceiling=request_cost_ceiling)
                 attempt += 1  # Every fallback gets its own exact-action consent.
@@ -101,7 +107,8 @@ class IntelligenceCoordinator:
             raise ValueError('Unknown provider.')
         config = self.registry.configs[name]
         routing = self.registry.routing
-        OutboundPolicy.check(config, ContextBundle(''), privacy=engine.config.privacy_mode or routing.privacy,
+        personality = getattr(engine, 'personality', None)
+        OutboundPolicy.check(config, ContextBundle(''), privacy=engine.config.privacy_mode or routing.privacy or bool(personality and personality.privacy_mode),
                              offline=routing.offline or routing.profile == 'offline',
                              allow_cloud=engine.config.allow_cloud, task_type='conversation', size=0)
         return engine.execute_tool('provider.health', name,

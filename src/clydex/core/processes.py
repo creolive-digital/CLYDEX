@@ -61,11 +61,12 @@ class OutputLimitExceeded(ClydexError):
 
 def run_process(args: list[str], *, input: str, cwd, timeout: float,
                 cancel: Cancellation, max_output_bytes: int = 1_048_576,
-                watch_files: tuple = ()) -> subprocess.CompletedProcess:
+                watch_files: tuple = (), binary_output: bool = False) -> subprocess.CompletedProcess:
     if cancel.is_set():
         raise Cancelled('Process canceled before launch.')
     encoded = input.encode('utf-8')
-    if len(encoded) > 1_048_576 or not 0 < timeout <= 900 or max_output_bytes < 1:
+    if (len(encoded) > 1_048_576 or not 0 < timeout <= 900 or max_output_bytes < 1
+            or type(binary_output) is not bool):
         raise ValueError('Invalid process input or limits.')
     process = subprocess.Popen(
         args, cwd=cwd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -138,8 +139,8 @@ def run_process(args: list[str], *, input: str, cwd, timeout: float,
         if overflow.is_set():
             raise OutputLimitExceeded('Child process exceeded its output limit.')
         return subprocess.CompletedProcess(args, process.returncode,
-                                           captured[0].decode('utf-8', 'replace'),
-                                           captured[1].decode('utf-8', 'replace'))
+                                           bytes(captured[0]) if binary_output else captured[0].decode('utf-8', 'replace'),
+                                           bytes(captured[1]) if binary_output else captured[1].decode('utf-8', 'replace'))
     finally:
         if job is not None and assigned:
             win32job.TerminateJobObject(job, 1)

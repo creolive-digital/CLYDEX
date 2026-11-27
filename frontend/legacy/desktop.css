@@ -1,4 +1,18 @@
 html,body { height:100%; margin:0; color-scheme:dark; }
+.voice-controls {display:flex;flex-wrap:wrap;gap:5px;padding:8px 12px;border-bottom:1px solid #3d494c;}
+.voice-controls button,#voicePanel button {background:#172c32;color:#4cd7f6;border:1px solid #4cd7f6;border-radius:9px;padding:4px 8px;}
+.voice-controls output {font-size:11px;width:100%;color:#a1cedb;}
+.voice-controls output.mic-live {color:#4cd7f6;font-weight:700;}
+#voicePanel {margin:auto;width:min(760px,92vw);max-height:88vh;overflow:auto;background:#171d1e;color:#dee3e6;border:1px solid #4cd7f6;border-radius:16px;padding:22px;}
+#voicePanel::backdrop {background:#030609cc;}
+#voicePanel form {display:flex;justify-content:space-between;align-items:center;}
+#voicePanel label {display:block;margin:10px 0;}
+#voicePanel input:not([type=checkbox]),#voicePanel select {display:block;width:100%;background:#252b2d;color:inherit;border:1px solid #536065;border-radius:5px;padding:6px;box-sizing:border-box;}
+#voicePanel button {margin:5px;}
+#voicePanel p {font-size:13px;overflow-wrap:anywhere;}
+#voicePanel summary {cursor:pointer;font-weight:600;padding:12px 0;}
+#voicePanel :focus-visible,.voice-controls :focus-visible {outline:2px solid #4cd7f6;outline-offset:2px;}
+#privacyShield:not([hidden]) {position:fixed;inset:0;z-index:100000;display:grid;place-content:center;background:#0e1416;color:#a1cedb;text-align:center;padding:30px;}
 .intelligence-open {position:fixed;right:14px;bottom:10px;z-index:10;background:#173640;color:#4cd7f6;border:1px solid #4cd7f6;border-radius:14px;padding:5px 14px;}
 .intelligence-telemetry {position:fixed;left:12px;bottom:2px;font-size:10px;max-width:60vw;overflow:hidden;white-space:nowrap;pointer-events:none;}
 #intelligencePanel {margin:auto;width:min(760px,92vw);max-height:88vh;overflow:auto;background:#171d1e;color:#dee3e6;border:1px solid #4cd7f6;border-radius:16px;padding:22px;}

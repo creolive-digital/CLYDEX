@@ -11,6 +11,8 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = ["ruff>=0.9,<1"]
+# Optional code runtime only. No wake/voice model is bundled or downloaded.
+voice-wake = ["openwakeword>=0.6,<0.7"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

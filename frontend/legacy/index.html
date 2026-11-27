@@ -75,6 +75,13 @@
         <span id="turnCountLabel" data-design-text-token="label-sm" class="font-label text-label-sm text-light-on-surface-variant dark:text-dark-on-surface-variant tabular-nums">0 TURNS</span>
       </div>
 
+      <nav class="voice-controls" aria-label="Voice controls">
+        <button id="voiceSettingsOpen">Voice &amp; Personality</button>
+        <button id="voiceUnmute">Unmute mic</button><button id="voiceMute">Mute mic</button>
+        <button id="voiceInterrupt">Stop / interrupt</button>
+        <output id="voiceLiveState" role="status" aria-live="polite">Microphone muted · standby</output>
+        <output id="voiceStatusMessage" role="status" aria-live="polite"></output>
+      </nav>
       <!-- Scrollable Chat Messages -->
       <div id="chatFeed" class="flex-1 overflow-y-auto transcript-scroll p-gutter-md flex flex-col gap-gutter-md max-h-[420px] lg:max-h-[calc(1024px-196px)]" data-stitch-vh="lg:max-h-[calc(1024px-196px)]===lg:max-h-[calc(100vh-196px)]">
 
@@ -312,4 +319,75 @@
 <button id="proposalAccept">Review and save locally</button><button id="proposalDismiss">Dismiss suggestion</button>
 <p>Suggestions remain in memory until reviewed and disappear at shutdown. Disabling retrieval retains saved records for review/deletion. Do not save passwords, tokens or financial secrets.</p>
 </details></dialog>
-<script src="studio.js"></script><script src="intelligence.js"></script></body></html>
+<dialog id="voicePanel" aria-labelledby="voicePanelTitle">
+<form method="dialog"><h2 id="voicePanelTitle">Voice &amp; Personality</h2><button aria-label="Close voice settings">Close</button></form>
+<p id="voiceNotice" role="status">Capture is opt-in. Stop/mute never approves an operating action.</p>
+<button id="voiceRefresh">Refresh availability</button>
+<details open><summary>Microphone and conversation</summary>
+<label><input id="v_microphone_enabled" type="checkbox"> Permit microphone use (also requires unmute this session)</label>
+<label>Audio input <select id="v_input_device"></select></label>
+<label>Audio output <select id="v_output_device"></select></label>
+<label><input id="v_continuous" type="checkbox"> Follow-up conversation after a voice turn</label>
+<label><input id="v_background_listening" type="checkbox"> Permit listening/output while the window is hidden</label>
+<p>Half duplex: capture pauses during transcription, thinking, approvals and playback. No acoustic echo cancellation or speaker authentication is claimed. Raw microphone audio is transient and never saved by default.</p>
+<button id="voiceCheckMic">Test microphone (5 seconds)</button><button id="voiceCheckSpeaker">Play local test phrase</button>
+</details>
+<details open><summary>Recognition and local models</summary>
+<label>Recognition mode <select id="v_mode"><option value="en">Fast</option><option value="en-accurate">Accurate</option><option value="auto">Automatic language detection</option></select></label>
+<label>Recognition language <input id="v_recognition_language" list="voiceLanguageCodes" placeholder="en / si / ta / auto"></label>
+<label>Fast model <select id="v_fast_model"></select></label><label>Accurate model <select id="v_accurate_model"></select></label>
+<p id="voiceModelStatus"></p><button id="voiceDownloadModel">Review model download / preparation</button>
+<p>Models are cached outside the repository under LOCALAPPDATA\CLYDEX\models. Missing files never download automatically. English-only presets switch to their multilingual equivalent for non-English/automatic recognition. Sinhala, Tamil and mixed-speech accuracy require actual testing.</p>
+</details>
+<details open><summary>Local voice output</summary>
+<label>TTS provider <select id="v_tts_provider"><option value="sapi">Windows SAPI — installed local fallback</option><option value="piper">Piper — separately supplied licensed local engine/model</option></select></label>
+<label>Installed SAPI voice <select id="v_voice_id"></select></label>
+<label>Synthesis language <input id="v_tts_language" list="voiceLanguageCodes" placeholder="auto / en / si / ta"></label>
+<label>Unsupported language fallback <select id="v_tts_fallback"><option value="none">Text only</option><option value="en">English SAPI notice that the answer is on screen</option></select></label>
+<label>Speech rate (−10 to 10) <input id="v_speech_rate" type="number" min="-10" max="10"></label>
+<label>Volume (0–100) <input id="v_volume" type="number" min="0" max="100"></label>
+<label>Approved Piper manifest (relative to runtime models) <input id="v_piper_manifest" placeholder="voice/manifest.json"></label>
+<p>No cinematic voice/model is bundled or approved. Installed voice metadata is shown below; an English-capable model does not establish Sinhala/Tamil/Singlish synthesis. Neural engine/model rights, original voice identity and exact file hashes require owner review.</p>
+<p id="voiceCapabilities"></p>
+</details>
+<details><summary>Activation</summary>
+<label><input id="v_wake_enabled" type="checkbox"> Enable custom local Hey CLYDEX detector configuration</label>
+<label>Validated wake manifest (relative to runtime models) <input id="v_wake_manifest" placeholder="wake/manifest.json"></label>
+<label>Wake confidence threshold <input id="v_wake_threshold" type="number" min="0.01" max="1" step="0.01"></label>
+<p>No actual validated Hey CLYDEX model is supplied. A generic wake model is insufficient. Custom local model, feature models, licensing, hashes and owner phrase validation are required. Arming is separate from saving configuration; Stop, mute or lock disarms it.</p>
+<button id="voiceArmWake">Review and arm local wake listening</button>
+<label><input id="v_hotkey_enabled" type="checkbox"> Enable global shortcut</label>
+<label>Shortcut <input id="v_hotkey" placeholder="CTRL+ALT+SPACE"></label>
+<label><input id="v_tray_enabled" type="checkbox"> Enable system tray controls</label>
+<p>Hotkey/tray activation uses the same queue and permission rules. When a task is busy, the shortcut interrupts it. Windows-key shortcuts and F12 are reserved. Microphone remains muted after restart or lock until explicitly unmuted.</p>
+<p id="voiceActivationStatus"></p>
+</details>
+<details><summary>Recording, silence and confidence limits</summary>
+<label>Maximum recording seconds <input id="v_max_recording_seconds" type="number" min="1" max="60"></label>
+<label>Initial silence seconds <input id="v_initial_silence_seconds" type="number" min="1" max="30"></label>
+<label>Silence after speech (ms) <input id="v_silence_ms" type="number" min="200" max="5000"></label>
+<label>Minimum speech (ms) <input id="v_min_speech_ms" type="number" min="80" max="2000"></label>
+<label>Follow-up listening seconds <input id="v_followup_seconds" type="number" min="1" max="30"></label>
+<label>Inactivity timeout seconds <input id="v_inactivity_seconds" type="number" min="5" max="600"></label>
+<label>Playback tail guard (ms; not echo cancellation) <input id="v_playback_cooldown_ms" type="number" min="100" max="3000"></label>
+<label>Minimum RMS level <input id="v_noise_floor" type="number" min="0.00001" max="0.1" step="0.00001"></label>
+<label>Noise ratio <input id="v_noise_ratio" type="number" min="1.2" max="10" step="0.1"></label>
+<label>Minimum average recognition log probability <input id="v_min_avg_logprob" type="number" min="-2" max="-0.1" step="0.05"></label>
+<label>Maximum no-speech confidence <input id="v_max_no_speech" type="number" min="0.1" max="1" step="0.05"></label>
+<label>Minimum auto-language confidence <input id="v_min_language_probability" type="number" min="0" max="1" step="0.05"></label>
+</details><button id="voiceSave">Review voice configuration</button>
+<details open><summary>Adaptive presentation</summary>
+<label>Mode <select id="personalityMode"></select></label>
+<label>Tone <select id="personalityTone"><option>calm</option><option>warm</option><option>direct</option><option>formal</option></select></label>
+<label>On-screen detail <select id="personalityLength"><option>brief</option><option>balanced</option><option>detailed</option></select></label>
+<label>Text response language <input id="personalityLanguage" list="voiceLanguageCodes" placeholder="auto"></label>
+<label>Optional personal address <input id="personalityAddress" maxlength="80" autocomplete="off" placeholder="No name configured"></label>
+<label>Spoken response character limit <input id="personalitySpokenLimit" type="number" min="80" max="800"></label>
+<label><input id="personalityFocusSpeech" type="checkbox"> Speak automatically in focus/gaming modes</label>
+<p>Full answers remain on screen; speech is concise and omits code/URLs. Privacy mode strengthens cloud restrictions. Other modes never grant permissions or change memory consent. Personal addressing is encrypted and needs private-context review for cloud use.</p>
+<button id="personalitySave">Review personality configuration</button>
+</details>
+<datalist id="voiceLanguageCodes"><option value="auto"><option value="en"><option value="si"><option value="ta"><option value="singlish"><option value="fr"><option value="de"><option value="es"></datalist>
+</dialog>
+<div id="privacyShield" hidden role="status">CLYDEX is locked. Microphone muted and pending actions canceled. Unlock the desktop to continue.</div>
+<script src="studio.js"></script><script src="intelligence.js"></script><script src="voice.js"></script></body></html>

@@ -3,6 +3,7 @@
 from PyInstaller.utils.hooks import collect_all
 
 from pathlib import Path
+from importlib.util import find_spec
 
 ROOT = Path(SPECPATH).resolve().parents[1]
 
@@ -23,6 +24,14 @@ datas += collect_data_files('clydex')
 for _pkg in ['webview', 'faster_whisper', 'ctranslate2', 'av', 'sounddevice', 'numpy']:
     _d, _b, _h = collect_all(_pkg)
     datas    += _d
+    binaries += _b
+    hiddenimports += _h
+
+# Only an explicitly prepared build environment includes the optional wake code.
+# No wake models, public pretrained packs or neural voice binaries are bundled.
+if find_spec('openwakeword') is not None:
+    _d, _b, _h = collect_all('openwakeword')
+    datas += _d
     binaries += _b
     hiddenimports += _h
 

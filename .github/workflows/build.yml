@@ -34,13 +34,14 @@ jobs:
           pip install "pyinstaller>=6.0" pyinstaller-hooks-contrib
           pip install "ruff>=0.9,<1"
 
-      - name: Core and intelligence tests, lint and compilation
+      - name: Core, intelligence and voice tests, lint and compilation
         run: |
           python -m unittest discover -v
           python -m ruff check --no-cache src tests
           python -m compileall -q src tests scripts
           node --check frontend/legacy/studio.js
           node --check frontend/legacy/intelligence.js
+          node --check frontend/legacy/voice.js
 
       # ── 3. PyInstaller builds ────────────────────────────────
       - name: Build clydex_widget.exe

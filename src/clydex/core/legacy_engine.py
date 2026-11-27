@@ -1,18 +1,14 @@
 """Voice recording, local transcription, Codex requests, and Windows speech."""
-from concurrent.futures import Future, TimeoutError as FutureTimeout
 from dataclasses import replace
 import getpass
 import logging
 import json
-import math
 import os
 from pathlib import Path
-import subprocess
 import threading
 import time
 from clydex.tools.desktop import DesktopBrowser, read_browser_tab, run_windows_task
 from clydex.integrations.outlook import OutlookInbox
-from clydex.voice.spectrum import SpectrumStream
 
 
 from clydex.core.commands import APP_ACTIONS, PLAN, STRING, local_command, object_schema
@@ -30,9 +26,11 @@ from clydex.security.permissions import PermissionService
 
 class VoiceEngine:
     def __init__(self, *, config=None, paths=None, store=None, provider=None,
-                 apps=None, browser=None, inbox=None):
+                 apps=None, browser=None, inbox=None, voice_privacy_probe=None):
         self.config = config or AppConfig()
         self.paths = paths
+        self.voice = self.personality = None
+        self._voice_privacy_probe = voice_privacy_probe
         self.store = store
         self.permissions = PermissionService(self.config.approval_timeout)
         self.executor = ToolExecutor(self.permissions, store.audit if store else None,
@@ -70,118 +68,31 @@ class VoiceEngine:
         self._approved = False
         self._approval = None
 
-    def record_worker(self, device, check_only):
-        mode = self.speech_mode
+    def _voice_service(self):
+        if self.voice is None:
+            from clydex.voice.service import VoiceRuntime
+            from clydex.voice.privacy import VoicePrivacy
+            privacy = VoicePrivacy(probe=self._voice_privacy_probe) if self._voice_privacy_probe else None
+            self.voice = VoiceRuntime(self.paths, self.events.put, privacy=privacy)
+        return self.voice
+
+    def record_worker(self, device, check_only, wake=False):
         try:
-            import numpy as np
-            import sounddevice as sd
-            info = sd.query_devices(device, 'input')
-            rate = int(info['default_samplerate'])
-            spectrum = SpectrumStream(rate)
-            chunks=[]
-            peak = 0.0
-            def callback(indata,frames,time_info,status):
-                nonlocal peak
-                peak = max(peak, float(np.max(np.abs(indata))))
-                if not check_only:
-                    chunks.append(indata.copy())
-                spectrum.push(indata[:,0])
-            with sd.InputStream(device=device, samplerate=rate, channels=1, dtype='float32',
-                                blocksize=0, callback=callback):
-                if not check_only:
-                    model_future = self._prepare_speech_model('small.en' if mode == 'en-accurate' else 'base')
-                self.events.put(('audio_stream', spectrum))
-                self.events.put(('status', 'CHECKING MIC' if check_only else 'RECORDING'))
-                self.stop_event.wait(timeout=5 if check_only else 30)
-            if check_only:
-                result = (f'Signal detected ({20*math.log10(peak):.0f} dBFS peak).'
-                          if peak >= .00015 else 'No usable signal. Select another input or check mute and input volume.')
-                self.events.put(('mic_info', f"{info['name']} · {result}"))
-                return
-            self.events.put(('record_done',None))
-            if not chunks:raise SpeechInputError('No microphone audio. Check Windows mic permissions.')
-            self.events.put(('status','TRANSCRIBING'))
-            if peak < 0.00015:
-                raise SpeechInputError('The microphone is capturing silence. Check your input device and volume.')
-            samples = np.concatenate(chunks).reshape(-1)
-            if peak < 0.1:
-                samples *= min(8.0, 0.1 / peak)
-            if rate != 16000:
-                import av
-                frame = av.AudioFrame.from_ndarray(samples.reshape(1, -1), format='flt', layout='mono')
-                frame.sample_rate = rate
-                resampler = av.AudioResampler(format='flt', layout='mono', rate=16000)
-                frames = resampler.resample(frame) + resampler.resample(None)
-                if not frames:
-                    raise SpeechInputError('The recording was too short. Please try again.')
-                samples = np.concatenate([f.to_ndarray().reshape(-1) for f in frames])
-            if not model_future.done():
-                self.events.put(('status','LOADING SPEECH MODEL · FIRST USE MAY DOWNLOAD'))
-            while True:
-                self.cancel_token.check()
-                try:
-                    model = model_future.result(timeout=.1)
-                    break
-                except FutureTimeout:
-                    continue
-            if self.closed:
-                return
-            self.events.put(('status','TRANSCRIBING'))
-            self.cancel_token.check()
-            question = self.transcribe_audio(model, samples, None if mode == 'auto' else 'en')
-            self.cancel_token.check()
-            self.ask(question)
-        except Exception as exc:self.report_error(exc)
-        finally:self.events.put(('done',None))
+            self._voice_service().run(self, device, check_only, wake)
+        except Exception as exc:
+            self.report_error(exc)
+        finally:
+            self.events.put(('done', None))
 
     def _prepare_speech_model(self, name):
-        future = self._model_future
-        if self._model_name == name and future is not None and (not future.done() or future.exception() is None):
-            return future
-        if future is not None and not future.done():
-            raise RuntimeError('Another speech model is still loading. Wait before changing models.')
-        future = Future()
-        self._model_name, self._model_future = name, future
-
-        def load():
-            try:
-                from faster_whisper import WhisperModel
-                from huggingface_hub.utils import LocalEntryNotFoundError
-                try:
-                    model = WhisperModel(name, device='cpu', compute_type='int8', local_files_only=True,
-                                         download_root=str(self.paths.directory('models')) if self.paths else None)
-                except LocalEntryNotFoundError:
-                    model = WhisperModel(name, device='cpu', compute_type='int8',
-                                         download_root=str(self.paths.directory('models')) if self.paths else None)
-                future.set_result(model)
-            except Exception as exc:
-                future.set_exception(exc)
-
-        threading.Thread(target=load, daemon=True, name='clydex-speech-model').start()
-        return future
+        self._model_name = name
+        self._model_future = self._voice_service().recognizer.prepare(name)
+        return self._model_future
 
     @staticmethod
     def transcribe_audio(model, samples, language):
-        options = dict(language=language, temperature=0.0, condition_on_previous_text=False,
-                       # Longer dictation benefits from timestamp-guided segmentation.
-                       without_timestamps=len(samples) <= 12 * 16000, vad_filter=True,
-                       vad_parameters={'min_silence_duration_ms': 650, 'speech_pad_ms': 250})
-        segments = list(model.transcribe(samples, beam_size=3, **options)[0])
-        if not segments:
-            # A softer voice can fall below the default voice-activity threshold.
-            options['vad_parameters'] = dict(options['vad_parameters'], threshold=0.3, min_speech_duration_ms=100)
-            segments = list(model.transcribe(samples, beam_size=5, **options)[0])
-        elif any(s.avg_logprob < -0.85 for s in segments):
-            retry = list(model.transcribe(samples, beam_size=5, **options)[0])
-            if retry and min(s.avg_logprob for s in retry) > min(s.avg_logprob for s in segments):
-                segments = retry
-        if any(s.avg_logprob < -1.0 or (s.no_speech_prob > 0.65 and s.avg_logprob < -0.6)
-               for s in segments):
-            raise SpeechInputError('I could not confidently hear that. Please repeat the command.')
-        question = ' '.join(s.text.strip() for s in segments).strip()
-        if not question:
-            raise SpeechInputError('I did not hear clear speech. Please try again.')
-        return question
+        from clydex.voice.speech_to_text import decode
+        return decode(model, samples, language).text
 
     def text_worker(self,question):
         try:self.ask(question)
@@ -193,7 +104,11 @@ class VoiceEngine:
             raise PermissionDenied('Unarchive the conversation before sending another request.')
         self.events.put(('user',question))
         self.events.put(('status','THINKING'))
+        if self.voice:
+            from clydex.voice.events import VoiceState
+            self.voice.lifecycle.transition(VoiceState.THINKING)
         answer = self.chat_reply(question)
+        self.cancel_token.check()
         if self.conversation_service:
             try:
                 saved = self.conversation_service.record(question, answer, self.last_provider, self.last_model,
@@ -215,6 +130,10 @@ class VoiceEngine:
                 self.speak_with_audio_meter(answer)
             except Exception as exc:
                 self.report_error(exc)
+        if self.voice and not self.cancel_token.is_set():
+            from clydex.voice.events import VoiceState
+            if self.voice.lifecycle.state != VoiceState.ERROR:
+                self.voice.lifecycle.transition(VoiceState.STANDBY)
 
     def launch_installed_app(self, name):
         # Resolve the model's display name against the local Start menu.
@@ -258,6 +177,11 @@ class VoiceEngine:
     def execute_tool(self, tool, target, arguments, operation, description='', **options):
         if self.closed:
             raise Cancelled('Engine closed.')
+        def unlocked():
+            if self.voice and self.voice.privacy.refresh():
+                raise PermissionDenied('Actions are suspended on the lock/secure desktop.')
+            self.cancel_token.check()
+        unlocked()
         if not tool.startswith('provider.') and tool not in ('app.launch', 'app.manage'):
             self.turn_sensitive = True
         action = ActionRequest.create(tool, target, arguments, self._request_context)
@@ -277,15 +201,27 @@ class VoiceEngine:
                 self._approved = False
                 self._review_event.clear()
                 self.events.put(('status', 'WAITING FOR APPROVAL'))
+                if self.voice:
+                    from clydex.voice.events import VoiceState
+                    self.voice.lifecycle.transition(VoiceState.WAITING_FOR_APPROVAL)
             while not self._review_event.wait(.05):
+                if self.voice:
+                    self.voice.privacy.refresh()
                 if (self.closed or self.cancel_token.is_set()
                         or self.permissions.clock() >= approval.expires_at):
                     break
             with self._review_lock:
                 accepted = self._approved and not self.closed and not self.cancel_token.is_set()
                 self._review = self._approval = None
+                if self.voice:
+                    from clydex.voice.events import VoiceState
+                    self.voice.lifecycle.transition(VoiceState.INTERRUPTED if self.cancel_token.is_set() or self.closed
+                                                    else VoiceState.THINKING)
                 return accepted
-        return self.executor.execute(action, operation, review, self.cancel_token, **options)
+        def guarded_operation(arguments):
+            unlocked()
+            return operation(arguments)
+        return self.executor.execute(action, guarded_operation, review, self.cancel_token, **options)
 
     def review_windows_task(self, description, script=''):
         # Compatibility only: never use a boolean review as execution authority.
@@ -300,6 +236,8 @@ class VoiceEngine:
             return dict(self._review) if self._review else None
 
     def decide(self, review_id, approve):
+        if self.voice and self.voice.privacy.refresh():
+            return False
         with self._review_lock:
             if (not self._review or self._review['id'] != review_id or not self._approval
                     or type(approve) is not bool):
@@ -312,6 +250,8 @@ class VoiceEngine:
             return True
 
     def cancel(self):
+        if self.voice:
+            self.voice.stop()
         self.cancel_token.set()
         self.stop_event.set()
         self.permissions.revoke_all()
@@ -324,16 +264,25 @@ class VoiceEngine:
         failure = failure_for(exc)
         logging.getLogger('clydex').error('operation_failed', exc_info=exc)
         self.events.put(('error', failure.message))
+        if self.voice:
+            from clydex.voice.events import VoiceState
+            state = VoiceState.INTERRUPTED if isinstance(exc, Cancelled) else VoiceState.ERROR
+            self.voice.lifecycle.transition(state)
+            self.voice.events.emit('error' if state == VoiceState.ERROR else 'warning', state, code=failure.code)
 
     def close(self):
         self.closed = True
         self.cancel()
         self.browser.close()
+        if self.voice:
+            self.voice.close()
 
     def wait_closed(self):
         try:
             self.browser.wait_closed()
         finally:
+            if self.voice:
+                self.voice.wait_closed()
             if self._model_future is not None:
                 try:
                     self._model_future.result()
@@ -534,43 +483,6 @@ class VoiceEngine:
         return self.inbox.draft(number, arguments['body'])
 
     def speak_with_audio_meter(self, answer):
-        """Synthesize Windows SAPI speech in memory and meter PCM during actual playback.
-        Speech and visualization use the exact same sample stream; no fake speaking waveform.
-        """
-        import numpy as np
-        import sounddevice as sd
-        import pythoncom
-        from win32com.client import Dispatch
-
-        text_to_speak = answer[:1300].strip()
-        if not text_to_speak or self.closed:
-            return
-        pythoncom.CoInitialize()
-        try:
-            voice = Dispatch('SAPI.SpVoice')
-            memory = Dispatch('SAPI.SpMemoryStream')
-            audio_format = Dispatch('SAPI.SpAudioFormat')
-            audio_format.Type = 22  # SAFT22kHz16BitMono
-            memory.Format = audio_format
-            voice.AudioOutputStream = memory
-            voice.Speak(text_to_speak, 16)  # SVSFIsNotXML: speak the reply as literal text.
-            samples = np.frombuffer(bytes(memory.GetData()), dtype='<i2').reshape(-1, 1)
-            rate = memory.Format.GetWaveFormatEx().SamplesPerSec
-        finally:
-            voice = memory = audio_format = None
-            pythoncom.CoUninitialize()
-        if self.closed or self.cancel_token.is_set() or not samples.size:
-            return
-        spectrum = SpectrumStream(rate)
-        self.events.put(('audio_stream', spectrum))
-        try:
-            with sd.OutputStream(samplerate=rate, channels=1, dtype='int16', blocksize=1024) as stream:
-                self.events.put(('status', 'SPEAKING'))
-                for offset in range(0, len(samples), 1024):
-                    if self.closed or self.cancel_token.is_set():
-                        break
-                    pcm = samples[offset:offset + 1024]
-                    stream.write(pcm)
-                    spectrum.push(pcm[:, 0].astype(np.float32) / 32768.)
-        finally:
-            self.events.put(('audio_stream', None))
+        from clydex.personality.policy import spoken_text
+        text = self.personality.spoken(answer) if self.personality else spoken_text(answer)
+        self._voice_service().speak(text, self.cancel_token)

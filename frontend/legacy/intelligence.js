@@ -25,7 +25,7 @@
   }
   async function refresh() {
     const data = await api().intelligence_settings();
-    if (data.busy) { notice('Wait for the current task to finish.'); return; }
+    if (data.busy || data.locked) { notice('Unlock the desktop and wait for the current task to finish.'); return; }
     settings = data;
     const chosen = value('providerId');
     el('providerId').replaceChildren(); el('routingSelected').replaceChildren();
@@ -47,7 +47,7 @@
   }
   async function memories() {
     const data = await api().memories();
-    if (data.busy) return;
+    if (data.busy || data.locked) return;
     records = data.records; proposals = data.proposals;
     el('memoryList').replaceChildren(); el('proposalList').replaceChildren();
     records.forEach(r => option(el('memoryList'), `[${r.category}] ${r.value.slice(0, 100)}`, r.id));

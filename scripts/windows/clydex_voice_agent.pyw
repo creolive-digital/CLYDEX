@@ -19,4 +19,7 @@ if __name__ == '__main__':
                                    width=1220, height=780, min_size=(760, 510),
                                    background_color='#0E1416')
     window.events.closed += studio._close
+    window.events.minimized += lambda: studio.set_voice_visible(False)
+    window.events.shown += lambda: studio.set_voice_visible(True)
+    window.events.restored += lambda: studio.set_voice_visible(True)
     webview.start(gui='edgechromium')

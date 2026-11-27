@@ -115,13 +115,44 @@ def webview_smoke() -> dict:
                 assert core.conversations.current.title == 'Synthetic smoke session'
                 assert b'Synthetic smoke session' not in core.store.path.read_bytes()
                 assert all(not c.enabled for name, c in core.providers.configs.items() if name != 'codex')
+                window.evaluate_js("document.getElementById('intelligencePanel').close();"
+                                   "document.getElementById('voiceSettingsOpen').click()")
+                deadline = time.monotonic() + 8
+                while not window.evaluate_js("document.getElementById('voicePanel').open"):
+                    assert time.monotonic() < deadline, 'Voice controls failed to open'
+                    time.sleep(.05)
+                assert window.evaluate_js("document.getElementById('personalityMode').options.length") == 9
+                assert not core.voice.config.microphone_enabled
+                assert core.voice.privacy.muted
+                window.evaluate_js("document.getElementById('v_volume').value=37;"
+                                   "document.getElementById('voiceSave').click()")
+                deadline = time.monotonic() + 8
+                while not core.engine.pending_review():
+                    assert time.monotonic() < deadline, 'Voice configuration review did not open'
+                    time.sleep(.05)
+                review = core.engine.pending_review()
+                assert 'voice.configure' in review['script']
+                assert studio.decide(review['id'], True)
+                while studio.snapshot()['busy']:
+                    assert time.monotonic() < deadline, 'Voice configuration did not finish'
+                    time.sleep(.05)
+                assert core.voice.config.volume == 37
+                assert not core.voice.config.microphone_enabled
+                assert not core.voice.snapshot()['background_armed']
+                assert not studio.microphone()
+                core.voice.privacy.probe = lambda: True  # Synthetic lock, never lock the owner's PC.
+                deadline = time.monotonic() + 5
+                while window.evaluate_js("document.getElementById('privacyShield').hidden"):
+                    assert time.monotonic() < deadline, 'Lock privacy shield did not appear'
+                    time.sleep(.05)
                 result.update(webview='passed', checks='WebView2 startup, local assets, bridge, Stop, review UI, '
-                              'seven provider controls, temporary defaults, reviewed encrypted session creation')
+                              'seven providers, encrypted session creation, nine personality profiles, reviewed '
+                              'voice settings, disabled/muted defaults, synthetic lock privacy shield')
             except Exception as exc:
                 result['error_type'] = type(exc).__name__
             finally:
                 window.destroy()
-        timer = threading.Timer(25, window.destroy)
+        timer = threading.Timer(45, window.destroy)
         timer.daemon = True
         timer.start()
         try:
@@ -130,6 +161,7 @@ def webview_smoke() -> dict:
         finally:
             timer.cancel()
             core.close()
+            assert core.wait_closed(5), 'Core native resources did not close'
     if result['webview'] != 'passed':
         raise RuntimeError(json.dumps(result))
     return result

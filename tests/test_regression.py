@@ -19,7 +19,7 @@ def engine_for_test(config=None):
     inbox = Mock()
     inbox.messages = []
     return VoiceEngine(config=config or AppConfig(speak_replies=False), provider=Mock(),
-                       apps=Mock(), browser=Mock(), inbox=inbox)
+                       apps=Mock(), browser=Mock(), inbox=inbox, voice_privacy_probe=lambda: False)
 
 
 class EngineRegressionTests(unittest.TestCase):

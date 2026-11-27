@@ -46,13 +46,20 @@ class SupervisedQueue:
         self._thread = threading.Thread(target=self._run, name='clydex-core', daemon=True)
         self._thread.start()
 
-    def submit(self, work: Callable[[CancellationToken], object]) -> TaskHandle:
+    def submit(self, work: Callable[[CancellationToken], object], *, only_if_idle: bool = False) -> TaskHandle:
         handle = TaskHandle()
         with self._lock:
             if self._closed:
                 raise RuntimeError('Task queue is closed.')
+            if only_if_idle and (self._active is not None or self._queue.unfinished_tasks):
+                raise queue.Full
             self._queue.put_nowait((handle, work, self._generation))
         return handle
+
+    @property
+    def busy(self) -> bool:
+        with self._lock:
+            return self._active is not None or bool(self._queue.unfinished_tasks)
 
     def _run(self) -> None:
         while True:

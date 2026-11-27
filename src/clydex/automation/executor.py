@@ -44,6 +44,7 @@ class ToolExecutor:
             approval = self.permissions.issue(action)
             try:
                 if not review(approval, action):
+                    token.check()
                     raise PermissionDenied('Action was not approved.')
                 token.check()
                 self.permissions.consume(approval, action)
