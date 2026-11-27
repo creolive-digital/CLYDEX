@@ -1,0 +1,27 @@
+import {useEffect, useState} from 'react';
+import {Clock3, Timer, AlarmClock, Watch, CloudSun, Play, Pause, RotateCcw} from 'lucide-react';
+import {useRead} from '../../hooks/useRead';
+import {command} from '../../services/bridge';
+import {Panel, Field, ErrorNotice, Empty} from '../../components/ui';
+import type {Frame} from '../../types/bridge';
+
+export function useClock() {
+  const [now,setNow]=useState(new Date());
+  useEffect(()=>{let timer:ReturnType<typeof setInterval>|undefined;const change=()=>{clearInterval(timer);if(!document.hidden){setNow(new Date());timer=setInterval(()=>setNow(new Date()),1000);}};change();document.addEventListener('visibilitychange',change);return()=>{clearInterval(timer);document.removeEventListener('visibilitychange',change);};},[]);
+  return now;
+}
+export const duration=(seconds=0)=>{const n=Math.max(0,Math.floor(seconds));return `${n>=3600?`${Math.floor(n/3600)}:`:''}${String(Math.floor(n/60)%60).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`;};
+export function WidgetPage({frame,onError}:{frame:Frame;onError:(e:string)=>void}) {
+  const now=useClock(),{data,error}=useRead('widget'),w=frame.widget?.status==='ready'?frame.widget:data;
+  const [tab,setTab]=useState('clock'),[seconds,setSeconds]=useState(1500),[alarm,setAlarm]=useState('09:00'),[city,setCity]=useState('Colombo');
+  const action=(operation:string,extra={})=>{void command('widget.action',{operation,...extra}).catch(e=>onError(e.message));};
+  return <Panel title="A little space for your day" eyebrow="SMART WIDGET" className="widget-panel"><div className="segmented" role="tablist" aria-label="Time tools">{[['clock',Clock3],['timer',Timer],['alarm',AlarmClock],['stopwatch',Watch]].map(([name,Icon])=><button key={String(name)} role="tab" aria-selected={tab===name} onClick={()=>setTab(String(name))}>{typeof Icon!=='string'&&<Icon size={15}/>}<span>{String(name)}</span></button>)}</div><ErrorNotice text={error}/>
+    {tab==='clock'&&<div className="clock-face"><p>{now.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}</p><time>{now.toLocaleTimeString(undefined,{hour12:false})}</time><small>LOCAL TIME · {Intl.DateTimeFormat().resolvedOptions().timeZone}</small></div>}
+    {tab==='timer'&&<div className="time-tool"><time>{duration(w?.timer_remaining)}</time><p>{w?.timer_running?'Counting down':'Ready or paused'}</p><div className="preset-row">{[300,900,1500].map(s=><button className="button" key={s} disabled={frame.busy} onClick={()=>{setSeconds(s);action('timer.set',{seconds:s});}}>{s/60} min</button>)}</div><Field label="Custom duration in seconds"><input type="number" min={1} max={86400} value={seconds} onChange={e=>setSeconds(Number(e.target.value))}/></Field><div className="form-actions"><button className="button" onClick={()=>action('timer.set',{seconds})}>Set duration</button><button className="button primary" onClick={()=>action('timer.toggle')}>{w?.timer_running?<Pause size={15}/>:<Play size={15}/>} {w?.timer_running?'Pause':'Start / resume'}</button><button className="button" onClick={()=>action('timer.reset')}><RotateCcw size={14}/>Reset</button></div></div>}
+    {tab==='alarm'&&<div className="time-tool"><AlarmClock size={26}/><time>{w?.alarm_at?new Date(w.alarm_at).toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'}):'No alarm'}</time><Field label="Local alarm time"><input type="time" value={alarm} onChange={e=>setAlarm(e.target.value)}/></Field><div className="form-actions"><button className="button primary" onClick={()=>{const [hour,minute]=alarm.split(':').map(Number);action('alarm.set',{hour,minute});}}>Set alarm</button><button className="button" onClick={()=>action('alarm.cancel')}>Cancel alarm</button></div><p className="quiet-note">A passed time is scheduled for tomorrow. Keep CLYDEX running.</p></div>}
+    {tab==='stopwatch'&&<div className="time-tool"><time>{duration(w?.stopwatch_elapsed)}<small>.{Math.floor((w?.stopwatch_elapsed||0)*10)%10}</small></time><p>{w?.lap||'No lap recorded'}</p><div className="form-actions"><button className="button primary" onClick={()=>action('stopwatch.toggle')}>{w?.stopwatch_running?'Pause':'Start / resume'}</button><button className="button" disabled={!w?.stopwatch_running} onClick={()=>action('stopwatch.lap')}>Lap</button><button className="button" onClick={()=>action('stopwatch.reset')}>Reset</button></div></div>}
+    {!!w?.alerts.length&&<div className="widget-alert" role="alert"><b>{w.alerts[0][0]}</b><p>{w.alerts[0][1]}</p><button className="button" onClick={()=>action('alert.dismiss')}>Dismiss</button>{w.alerts[0][0]==='Alarm'&&<button className="button" onClick={()=>action('alarm.snooze')}>Snooze 5 minutes</button>}</div>}
+    <div className="weather-card"><CloudSun size={30}/><div><b>{w?.temperature||'—'}</b><p>{w?.weather_status==='LIVE'?w.weather:'Weather not refreshed'}</p><small>{w?.weather_status==='LIVE'?w.weather_metrics:'Refresh contacts Open-Meteo after review.'}</small></div></div><Field label="Weather city"><input value={city} maxLength={100} onChange={e=>setCity(e.target.value)}/></Field><button className="button" disabled={frame.busy} onClick={()=>action('weather',{city})}>Review weather refresh</button>{w?.status==='unavailable'&&<Empty>Native time tools unavailable. Standalone widget fallback remains available.</Empty>}
+    <p className="quiet-note">One time-tool instance is shared across HUD views. Changing display modes does not restart it.</p>
+  </Panel>;
+}

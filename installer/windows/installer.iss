@@ -29,6 +29,9 @@ Name: "desktopicon"; Description: "Create a &desktop shortcut for the CLYDEX wid
 [Files]
 Source: "..\..\docs\README_SETUP.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\docs\VOICE_CONFIGURATION.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\docs\FRONTEND_ARCHITECTURE.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\docs\UI_DESIGN_SYSTEM.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\docs\AVATAR_RENDERING.md"; DestDir: "{app}"; Flags: ignoreversion
 ; Widget — full dist folder goes into widget\
 Source: "..\..\deployment\windows\artifacts\dist\clydex_widget\*"; DestDir: "{app}\widget"; Flags: ignoreversion recursesubdirs createallsubdirs
 

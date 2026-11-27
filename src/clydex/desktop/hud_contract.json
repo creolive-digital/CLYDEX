@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "read": {
+    "bootstrap": {}, "intelligence": {}, "voice": {}, "memories": {}, "preferences": {}, "permissions": {}, "widget": {},
+    "conversations": {"query": "string?"}, "export": {"id": "string?"}
+  },
+  "command": {
+    "chat.send": {"message": "string"}, "chat.clear": {}, "voice.capture": {"check": "boolean?"},
+    "voice.mute": {"muted": "boolean"}, "voice.stop": {}, "voice.test": {}, "voice.arm": {},
+    "voice.configure": {"values": "object"}, "voice.download": {"model": "string"},
+    "personality.configure": {"values": "object", "address": "string?"},
+    "provider.configure": {"name": "string", "values": "object", "secret": "string?", "remove_key": "boolean?"},
+    "provider.check": {"name": "string"}, "routing.configure": {"values": "object"},
+    "conversation.manage": {"values": "object"}, "conversation.resume": {"id": "string"},
+    "memory.manage": {"values": "object"}, "memory.configure": {"values": "object"},
+    "approval.decide": {"id": "string", "approve": "boolean"},
+    "display.mode": {"mode": "string"}, "display.monitor": {"index": "integer"},
+    "preferences.configure": {"values": "object"}, "permissions.configure": {"disabled_scopes": "array"},
+    "widget.action": {"operation": "string", "seconds": "integer?", "hour": "integer?", "minute": "integer?", "city": "string?"},
+    "notifications.clear": {}, "notifications.native_test": {}, "startup.greet": {}
+  }
+}

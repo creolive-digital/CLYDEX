@@ -103,6 +103,15 @@ class SystemTray:
     def close(self):
         self._stop.set()
 
+    def notify(self) -> bool:
+        """Generic Shell notification only; never show private task/transcript text."""
+        if not self._window or self.status != 'active':
+            return False
+        import win32gui
+        win32gui.Shell_NotifyIcon(win32gui.NIM_MODIFY, (self._window, 0, 0x10, 0, 0, '',
+            'Open CLYDEX to review the local status.', 3000, 'CLYDEX', 1))
+        return True
+
     def wait_closed(self):
         if self._thread and self._thread is not threading.current_thread():
             self._thread.join()

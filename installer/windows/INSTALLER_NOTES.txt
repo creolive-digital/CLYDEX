@@ -18,7 +18,7 @@ CLYDEX is now installed. Before the Voice Agent will work:
 3. MICROPHONE PERMISSIONS
    Windows Settings > Privacy & security > Microphone
    Make sure "Let apps access your microphone" is ON.
-   Then open Voice & Personality in CLYDEX, review microphone opt-in,
+   Then open Voice (or legacy Voice & Personality) in CLYDEX, review microphone opt-in,
    and explicitly unmute this session. Stop or mute cancels pending work.
 
 4. LOCAL SPEECH MODELS
@@ -32,3 +32,11 @@ The CLYDEX Widget (clock / weather) works without any of the above.
 
 For Windows task approvals, Chrome or Edge browsing, and Outlook setup,
 see README_SETUP.txt in the CLYDEX installation folder.
+
+The agent now opens the local React cinematic HUD. No CDN is required.
+Use clydex_voice_agent.exe --legacy for the retained static interface,
+--silent for muted startup, or --reduced-motion to disable cinematic motion.
+Display modes share one Core and one set of time tools. Tray hiding requires
+reviewed native tray controls. The avatar is the approved reference presentation;
+a matching production facial/full-body rig and precise lip synchronization are
+not bundled. See FRONTEND_ARCHITECTURE.md and AVATAR_RENDERING.md.

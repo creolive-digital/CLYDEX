@@ -23,6 +23,18 @@ python -m pip install --upgrade "pyinstaller>=6.0" pyinstaller-hooks-contrib
 if errorlevel 1 ( echo ERROR: pip install failed. & pause & exit /b 1 )
 echo [OK] PyInstaller ready.
 
+:: Build local React assets before freezing either desktop application.
+where node >nul 2>&1
+if errorlevel 1 ( echo ERROR: Node.js 24 is required to build the frontend. & pause & exit /b 1 )
+pushd frontend
+call npm ci
+if errorlevel 1 ( popd & pause & exit /b 1 )
+call npm test
+if errorlevel 1 ( popd & pause & exit /b 1 )
+call npm run build
+if errorlevel 1 ( popd & pause & exit /b 1 )
+popd
+
 :: ── 3. Build the widget exe ───────────────────────────────────
 echo.
 echo Building clydex_widget.exe ...

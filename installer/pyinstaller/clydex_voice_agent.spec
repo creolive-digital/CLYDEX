@@ -6,9 +6,13 @@ from pathlib import Path
 from importlib.util import find_spec
 
 ROOT = Path(SPECPATH).resolve().parents[1]
+HUD = ROOT / 'deployment/windows/artifacts/frontend'
+if not (HUD / 'index.html').is_file():
+    raise RuntimeError('Build the local frontend first: npm --prefix frontend ci, then npm --prefix frontend run build')
 
 datas = [
     (str(ROOT / 'frontend/legacy'), 'frontend/legacy'),
+    (str(HUD), 'frontend/hud'),
     (str(ROOT / 'assets/legacy/clydex_hologram.png'), '.'),
     (str(ROOT / 'assets/legacy/clydex_projection.png'), '.'),
 ]
@@ -44,7 +48,7 @@ a = Analysis(
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=['tkinter', '_tkinter'],
+    excludes=[],  # HUD's one owned time-tools adapter reuses the existing Tk implementation.
     noarchive=False,
 )
 

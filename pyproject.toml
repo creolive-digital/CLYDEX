@@ -20,6 +20,7 @@ where = ["src"]
 [tool.setuptools.package-data]
 "clydex.database" = ["migrations/*.sql"]
 "clydex.tools" = ["*.ps1"]
+"clydex.desktop" = ["hud_contract.json"]
 
 [tool.ruff]
 target-version = "py310"
