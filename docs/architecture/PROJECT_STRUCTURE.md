@@ -1,6 +1,6 @@
 # Project structure and public interfaces
 
-Current Phase 02 structure after foundation hardening and owner-requested root cleanup. Target follows the owner's mandatory layout; only functional packages exist. Source launchers remain under scripts/windows and the supplied specifications/archive remain unchanged.
+Current Phase 03 structure after incremental voice/personality extraction. Target follows the owner's mandatory layout; only functional packages exist. Source launchers remain under scripts/windows and the supplied specifications/archive remain unchanged.
 
 ## Actual structure
 
@@ -17,14 +17,19 @@ CLYDEX/
     providers/                    Codex + six HTTP codecs, transport, registry, router
     conversations/                encrypted owned sessions/messages and retention
     memory/                       encrypted provenance, consent, suggestions, retrieval
-    voice/                        real PCM/FFT spectrum
+    voice/                        typed contracts, config/artifacts, input/output,
+                                  Whisper, SAPI/Piper, VAD, wake, lifecycle,
+                                  devices/privacy/events and real PCM/FFT spectrum
+    personality/                  nine presentation profiles, response policy,
+                                  encrypted optional personal addressing
     tools/                        Windows, browser, PowerShell adapters and PS1 resources
     integrations/                 existing Outlook integration
     security/                     exact approvals, outbound policy, Credential Manager,
                                   DPAPI encryption and private persistence filter
     automation/                   bounded queue, cancellation and tool execution
     database/                     SQLite metadata and schema 1–3 embedded migrations
-    desktop/                      Studio bridge, widget, Tk theme/hologram helpers
+    desktop/                      Studio/voice/settings bridge, native hotkey/tray
+                                  activation ownership, widget, Tk theme/helpers
   frontend/legacy/                existing HTML/CSS/JS desktop frontend, bundled
                                   fonts/icons/licenses; no UI redesign
   assets/legacy/                  unchanged active PNG artwork
@@ -32,6 +37,8 @@ CLYDEX/
   tests/                          all active V2 tests, including voice regressions
   scripts/
     verify_windows_smoke.py        safe native UI/credential verification
+    verify_voice_native.py         device/voice metadata, SAPI-to-RAM and owned
+                                  native activation check; no mic/speaker
     windows/
       clydex_widget.pyw            V2 widget launcher
       clydex_voice_agent.pyw       V2 Studio launcher
@@ -57,9 +64,9 @@ There are no loose Python modules, launchers, batch files, .spec files, installe
 |---|---|---|
 | `src/clydex/core/` | Application services and orchestration | Implemented foundation; legacy orchestration retained incrementally |
 | `providers/` | Seven model adapters/routing | Implemented Phase 02; six new adapters disabled, live validation pending |
-| `voice/` | STT/TTS/activation/audio | Spectrum now; existing engine STT/SAPI retained until Phase 3 |
+| `voice/` | STT/TTS/activation/audio | Phase 03 services implemented; gated local custom wake/neural assets; live acoustic acceptance open |
 | `conversations/`, `memory/` | Session persistence and consented personal memory | Implemented Phase 02; encryption, owner-bound repositories and local retrieval |
-| `personality/` | Adaptive behavior | Phase 3; no placeholder package |
+| `personality/` | Adaptive presentation | Phase 03 nine profiles/configured tone/length/language; no permission authority |
 | `tools/`, `automation/` | OS/developer adapters and supervised execution/workflows | Existing tools/queue now; expanded tools/studio Phase 6 |
 | `knowledge/` | Ingestion/retrieval | Phase 5 |
 | `security/` | Permissions/credentials/audit/auth | Local consent/secret foundation now; cloud/device auth later |
@@ -74,6 +81,14 @@ There are no loose Python modules, launchers, batch files, .spec files, installe
 | `assets/` | Approved branding/avatar/fonts/sounds | Existing V2 artwork under legacy/; approved reference files still missing OI-01 |
 | `cloud/` | Independently deployable cloud gateway/sync | Phase 5 after owner infra approval |
 | `database/` (root) | SQLite/MSSQL deployment schemas/scripts | Add deployment SQL when needed; current embedded local migration is package data |
+
+## Phase 03 public boundaries and runtime ownership
+
+`voice/contracts.py` defines AudioInput, AudioOutput, SpeechRecognizer, SpeechSynthesizer, ActivityDetector, WakeDetector, ConversationLifecycle and InterruptibleVoice, plus AudioBuffer/PCMChunk/Transcript. `devices.py` defines DeviceManager/AudioDevice. `events.py` defines VoiceState, VoiceEvent and optional SpeechTiming; sinks remain transport-independent and bridge tuple compatibility is retained. `spectrum.py` remains the single real FFT implementation.
+
+CoreApplication owns VoiceRuntime and PersonalityService. VoiceEngine delegates capture/recognition/synthesis to these services while the same IntelligenceCoordinator, ToolExecutor, permissions, conversation/memory services and supervised queue handle every request. `desktop/activations.py` owns native hotkey/tray lifecycles registered with Core. The Core lock is released only after queue/model/wake/privacy/native cleanup. The background worker detects wake only and submits to the same queue; it never plans tools.
+
+Voice preferences and encrypted optional addressing live in runtime `settings/voice.json` and `settings/personality.json`; downloaded models/manifests/binaries belong under runtime `models/`, outside source. No schema-4 migration, raw audio file, frontend-specific headless dependency, empty placeholder package or approved-brand replacement was added. `docs/VOICE_CONFIGURATION.md` is included by the Windows installer. Optional wake code is collected by PyInstaller only when explicitly installed for that build; no wake/neural assets are bundled. React/HUD/production humanoid remains Phase 04.
 | `config/` | Non-secret templates | Implemented |
 | `tests/` | Unit/integration/regression/security/perf/e2e | Functional foundation tests now, later categories incrementally |
 | `deployment/`, `installer/` | Windows/Linux/Docker/proxy and setup wizard | Later migration; working scripts/specs under scripts/ and installer/ |

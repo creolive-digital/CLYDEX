@@ -1,5 +1,22 @@
 # Requirements traceability
 
+## Phase 03 checkpoint (2026-11-27)
+
+| Requirement / task | Current classification | Evidence / remaining boundary |
+|---|---|---|
+| FND-01,02,05 / P3-01,02,04,07 | Implemented extraction/ownership | Typed headless voice contracts, existing Core/coordinator/queue/executor, bounded audio/events, joined native/model/lock watcher resources; no second AI engine. |
+| VO-01 / P3-05,07 | Implemented five activation pathways; wake asset requires owner validation | Manual/continuous/hotkey/tray controls and custom local wake adapter. Native registration verified; synthetic routing tests. No real Hey CLYDEX model supplied or validated. |
+| VO-02 / P3-02,04,08 | Implemented capture/VAD/confidence/lifecycle/cancellation | Synthetic PCM/silence/overflow/confidence/cancel tests; no uncertain dispatch; half duplex, follow-ups/timeouts, separate finish/Stop and explicit microphone opt-in. Live accuracy/driver behavior unverified. |
+| VO-03 / P3-03 | Implemented local TTS contracts/fallback; cinematic voice requires selection | Async literal SAPI→RAM verified, cancellable PCM playback and optional fingerprinted Piper CLI tested with mocks. No neural model/quality/cinematic claim. |
+| VO-04 / P3-02,03 | Implemented real events; visemes not implemented | Real amplitude/frequency/playback frames, lifecycle and optional SpeechTiming contract. No fabricated lip/phoneme synchronization or Phase 04 renderer. |
+| VO-05 / P3-02,03,06 | Implemented independent language selection/fallback; live acceptance pending | English/Sinhala/Tamil recognition configuration, mixed/Singlish text preference; only English SAPI installed. Capability matrix and visible unsupported-language fallback in VOICE_CONFIGURATION. |
+| SEC-01,02,03 / P3-04,06,07 | Implemented voice privacy/consent boundaries | Exact approvals unchanged, Stop/mute revokes effects, lock watcher/action-time checks, hidden-background indicator requirement, private addressing transfer review. No raw audio/log content, cloud TTS or implicit download. Native effect rollback not claimed. |
+| MODE-01, D04,D51,D52 / P3-06 | Implemented presentation portion | Nine profiles/tone/length/language, focus/gaming speech preference, optional encrypted name; no permission or memory activation fields. Automatic contextual tool/workspace mode switching remains later scope. |
+| MEM-01,02 / P3-07 | Preserved and integrated | Existing temporary/saved sessions and consented memories; complete screen answer retained, private addressing separate from memory, local-only history safeguards and privacy tests pass. |
+| TEST-01 / P3-08,09 | Implemented declared automated/native scope | Full tests, original four voice cases, separate archive tests, real safe UI/launcher/SAPI/native registration, lint/syntax/build evidence in completion report. Hardware, acoustic, frozen interactive and production acceptance remain open. |
+
+Phase 03 supersedes historical statements below that voice is unstarted. Phase 04 HUD/renderer, cloud, plugins, devices and release remain unimplemented/unapproved.
+
 Current status: Phase 02 engineering checkpoint below supersedes historical baseline/Phase 01-only statements. Live activation and account/hardware acceptance remain separate gates.
 
 ## Phase 02 checkpoint

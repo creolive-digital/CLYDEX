@@ -2,7 +2,9 @@
 
 Windows-first personal AI assistant. Active code is in `src/clydex/`; the original V1 release is preserved independently in `v1-old/`.
 
-Phase 02 engineering is ready for review: multi-provider routing, encrypted local conversations and consented memory are available through **AI & Memory** in the existing desktop UI. Codex remains the default; new providers are disabled, chats start temporary, and automatic memory suggestions are off. See [provider setup and privacy](docs/PROVIDER_CONFIGURATION.md) and the [Phase 02 checkpoint report](docs/PHASE_02_COMPLETION_REPORT.md) for verified behavior and remaining acceptance gates.
+Phase 03 adds modular local voice, controlled follow-up conversation, interrupt/mute/lock privacy, native activation adapters and nine personality profiles through **Voice & Personality** in the existing desktop UI. Microphone/background activation starts off; speech models require separate reviewed preparation. SAPI remains the local fallback. No validated Hey CLYDEX model or approved cinematic neural voice is bundled. See [voice setup and limitations](docs/VOICE_CONFIGURATION.md) and the [Phase 03 checkpoint](docs/PHASE_03_COMPLETION_REPORT.md).
+
+Multi-provider routing, encrypted conversations and consented memory remain available through **AI & Memory**. Codex remains the default; new providers are disabled, chats start temporary, and automatic memory suggestions are off. See [provider setup and privacy](docs/PROVIDER_CONFIGURATION.md). Live hardware/provider and production acceptance remain pending.
 
 From the checkout root:
 

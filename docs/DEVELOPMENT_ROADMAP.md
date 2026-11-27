@@ -1,5 +1,9 @@
 # Development roadmap
 
+## Current Phase 03 disposition (2026-11-27)
+
+Latest owner instruction supersedes historical Phase 02 stops. P3-01 admission, P3-02 audio/STT/VAD, P3-03 local TTS, P3-04 lifecycle/privacy/cancel, P3-05 activation adapters, P3-06 personality/languages, P3-07 Core/UI integration, P3-08 declared verification and P3-09 documentation are delivered in the engineering scope. Activation/voice assets and live language/acoustic/performance acceptance remain external gates, not completed models or certification. See PHASE_03_COMPLETION_REPORT for evidence and conditional capabilities. Stop at Phase 03; all Phase 04–08 rows remain future work. Historical rows below describe their original checkpoint dates.
+
 Source: Blueprint pp19–21 and master instructions. No dates, budgets or later-phase approvals inferred.
 
 | Phase | Tasks / deliverable | Dependencies | Acceptance / status |

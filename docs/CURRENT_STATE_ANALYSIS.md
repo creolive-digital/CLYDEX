@@ -1,5 +1,13 @@
 # Current state analysis
 
+## Phase 03 assessment (2026-11-27)
+
+Intake found `v2` at `aa084d4` with extensive preexisting uncommitted Phase 03 work. It was preserved and audited; no assumption of a clean reviewed checkpoint was made. Isolated HEAD passes 135 tests; reviewed `6b8c452` CI run 45807025777 succeeded. The current working-tree baseline had 178 tests with one intermittent model-loader test failure and a consequent cleanup error; unnecessary heavyweight imports in injected adapters and test cleanup were corrected. Historical analysis below remains provenance, not the current phase authorization.
+
+Core now owns VoiceRuntime and PersonalityService alongside the existing coordinator/providers/conversations/memory/executor. Audio capture/output, recognition, synthesis, VAD, wake, devices, privacy, lifecycle and events are extracted into headless services. New functional legacy controls and Windows hotkey/tray adapters reuse the same queue. Watcher/native-resource/model completion remains part of instance ownership. Lock checks do not depend on frontend polling, and immediate Stop/mute cancels foreground tokens and pending effects.
+
+Defaults are microphone disabled/muted, background/continuous/wake/hotkey/tray off, no implicit model downloads and no raw audio files. Local SAPI works for synthetic in-memory English PCM; only English voices were enumerated here. Optional neural/wake adapters require licensed owner-selected assets; no actual Hey CLYDEX model or cinematic voice is supplied. Language/quality/latency acceptance, live providers and hardware remain unverified. See PHASE_03_COMPLETION_REPORT and VOICE_CONFIGURATION for the current capability boundaries, actual test evidence and external gates. Phase 04 is not authorized.
+
 ## Current Phase 02 assessment (2026-11-26)
 
 Current implementation baseline was clean `v2` at reviewed `0c0213d`; the e65fe46 audit below is historical. All required specifications/management documents were reread before edits. The original 76 tests and reviewed baseline GitHub Actions run passed. Hardening commit `3d38311` addressed early instance-lock release, child output bounds and owned process termination before Phase 02 began. No main/archive changes or new provider activation occurred.

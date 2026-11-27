@@ -1,5 +1,30 @@
 # Open issues and requirement conflicts
 
+## Phase 03 checkpoint disposition (2026-11-27)
+
+| IDs | Engineering disposition | External owner/technical acceptance |
+|---|---|---|
+| OI-25 | Implicit model downloads removed; complete local cache required; exact reviewed anonymous preparation with model/directory/storage/network disclosure. | Owner approves actual selected model preparation; no model downloaded or real inference tested here. Native download cancellation can wait for library cleanup. |
+| OI-26,09 | Local custom-wake/Piper interfaces, licensed artifact manifests/fingerprints, SAPI fallback and no invented name/voice. | No validated Hey CLYDEX model, original cinematic voice or redistribution package supplied. Owner selects/licenses/auditions assets and measures false activations. Wake is gated, not claimed working acoustically. |
+| OI-27 | Independent recognition/response/synthesis languages, actual SAPI metadata and visible text-only/English-notice fallback. | Only English SAPI voices installed; Sinhala/Tamil/Singlish recognition/pronunciation and all actual neural capabilities unverified. |
+| OI-28,14 | Separate finish vs cancel, async SAPI purge, owned PCM playback/process/model cleanup and foreground token cancellation. Repeated reviews recover after Stop/sleep/error. | Live driver/COM/STT cancellation remains cooperative; completed effects are not undone. No spoken full-duplex barge-in/AEC. |
+| OI-29 | Opt-in/muted defaults, bounded transient buffers, half duplex, Core-owned lock/session watcher, action-time guards and hidden-background tray/indicator checks. | Human lock/disconnect/hidden/long-idle UX, acoustic feedback and physical access/spoof testing remain open. No real ambient recording or speaker test performed. |
+| OI-31 | Intake synthetic ownership test failed intermittently because injected adapters still imported heavy Whisper dependencies before a two-second wait; failure cleanup was also incomplete. Both corrected and covered. | This was an intake working-tree verification defect, separate from the passing isolated 135-test committed foundation. |
+| OI-32 | Native hotkey/tray lifecycle and real legacy voice controls verified in safe scope; optional wake code collected only when installed for the build. | Standard frozen build has no optional wake runtime/models. Native activation by a real key/menu, optional frozen runtime, Inno/fresh install and acoustic use remain acceptance gates. |
+| OI-33 | Incremental PyInstaller rebuild reused stale PYZ code despite reanalysis; embedded bytecode inspection detected it. Fresh clean build passed and final embedded rejection branch verified. | Continue using clean builds/fresh work directories and embedded-code checks. Existing CI/build commands already use `--clean`; this is a resolved local packaging finding, not successful frozen interaction evidence. |
+
+OI-01/07/10/12/17–24 remain applicable as qualified below. Phase 03 authorization supersedes the historical Phase 02 stop; stop now at the Phase 03 engineering checkpoint. No provider/private/paid activation, push, merge or release is authorized.
+
+## Phase 03 intake
+
+- Latest owner authorizes voice/personality implementation after engineering admission. Phase 02 CI 45807025777 succeeded; historical no-current-CI statements below are superseded for that reviewed commit. New Phase 03 code is not authorized for push/merge/release.
+- OI-25: existing model loader silently downloads a missing Whisper model. Remove implicit download; add explicit reviewed model preparation with storage/network disclosure. Cached loading must remain local, including tokenizer/config closure.
+- OI-26: no owner-approved validated Hey CLYDEX wake model or cinematic neural voice is supplied. Evaluate current official local engines and implement real gated adapters; keep activation disabled and SAPI working. Do not relabel a generic detector or voice as approved/validated.
+- OI-27: installed SAPI voices and local neural models may not support Sinhala/Tamil/Singlish. Separate recognition/text-response/synthesis preferences; query actual installed metadata and provide visible text-only/explicit fallback. Native pronunciation/false-activation/quality/performance tests remain owner/hardware gates.
+- OI-28: baseline recording stops into transcription and synchronous SAPI lacks cooperative synthesis interruption. Separate finish-recording from cancel/mute, retain ownership of native work, and prevent playback or uncertain/ambient audio from authorizing subsequent effects.
+- OI-29: always-listening creates a new microphone privacy surface. Require opt-in, visible state, mute/Stop, lock/hidden-window policy and bounded transient buffers; no ambient persistence or cloud wake processing. Initial conversation is half duplex, not AEC/full duplex.
+- OI-30: expanded stress exposed a preexisting intermittent Windows HTTP close/read cancellation race. Resolved with owner-thread nonblocking connect/TLS/send/read polling, standard HTTP framing and new deterministic HTTP/1.0/chunked/verified local TLS tests. 30/30 focused cancellation repeats pass. Native DNS remains OI-18; no external provider/private content used.
+
 ## Current Phase 02 disposition (supersedes historical rows where stated)
 
 | ID | Current issue / resolution | Owner or technical gate |

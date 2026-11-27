@@ -1,6 +1,20 @@
 # Architecture decisions
 
-Status: historical Phase 01 decisions followed by owner-authorized Phase 02 decisions below; approved product identity and database technology remain unchanged.
+Status: Phase 03 decisions below supersede historical phase stops. Approved product identity, database technology and central execution authority remain unchanged.
+
+## Phase 03 decisions (2026-11-27)
+
+| ADR | Decision | Rationale / consequence |
+|---|---|---|
+| 029 | Owner authorizes bounded Phase 03; preserve the existing uncommitted implementation and verify HEAD separately. | Intake is `v2` at `aa084d4`, not a clean `6b8c452` checkout. Backed up intake changes outside source; no reset, branch rewrite or archive edit. Reviewed Phase 02 CI success is historical, not a current CI claim. |
+| 030 | One Core-owned VoiceRuntime with typed audio/STT/TTS/VAD/device/wake/lifecycle/cancellation contracts. | Extract VoiceEngine audio responsibilities while retaining its routing adapter, one IntelligenceCoordinator and supervised queue. No UI import in voice services or second AI engine. |
+| 031 | Explicit local model preparation and complete local cache checks. | Missing Whisper/tokenizer/config/vocabulary never cause implicit downloads. Supported names, displayed path/network/storage and exact approval; anonymous download only. Native load/download completion remains owned. Injected synthetic adapters avoid heavyweight dependency imports. |
+| 032 | Half duplex and a controlled lifecycle; background wake only detects activation. | Capture closes before reasoning/approvals/output; bounded buffers/cooldown, finish vs cancel, silence/follow-up/inactivity, mute/Stop, no claimed AEC/full duplex. Foreground tokens are canceled by runtime Stop as well as Core Stop. |
+| 033 | Fail-closed native lock/session policy with a Core-owned watcher and action-time checks. | Protect headless provider/approval waits, hide UI payloads, revoke pending actions and require explicit unmute/rearm after unlock. Hidden background operation needs consent plus a reachable trusted tray/indicator. Native cleanup retains the instance lock. |
+| 034 | Local SAPI compatibility plus optional owner-supplied Piper CLI; gated custom openWakeWord ONNX. | No cloud TTS, imitated actor, invented wake model or bundled neural assets. Reviewed manifests bind licensing/provenance/hashes and real phrase attestation. Current upstream license and raw PCM build differences documented in VOICE_CONFIGURATION. |
+| 035 | Personality affects presentation only; private addressing is encrypted and compartmented. | Nine fixed modes/validated tone/length/language, concise spoken vs complete screen text, focus/gaming speech suppression; privacy can restrict cloud but no mode grants permissions or memory consent. Name stays neutral until configured. |
+| 036 | Separate recognition, response and synthesis languages and report actual capabilities. | Multilingual Whisper preset substitution, installed SAPI metadata and explicit text/English-notice fallback; no text-generation-to-speech-support inference. Actual pronunciation/accuracy remains an external gate. |
+| 037 | Coalesced real amplitude/spectrum and lifecycle events; optional timing contract only. | Phase 04 can consume voice events independently of frontend. No simulated visemes, full HUD, renderer, new cloud/plugin/device phase or branding replacement. |
 
 ## Phase 02 decisions (2026-11-26)
 

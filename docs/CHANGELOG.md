@@ -1,5 +1,14 @@
 # Changelog
 
+## V2 Phase 03 — engineering checkpoint (2026-11-27)
+
+- Extracted bounded local audio, Whisper, SAPI/Piper, VAD, wake, devices, lifecycle, privacy and real spectrum events behind typed headless contracts; existing Core/coordinator/tools remain the authority.
+- Added opt-in microphone, distinct finish/cancel, half-duplex follow-ups, independent languages, lock watcher, mute/Stop, foreground cancellation and owned native shutdown.
+- Added configurable native hotkey/tray and a local custom-wake adapter. No trained Hey CLYDEX model, cinematic neural voice, raw recording, cloud TTS or automatic model download is bundled/enabled.
+- Added nine isolated personality modes, concise spoken/full-screen answers, encrypted optional addressing and functional legacy settings/status/error controls.
+- Preserved intake user changes and fixed the synthetic model-loader startup/cleanup failure, muted activation rejection and headless lock/action checks. Added deterministic/native/visual verification, optional-runtime packaging, setup/licensing documentation and the Phase 03 checkpoint.
+- Main, archive, official specifications and artwork remain protected. Live speech/language/quality/provider/hardware acceptance and asset choices are open; stop before Phase 04, with no push/merge/release.
+
 ## V2 Phase 02 — engineering checkpoint (2026-11-26)
 
 - Hardened shutdown ownership and Windows child jobs, including failed assignment cleanup, bounded combined output/generated files and descendant termination.

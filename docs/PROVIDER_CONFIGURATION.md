@@ -1,5 +1,7 @@
 # Phase 02 configuration and privacy
 
+Phase 03 continuation: voice transcripts use the same IntelligenceCoordinator, outbound compartments, configured providers, cost ceilings and exact-action reviews described here. Personality privacy mode adds a cloud restriction; it cannot enable a provider or relax core/routing privacy. Optional encrypted addressing is private context and requires transfer review. No new AI provider or cloud speech service was activated. See [voice configuration](VOICE_CONFIGURATION.md) and [Phase 03 evidence](PHASE_03_COMPLETION_REPORT.md). Historical Phase 02 protocol/configuration guidance below remains applicable.
+
 Validated against official documentation on 2026-11-26. These are implementation contracts and synthetic test results, not live connectivity or model-availability claims. No SDK dependency or invented default model was added. The existing logged-in Codex CLI remains the only enabled default provider. Six HTTP providers start disabled without models or credentials.
 
 ## Desktop setup

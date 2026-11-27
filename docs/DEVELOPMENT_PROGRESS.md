@@ -1,5 +1,49 @@
 # Development progress
 
+## Owner-authorized checkpoint publication (2026-11-27)
+
+After the Phase 03 engineering handoff, the owner explicitly requested a GitHub push. Publish the existing provider-cancellation hardening and reviewed Phase 03 implementation/documentation on `v2` only; no main merge, tag or release. Pre-publication review found 67 changed/new paths relative to the reviewed Phase 02 checkpoint, no generated/runtime artifacts and no high-signal credential patterns. Local source verification remains 185 passing V2 tests plus four separate archive tests; current remote CI is not yet claimed.
+
+## Phase 03 continuation audit and checkpoint (2026-11-27)
+
+This continuation found `v2` at `aa084d453e41152c6c007a90a1b05c892fd72cf4` with substantial uncommitted Phase 03 implementation already present. Changes were backed up outside source and preserved. Both specifications and all management documents were reread. Main, archive and official document hashes remain protected. The earlier clean-6b8 intake below is historical evidence from the previous implementation work, not the state encountered by this continuation.
+
+Admission repeated: isolated HEAD **135 passed** (9.805 s). GitHub API confirms Phase 02 run 45807025777 at exactly `6b8c452` succeeded through Python 3.11 checks, both EXEs, Inno compilation and artifact upload; release skipped. Current working-tree baseline: **178 tests**, one ownership-test timing failure plus consequent open-log cleanup error. The injected model/cache adapters now avoid unnecessary heavyweight imports and the test always releases/joins cleanup. No product, hardware or provider acceptance was inferred.
+
+P3-02–07 extraction/integration was audited and completed with headless lock monitoring, action-time/privacy approval checks, canceled foreground tokens, native minimize/restore privacy, rejected muted activation, settings recovery after Stop/sleep/error and standby completion. Hidden background capture requires trusted native indicator/Stop availability; tray metadata updates independently of frontend polling. Unsupported speech warnings remain visible outside settings. Personality, memory, provider policies, trusted tool scopes and text chat remain integrated through the original Core architecture.
+
+P3-08 safe Windows checks passed: legacy Tk/WebView2 controls, actual isolated/hidden .pyw launcher, reviewed voice settings and simulated lock shield; native English SAPI-to-RAM synthesis and joined temporary hotkey/tray registrations. Screenshot captured/reviewed with isolated Edge and network blocked. No microphone/speaker, real model inference, wake model, private content or provider account was exercised. P3-09 current setup/licensing/language/decisions/structure and completion report document the result and external gates. Full final counts/build evidence are in PHASE_03_COMPLETION_REPORT and TESTING_AND_ACCEPTANCE. No Phase 04 work, push, merge or release.
+
+Final source run: **185 tests passed** (16.088 s), lint/syntax/UI checks passed. Speech rejection also treats high no-speech probability and missing automatic-language confidence as uncertain regardless of apparent text likelihood. Initial EXE builds passed, but checking an incremental rebuild's embedded code exposed stale PYZ caching. A fresh clean build and embedded-code check are used for final packaging evidence; existing CI/build commands already request clean builds. Final wheel contains the updated rejection code and imports in isolation.
+
+Final clean agent build passed and its embedded confidence branch was verified directly. Both EXEs, final wheel and isolated imports passed; hashes/resource checks are recorded in the completion report and local packaging-final.json. Local Inno compiler is absent, and frozen interactive/clean-install acceptance remains open. All eight management documents, configuration/setup/structure records and the 29-created/38-modified manifest (relative to reviewed 6b8c452, including preserved changes) are complete. Phase 03 engineering checkpoint reached; no Phase 04 activation or remote publication.
+
+## Phase 03 admission and implementation plan (2026-11-26)
+
+Latest owner explicitly authorizes Phase 03 after admission and supersedes the historical Phase 02 stop below. Actual intake: clean `v2` at reviewed `6b8c4524353c3b7f613c068c5757dfe693b494f4`. All official specifications and management documents reread; original files/archive/main protected. PDF extraction initially hit Windows console encoding on a decorative glyph; UTF-8 extraction then completed all 26 pages. No product content was guessed or changed.
+
+Admission P3-01: **132 tests passed** (8.196 s), lint passed. Reviewed CI [45807025777](https://github.com/creolive-digital/CLYDEX/actions/runs/45807025777) at the exact reviewed SHA: Python 3.11 tests/lint/compilation, both EXEs, Inno compilation and artifact upload passed; no release. Existing ownership/cancel/provider privacy regressions pass. Real provider/audio/voice quality/hardware/installer acceptance remains external.
+
+Audit findings before source edits: capture/STT/SAPI/playback are still mixed into VoiceEngine; missing Whisper models may download without approval; synchronous SAPI cannot promptly cancel synthesis; no mute/lock/background gate, continuous state machine, wake/hotkey/tray activation or personality service. Preserve the existing decode confidence/routing regression contracts while extracting services.
+
+| Task | Dependencies | Implementation / acceptance plan |
+|---|---|---|
+| P3-01 | Reviewed Phase 02 | Read/audit/admission complete; newly discovered blockers addressed before dependent features. |
+| P3-02 | P3-01 | Typed audio/STT/VAD/device/event interfaces, bounded transient capture, silence/noise/confidence checks, local-only model loading and explicit model-download review. |
+| P3-03 | P3-02 | Local TTS interface, cancellable SAPI compatibility, actual PCM playback/spectrum, optional separately installed/licensed neural voice adapter. No cloud TTS. |
+| P3-04 | P3-02,03 | Conversation lifecycle, half duplex, follow-ups/inactivity, mute/Stop/lock/background privacy and owned shutdown. |
+| P3-05 | P3-04 | Manual/continuous/hotkey/tray activation; real local custom wake adapter gated on supplied licensed/validated Hey CLYDEX model. No generic wake model renamed as CLYDEX. |
+| P3-06 | P3-01 | Independent personality profiles/response policy, encrypted optional addressing, independent recognition/response/synthesis languages; no permission escalation. |
+| P3-07 | P3-02–06 | Reuse Core queue/coordinator/memory/executor and existing frontend/legacy controls; preserve text and entry points. |
+| P3-08 | P3-07 | Deterministic audio/state/security/regression tests, safe native synthesis/metadata/UI where available, compilation/lint/packaging. No ambient capture or speaker playback without authorization. |
+| P3-09 | P3-08 | Update all management/architecture/setup records and PHASE_03_COMPLETION_REPORT with exact capabilities, licensing, limits and owner gates. Stop before Phase 04; no remote publication authorized. |
+
+Planned touched paths: functional `voice/` services and `personality/`; existing core application/legacy adapter/coordinator/event/spec boundaries; desktop voice settings/hotkey/tray adapters; current static frontend; tests, optional dependency/build metadata and docs. No root business logic, archive changes, brand replacement, public endpoint, cloud/robot/full HUD work. SQLite technology/schema remain unchanged unless a proven need is recorded.
+
+Engineering defaults: microphone disabled/muted, background/wake/continuous/hotkey/tray activation off; no raw audio files or ambient retention; half duplex; no automatic model downloads. Keep SAPI installed-voice fallback, without claiming cinematic quality or Sinhala/Tamil pronunciation. Optional custom wake and neural artifacts require explicit owner selection/licensing/validation; implemented adapters will not be reported as live-validated models. Voice commands never approve sensitive actions.
+
+P3-01 follow-up blocker found by expanded cancellation tests: Phase 02's cross-thread HTTP socket shutdown could intermittently leave a Windows response read blocked (4 failures in a 30-run focused reproduction, despite initial 132-test admission passing). Replaced that mechanism with cancel/deadline-polled nonblocking socket I/O on the owning thread, retaining stdlib HTTP framing and certificate-validated TLS. Focused stress is now 30/30 passing; deterministic post-HTTP/1.0-facade release, chunked framing and locally verified TLS cancellation tests pass. No real provider contacted. OS DNS delay remains explicitly unverified/owned. This is a newly discovered preexisting foundation defect, not successful live provider evidence.
+
 ## Phase 02 engineering completion checkpoint (2026-11-26)
 
 Objective: extend the single existing Core with multi-model intelligence, persistent owned conversations and consented personal memory after resolving Phase 01 engineering blockers. H1-01–03 and P2-01–09 are complete in the declared automated/native scope. **132 tests pass**, lint/compilation/JS checks pass, native Tk/WebView2/DPAPI/synthetic credential checks pass, wheel/isolated imports and both EXE builds pass. Details and the complete changed-file manifest are in PHASE_02_COMPLETION_REPORT.md and TESTING_AND_ACCEPTANCE.md.

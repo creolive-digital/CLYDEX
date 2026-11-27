@@ -1,6 +1,11 @@
-CLYDEX FINAL EDITION — Windows 10/11
+CLYDEX V2 — Windows 10/11
 =======================================
 WHAT YOU GET
+- Phase 03 modular local voice and Voice & Personality controls. Read
+  VOICE_CONFIGURATION.md for setup, supported capabilities and acceptance limits.
+  Microphone/background activation starts disabled and muted; no model downloads
+  automatically. Hey CLYDEX and cinematic neural voice need separately supplied,
+  licensed, validated assets. English installed SAPI remains the local fallback.
 - CLYDEX Mini desktop flip clock with the Voice Agent’s cyan controls, icons, and local fonts.
 - The desktop app pairs a live transcript with the Stitch wireframe acoustic core.
   Its rings, waveform, and frequency bars respond to microphone and speech playback audio.
@@ -15,15 +20,19 @@ REQUIREMENTS
 - Windows 10/11, Python 3.10+ (3.11 recommended), microphone and audio output.
 - Codex CLI installed and logged in: codex --version && codex login status.
   Use a version with codex exec --ignore-user-config and --ephemeral (tested with 0.171).
-- Internet for Codex and weather. First Whisper model use may download files.
+- Internet for Codex/weather and explicitly approved speech-model preparation.
+  Missing speech models never download implicitly.
 
 SETUP
 1. Unzip folder somewhere writable, e.g. Documents\CLYDEX_FINAL_EDITION.
-2. Double-click scripts\windows\INSTALL_REQUIREMENTS.bat or in CMD: py -m pip install -r deployment\windows\requirements.txt
+2. Double-click scripts\windows\INSTALL_REQUIREMENTS.bat or in CMD: python -m pip install -r deployment\windows\requirements.txt
 3. Check login: codex login status (log in with codex login if needed).
 4. Double-click scripts\windows\START_CLYDEX.bat or scripts\windows\clydex_widget.pyw.
-5. Click Agent on the clock. Type a prompt or click Use Live Mic, then Stop recording.
-6. For errors, run in CMD: py scripts\windows\clydex_voice_agent.pyw
+5. Click Agent on the clock. Text chat works without speech models. For voice,
+   open Voice & Personality, review microphone permission/model preparation,
+   explicitly unmute this session, then click Use Live Mic. Click again to finish
+   and transcribe; Stop task / Stop-interrupt / Mute cancels the request.
+6. For errors, run in CMD: python scripts\windows\clydex_voice_agent.pyw
 
 USE
 - Try "Open Notepad", "Minimise Calculator" or "Which windows are open?"
@@ -52,7 +61,7 @@ USE
   Outlook account setup in CLYDEX and also works on other text-based pages.
 - In Audio settings, English · fast is the default for spoken English, including
   English with a Sinhala accent. English · higher accuracy uses a larger English
-  model (about 480 MB on first download) and may take longer on a CPU. Use
+  model and may take longer on a CPU. Review model/storage preparation first. Use
   Auto-detect language when speaking another language. CLYDEX remembers the
   selection for your Windows user. If speech is unclear, it asks you to repeat.
 - Open Audio settings to toggle Speak replies or select and check the microphone.
@@ -88,7 +97,10 @@ OPTIONAL CONNECTED MAILBOX SETUP
   https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app
 
 PRIVACY/SAFETY
-- Microphone recorded only after clicking START LISTENING; click STOP to finish.
+- Microphone requires opt-in and per-session unmute. Manual/continuous/native
+  activation uses the same queue. Optional wake requires approved local assets
+  and explicit arming; hidden capture also needs background consent and tray.
+  Stop/mute cancels; clicking the recording button again finishes transcription.
 - Speech is transcribed on the PC. Requests that need Codex include the current
   question and recent conversation, which can include earlier local commands.
 - Codex receives the page text, inbox excerpts, window and control labels or command output needed to
@@ -105,7 +117,7 @@ NOTES
 - Requires network access for weather and typical Codex CLI usage.
 - UI/voice/codex end-to-end behavior must be tested on your own Windows PC.
 
-V2 PHASE 01 DEVELOPMENT BRANCH
+V2 DEVELOPMENT SAFETY AND STORAGE
 - Launcher filenames remain supported under scripts\windows\. Implementation is now packaged under
   src/clydex; deployment\windows\requirements.txt installs it in editable mode for development.
 - Use a verified interpreter. On the development PC, python works while the
@@ -115,8 +127,10 @@ V2 PHASE 01 DEVELOPMENT BRANCH
   config\clydex.example.json to settings\config.json under that runtime directory
   if you want to customize non-secret settings. Unknown settings are rejected.
   .env.example documents environment variables; .env files are not auto-loaded.
-- Voice preferences are stored in the local metadata database; an existing HKCU
-  recognition preference is read only as a fallback. No registry values are deleted.
+- Voice policy/device/model preferences are stored in settings/voice.json under
+  the runtime directory. Existing database/HKCU recognition preferences are imported
+  only as fallback. No registry values are deleted. Personality preferences and
+  DPAPI-encrypted optional addressing live in settings/personality.json.
 - Sensitive reads, native drafts, PowerShell, close/control actions and private
   context transfers require an exact, expiring, one-time approval. Inspect the
   displayed action/data before approving. Rejecting a later step leaves any
@@ -130,10 +144,10 @@ V2 PHASE 01 DEVELOPMENT BRANCH
   Restart after changing policy configuration. No cloud fallback is added.
 - Only one Core instance may own a user's runtime directory. Close the existing
   assistant before opening another instance. The widget remains independent.
-- Local SQLite stores allowlisted voice preferences and audit metadata only.
-  Do not place credentials, conversations, private documents or audio in it.
-  The credential storage API uses Windows Credential Manager; Codex still uses
-  its existing CLI login. No new provider account is activated by this migration.
+- Local SQLite schema 3 preserves preferences/audit and supports consented,
+  DPAPI-encrypted conversations and personal memory. Temporary sessions remain
+  default and automatic suggestions off. Never store credentials or raw audio.
+  Credential Manager and Codex's existing CLI login remain the credential paths.
 - Developer checks:
     python -m unittest discover -v
     python -m ruff check src tests
@@ -141,9 +155,10 @@ V2 PHASE 01 DEVELOPMENT BRANCH
   Install the optional lint tooling with: python -m pip install -e ".[dev]"
   Add --credentials to smoke-test native Credential Manager with a synthetic
   value that is deleted immediately. UI smoke tests disable weather/cloud/audio.
-- Phase 02 and later features, React HUD, cloud account/sync, new AI providers,
-  memory collection, wake word, new artwork, plugins and devices are not shipped
-  by Phase 01. See docs\DEVELOPMENT_PROGRESS.md for evidence and remaining gates.
+- Phase 02 intelligence/memory and Phase 03 voice/personality are implemented
+  within their documented engineering gates. No optional provider, wake/model,
+  microphone or automatic memory is enabled by implementation work. React HUD,
+  cloud account/sync, plugins, devices and release remain later phases.
 
 V1 ARCHIVE
 - The original e65fe46 release is preserved independently in v1-old\, including
@@ -151,7 +166,7 @@ V1 ARCHIVE
   Run v1-old\START_CLYDEX.bat from the checkout root to use the original V1 application.
 - Launchers under scripts\windows\ start active V2. V2's shared widget, theme and older
   hologram helper now live in src\clydex\desktop\. Its artwork is in assets\legacy\.
-  V2's static studio_ui\ includes the current approval and Stop controls.
+  V2's static frontend\legacy\ includes approval, Stop and voice/privacy controls.
 - V2 does not load code or resources from v1-old\. Archived files retain V1's
   original behavior and approval system. See v1-old\README_ARCHIVE.md.
 
