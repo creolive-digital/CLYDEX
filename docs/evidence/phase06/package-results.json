@@ -1,0 +1,36 @@
+{
+  "wheels": [
+    {
+      "name": "clydex-2.0.0.dev1-py3-none-any.whl",
+      "sha256": "f7d8ec3a0bcee49d58b79818ae7fa8bcd493ccc0ce2bb079a491db2144fe9b5c"
+    },
+    {
+      "name": "clydex_cloud-0.5.0.dev1-py3-none-any.whl",
+      "sha256": "77c8eae12d6a93da11687a24f194046d81959aa51e9d405892aeda1a3137afe5"
+    }
+  ],
+  "frozen_resources": true,
+  "embedded_cloud_client": true,
+  "cloud_server_excluded": true,
+  "frontend_files_verified": 14,
+  "legacy_fallback": true,
+  "operating_modules_verified": [
+    "automation.workspace",
+    "automation.workflows.schema",
+    "automation.workflows.runtime",
+    "automation.scheduler",
+    "plugins.manager",
+    "plugins.sdk",
+    "integrations.mcp",
+    "integrations.services",
+    "tools.worker",
+    "tools.catalog",
+    "security.schema"
+  ],
+  "schema5": true,
+  "packaged_iana_timezone": true,
+  "timezone_license_notices": true,
+  "actual_frozen_plugin_helper": true,
+  "helper_started_core": false,
+  "optional_sql_camera_mqtt": "Dependencies/accounts/hardware not activated or accepted"
+}

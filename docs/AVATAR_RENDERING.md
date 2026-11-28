@@ -1,5 +1,9 @@
 # Digital Wireframe renderer and asset gate
 
+## Phase 06 boundary (2026-11-28)
+
+Phase 06 adds operating management screens and an original SVG workflow graph, not a replacement avatar or renderer. Approved face/logo bytes, existing audio-reactive effects, six display modes, resource limits and rig/viseme/acoustic acceptance boundaries are preserved.
+
 ## Phase 05 preservation (2026-11-28)
 
 Cloud/Vault development does not replace the approved reference face/logo, add a rig, alter mouth synchronization or change the Phase 04 rendering claims. Existing avatar WebGL fallback, disposal, reduced motion and six-mode lifecycle are regression checked; acoustic/viseme/production 3D and reference-hardware gates remain open. See PHASE_05_COMPLETION_REPORT for new management UI evidence, not new avatar capability.

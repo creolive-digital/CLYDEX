@@ -1,5 +1,17 @@
 # Development progress
 
+## Owner-authorized Phase 06 publication
+
+Following the Phase 06 engineering handoff, the owner explicitly requested committing and pushing the reviewed checkpoint on `v2`. Publication review matched the 109-path manifest and the reviewed remote base, preserved main/archive/specifications/branding and the removed workflow, and found no new high-signal credential literals. Existing 256 desktop, 30 cloud plus one native SQL skip, 31 frontend and four archive test results, native Windows checks and package/frozen-helper evidence remain applicable; only publication documentation changed after the checkpoint. No deployment, merge, tag, release or later phase is authorized.
+
+## Phase 06 admission and engineering (2026-11-28)
+
+Owner authorizes Phase 06 on clean `v2` at `f39fb8080af5f91972602a5b7b7a8fedd2fb76ee`. Admission passed 222 desktop tests (28.451 s), 28 cloud tests with one native SQL skip (47.086 s), 22 frontend tests (21.81 s), TypeScript and production build (2.46 s). Reviewed Phase 05 actual native/package evidence and outstanding security/storage/lifecycle gates; no baseline regression was observed. Historical phase stops below are superseded for this authorized work.
+
+P6-01–13 cover admission, tool contracts, selected operating/developer adapters, versioned workflows/editor, triggers/routines, feeds/monitoring, local plugins/SDK, reviewed MCP/official integration codecs, inert sync/imports, frontend/security, declared verification and documentation. PHASE_06_COMPLETION_REPORT records the final disposition and evidence. SDK dynamic adapters, external event ingress, optional native/account integrations and live production acceptance are explicitly partial/unverified.
+
+Main, v1-old, original specifications and approved assets remain unchanged. No private production data, paid requests, real SQL/server/device effects, public endpoint, CI workflow, push, merge, tag or release is authorized/performed. Runtime/build evidence is outside source. Stop at Phase 06 owner review.
+
 ## Owner-authorized Phase 05 publication
 
 Following the Phase 05 handoff, the owner explicitly requested a GitHub push. Commit and publish the completed checkpoint on `v2` only. Pre-publication review matched all 140 paths to the checkpoint manifest, found no new high-signal credential literals or generated/runtime artifacts, and verified main, archive, specifications and approved assets unchanged. Remote `v2` matched the reviewed base before publication. Publication review found and corrected duplicate generated SQL constraint names, regenerated the canonical migration and added a regression proving names are schema-unique. Reverification passed 28 cloud tests with one native SQL test skipped, cloud lint/compilation and updated wheels. Existing 222 desktop Python, 22 frontend and four archive test results plus local/native/build evidence remain applicable; desktop/frontend code is unchanged by the SQL fix. Keep automatic GitHub Actions removed; no deployment, main merge, tag, release or later phase.

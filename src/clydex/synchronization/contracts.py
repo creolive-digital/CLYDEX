@@ -68,6 +68,22 @@ def validate_payload(category: str, value: dict, *, deleted=False) -> dict:
         validate_private_text(value['display_name'], 80)
         validate_private_text(value['platform'], 40)
     elif category == 'workflows':
+        if value.get('contract_version') == 2:
+            from clydex.automation.workflows.schema import validate_workflow
+            value = validate_workflow(value)
+            def safe_constants(item):
+                if type(item) is dict:
+                    if any(k.casefold() in ('password', 'secret', 'token', 'api_key', 'authorization', 'permissions', 'approval') for k in item):
+                        raise ValueError('Credentials and authority cannot synchronize in workflows.')
+                    for child in item.values():
+                        safe_constants(child)
+                elif type(item) is list:
+                    for child in item:
+                        safe_constants(child)
+                elif type(item) is str and item.strip():
+                    validate_private_text(item, 65536)
+            safe_constants(value)
+            return json.loads(canonical_json(value))
         if (set(value) != {'contract_version', 'name', 'nodes', 'edges'} or value['contract_version'] != 1
                 or not isinstance(value['nodes'], list) or not isinstance(value['edges'], list)
                 or len(value['nodes']) > 64 or len(value['edges']) > 128):

@@ -71,6 +71,16 @@ class ToolSpec:
     timeout: float
     fields: tuple[tuple[str, type], ...]
     result_types: tuple[type, ...]
+    description: str = ''
+    argument_schema_json: str = ''
+    result_schema_json: str = ''
+    platforms: tuple[str, ...] = ('Windows', 'Linux', 'Darwin')
+    read_only: bool = False
+    destinations: tuple[str, ...] = ()
+    idempotent: bool = False
+    approval_required: bool = True
+    cancellation: str = 'cooperative; completed effects cannot be undone'
+    audit_metadata: tuple[str, ...] = ('action_digest', 'tool', 'outcome')
 
     def validate(self, arguments: dict) -> None:
         expected = dict(self.fields)
@@ -78,6 +88,32 @@ class ToolSpec:
             raise ValueError('Unexpected or missing tool arguments.')
         if any(type(arguments[key]) is not kind for key, kind in expected.items()):
             raise ValueError('Invalid tool argument type.')
+        if self.argument_schema_json:
+            from clydex.security.schema import validate
+            validate(arguments, json.loads(self.argument_schema_json))
+
+    def validate_result(self, result) -> None:
+        if type(result) not in self.result_types:
+            raise ValueError('Tool result type mismatch.')
+        if self.result_schema_json:
+            from clydex.security.schema import validate
+            validate(result, json.loads(self.result_schema_json))
+
+    def inventory(self) -> dict:
+        kinds = {str: 'string', dict: 'object', list: 'array', int: 'integer', bool: 'boolean', type(None): 'null', float: 'number'}
+        schema = json.loads(self.argument_schema_json) if self.argument_schema_json else {
+            'type': 'object', 'properties': {k: {'type': kinds[t]} for k, t in self.fields},
+            'required': [k for k, _ in self.fields], 'additionalProperties': False}
+        result_schema = json.loads(self.result_schema_json) if self.result_schema_json else {
+            'oneOf': [{'type': kinds.get(t, 'object')} for t in self.result_types]}
+        return dict(id=self.name, description=self.description or self.name.replace('.', ' '), scope=self.scope,
+                    risk=self.risk.value, timeout=self.timeout, arguments=schema,
+                    results=result_schema,
+                    platforms=list(self.platforms), read_only=self.read_only,
+                    destinations=list(self.destinations), idempotent=self.idempotent,
+                    approval_required=self.approval_required, cancellation=self.cancellation,
+                    approval_policy='One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions',
+                    audit_metadata=list(self.audit_metadata))
 
 
 @dataclass(frozen=True)

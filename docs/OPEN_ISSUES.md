@@ -1,5 +1,20 @@
 # Open issues and requirement conflicts
 
+## Phase 06 checkpoint issues (2026-11-28)
+
+| ID | Engineering disposition | External / remaining acceptance |
+|---|---|---|
+| OI-51 | Selected trusted adapters, fixed schemas and process/socket ownership implemented | Same-user filesystem races, OS DNS/native interruption and completed-effect limits remain; no OS sandbox claim |
+| OI-52 | Workflow engine/editor, disabled versions/session arming, bounded scheduling/receipts | Real voice/model drafting, DST/long-idle/user accessibility and sustained event stress remain qualification |
+| OI-53 | Local plugin manifest/install/trust/hash/owned runtime implemented | Hostile third-party code must not be enabled; lower-privilege containment and richer dynamic SDK extensions remain future reviewed work |
+| OI-54 | Official modern MCP HTTP and service codecs tested on fixtures/loopback | Legacy MCP/stdio, OAuth onboarding, external accounts/subscriptions and live sends/control remain unavailable/unverified |
+| OI-55 | Native SQL/camera/MQTT adapters optional, explicit, disabled/gated | Owner-selected dependencies/profiles/devices, actual SQL TLS/least privilege and hardware qualification pending; no real SQL/device used |
+| OI-56 | Webhook verification/source event contracts and feed-derived events implemented | No public/local HTTP ingress listener or automatic native/email subscription delivered; provider signature mapping/approved ingress remains partial |
+| OI-57 | Scope recheck and ordinary-chat catalog compartment regression corrected | Final regression evidence in Phase 06 report; baseline admission was green |
+| OI-58 | V2 workflow sync/import and connected deletion disabling implemented | Multi-device live/offline qualification; a disconnected client cannot immediately learn revocation |
+
+All Phase 03 acoustic/wake/language, Phase 04 matching rig and Phase 05 SQL/embedding/VPS/production gates remain open. Automatic GitHub Actions remains removed. No deployment/publication is implied.
+
 ## Phase 05 checkpoint disposition (2026-11-28)
 
 | ID | Engineering disposition | Remaining owner / external acceptance |

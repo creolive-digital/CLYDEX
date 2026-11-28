@@ -1,5 +1,5 @@
 """One-time, action-bound consent. Only the trusted local bridge may decide reviews."""
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import threading
 import time
 from typing import Callable
@@ -8,6 +8,7 @@ import uuid
 from clydex.core.contracts import ActionRequest, Risk, ToolSpec
 from clydex.core.errors import PermissionDenied
 from clydex.providers.base import PROVIDER_IDS
+from clydex.tools.catalog import OPERATING_SPECS
 
 
 @dataclass(frozen=True)
@@ -114,3 +115,14 @@ TOOL_SPECS = (
 TOOL_SPECS += tuple(ToolSpec('provider.' + name, 'cloud.' + name if name != 'ollama' else 'local.ollama',
     Risk.SENSITIVE, 900, (('instructions', str), ('data', dict), ('schema', dict), ('fast', bool),
                          ('configuration', str), ('attempt', int)), (dict,)) for name in PROVIDER_IDS)
+
+TOOL_SPECS += OPERATING_SPECS
+
+# Annotate legacy installed adapters without changing their established approval behavior.
+TOOL_SPECS = tuple(replace(s,
+    platforms=('Windows',) if s.name.startswith(('app.', 'browser.', 'mail.', 'shell.', 'voice.', 'desktop.', 'widget.')) else s.platforms,
+    read_only=s.read_only or s.name in ('app.read', 'browser.read', 'mail.read', 'provider.health'),
+    idempotent=s.idempotent or s.name in ('app.read', 'browser.read', 'mail.read'),
+    destinations=(s.name.removeprefix('provider.') + ' configured endpoint',) if s.name.startswith('provider.')
+        and s.name not in ('provider.configure', 'provider.health') else s.destinations)
+    for s in TOOL_SPECS)

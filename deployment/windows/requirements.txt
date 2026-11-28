@@ -11,3 +11,7 @@ msal>=1.28,<2
 requests>=2.31,<3
 # Optional local wake code: install -e ".[voice-wake]" only after owner selection.
 # Speech/wake models and Piper binaries are not downloaded by dependency setup.
+
+# Core installs pinned tzdata for named IANA timezones on Windows.
+# Optional owner-selected adapters: .[operating-sql], .[operating-camera], .[operating-mqtt].
+# No optional account, device, plugin or polling activation follows dependency installation.

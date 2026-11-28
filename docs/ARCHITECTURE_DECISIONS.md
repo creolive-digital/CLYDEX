@@ -1,5 +1,23 @@
 # Architecture decisions
 
+## Phase 06 engineering decisions (2026-11-28)
+
+The explicit owner Phase 06 instruction supersedes historical phase stops. Preserve main/archive/specifications/branding; no push/deploy or GitHub Actions recreation.
+
+| ADR | Decision | Consequence |
+|---|---|---|
+| 057 | Extend installed ToolSpec contracts and the same executor/queue/coordinator. | No model/plugin/MCP risk assignment; scope is rechecked after review and cancellation after effects. |
+| 058 | Declarative v2 DAG, constrained conditions, explicit bounded action loops and linked deadlines. | No eval/exec workflow expressions, implicit retry or imported authority. Original scripting uses separately selected reviewed code. |
+| 059 | Add owner-bound DPAPI SQLite schema 5 records/versions/status receipts and session-only arming. | CAS save/restore disables versions; crash runs become interrupted. No plaintext fallback, permission synchronization or automatic resume. |
+| 060 | Local source packages disabled, hash pinned, explicit OS-user code trust, fixed HIGH host wrapper and owned process. | No marketplace/dependency download; resource limits are not an OS sandbox. SDK extension protocols are distinguished from automatic runtime adapters. |
+| 061 | Pin current official MCP 2026-07-28 stateless HTTP with bounded JSON/SSE. | Explicit server/schema review, no silent legacy fallback, arbitrary stdio launch, roots/sampling/elicitation or replay. |
+| 062 | Official integration codecs with owner-provisioned scoped credentials and fixed destinations. | Synthetic/loopback verification only; OAuth onboarding/accounts/subscriptions/live effects remain external. No unofficial browser automation. |
+| 063 | Original React/SVG graph editor on existing tokens and three-method HUD. | No graph dependency, duplicate engine or external CDN. Advanced contracts remain editable, validated and reviewable. |
+| 064 | One fixed private worker mode for source/windowed frozen helpers. | Inherited bounded pipes and owned jobs, no second Core/queue/mic; optional SQL/camera libraries stay gated. |
+| 065 | Shared sampled system counters, transient feed observations, explicit polling and native capture indication. | System vs process scope, timestamps/staleness/unavailable values explicit; no scans, fabricated health or hidden capture. |
+
+See OPERATING_TOOLS, AUTOMATION_ENGINE, PLUGIN_SDK and MCP_CONFIGURATION for actual limits and partial capabilities. These are low-risk implementation decisions within the authorized architecture, not production activation.
+
 ## Phase 05 decisions (2026-11-28)
 
 | ADR | Decision | Consequence |

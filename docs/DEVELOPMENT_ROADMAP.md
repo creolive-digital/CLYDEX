@@ -1,5 +1,9 @@
 # Development roadmap
 
+## Current Phase 06 disposition (2026-11-28)
+
+The explicit owner request authorizes the bounded operating-intelligence phase and supersedes historical Phase 05/earlier stops below. P6-01–13 are tracked in PHASE_06_COMPLETION_REPORT. Implemented local workflows, reviewed tools, plugin runtime, official integration codecs and HUD views remain subject to their declared limitations. Typed extension/event contracts are not described as live integrations. No later release phase, infrastructure, mobile/robot work or automatic GitHub Actions is authorized. Phase 07 requires owner review and the remaining native/live/security gates; no automatic transition.
+
 ## Current Phase 05 disposition (2026-11-28)
 
 P5-01–12 engineering is delivered for owner review with explicitly gated SQL/model/Linux/production acceptance. The owner approved the SQL Server 2025 and server-managed AES-GCM baseline; no hosting, paid activation or private transfer follows from that approval. See PHASE_05_COMPLETION_REPORT for implemented versus simulated/native/unverified results, remaining decisions and actual evidence.

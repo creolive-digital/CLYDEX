@@ -1,20 +1,44 @@
 """Local sampled OS counters. Unavailable/first CPU sample stays null."""
 import os
 import platform
+import shutil
+import threading
 import time
 
 
 class SystemInformation:
     def __init__(self):
+        self._lock = threading.RLock()
+        self._process_sample = None
         self._previous = None
         self._updated = 0.
         self._snapshot = dict(os=platform.system(), release=platform.release(), cpu_percent=None,
                               memory_percent=None, memory_total_bytes=None, process_memory_bytes=None)
 
     def sample(self) -> dict:
+        with self._lock:
+            return self._sample()
+
+    def _sample(self) -> dict:
         if time.monotonic() - self._updated < 1:
             return dict(self._snapshot)
         self._updated = time.monotonic()
+        process_cpu = time.process_time()
+        if self._process_sample:
+            stamp, previous = self._process_sample
+            elapsed = self._updated - stamp
+            self._snapshot['process_cpu_percent_one_core'] = round(100 * (process_cpu - previous) / elapsed, 2) if elapsed > 0 else None
+        self._process_sample = self._updated, process_cpu
+        try:
+            disk = shutil.disk_usage(os.environ.get('LOCALAPPDATA') or os.path.expanduser('~'))
+            self._snapshot.update(disk_total_bytes=disk.total, disk_free_bytes=disk.free,
+                                  disk_percent=round(100 * (disk.total - disk.free) / disk.total, 1))
+        except OSError:
+            self._snapshot.update(disk_total_bytes=None, disk_free_bytes=None, disk_percent=None)
+        self._snapshot.update(observed_at=time.time(), gpu=None,
+                              gpu_status='No configured GPU telemetry adapter',
+                              cpu_scope='system-wide utilization',
+                              process_cpu_scope='CLYDEX Python process; 100% equals one logical CPU')
         if os.name != 'nt':
             return dict(self._snapshot)
         import ctypes

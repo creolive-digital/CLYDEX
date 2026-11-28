@@ -1,5 +1,11 @@
 # Project structure and public interfaces
 
+## Phase 06 concrete extensions (2026-11-28)
+
+`automation/workflows/{schema,runtime,repository}.py`, `automation/{workspace,scheduler,routines,feeds}.py` extend the existing executor/tasks package. `tools/{catalog,selected,developer,native,worker}.py` reuse the existing process supervisor. `plugins/{manager,sdk}.py` and `integrations/{services,mcp,mqtt,webhooks}.py` implement local plugin/official codec/verified event contracts without shadowing existing packages. System counters/notifications stay in their existing desktop modules and are shared, not duplicated.
+
+React operating features live under `frontend/src/features/automation/` with reusable editor/types/styles. New schema SQL is `database/migrations/005_operating.sql` inside the active package; cloud SQL remains under `database/mssql`. Original examples live under `examples/plugins` and `examples/workflows`. Runtime sources/DPAPI records/preferences remain outside the repository. Private fixed helpers work in source/frozen runtimes without a second Core. Local Phase 06 verification scripts replace CI; no GitHub Actions was recreated. See PHASE_06_COMPLETION_REPORT and the dedicated tool/workflow/SDK/integration documents for boundaries and partial capabilities.
+
 ## Phase 05 actual extension (2026-11-28)
 
 - `cloud/`: independent `clydex-cloud` package, API/core/auth/devices/sync/vault/storage/workers/repositories/tests, runtime lock and generated OpenAPI.

@@ -1,0 +1,51 @@
+{
+  "kind": "native Windows WebView2; isolated synthetic profile",
+  "passed": true,
+  "bridge": [
+    "hud_command",
+    "hud_read",
+    "hud_snapshot"
+  ],
+  "webgl": true,
+  "viewport": {
+    "width": 1344,
+    "height": 861,
+    "dpr": 1
+  },
+  "rendered_frames_over_2s": 26,
+  "system_counters": {
+    "os": "Windows",
+    "release": "10",
+    "cpu_percent": 74.2,
+    "memory_percent": 58,
+    "memory_total_bytes": 21367050240,
+    "process_memory_bytes": 103972864,
+    "disk_total_bytes": 239359700992,
+    "disk_free_bytes": 4406079488,
+    "disk_percent": 98.2,
+    "observed_at": 1795876812.4928432,
+    "gpu": null,
+    "gpu_status": "No configured GPU telemetry adapter",
+    "cpu_scope": "system-wide utilization",
+    "process_cpu_scope": "CLYDEX Python process; 100% equals one logical CPU",
+    "process_cpu_percent_one_core": 6.1
+  },
+  "minimized_frames_over_1s": 0,
+  "memory_crud_encryption_and_ui_refresh": true,
+  "reduced_motion_frames_over_1s": 0,
+  "shared_timer_survives_modes": true,
+  "native_monitor_moves": 2,
+  "native_modes": [
+    "window",
+    "fullscreen",
+    "widget",
+    "floating",
+    "mini",
+    "tray"
+  ],
+  "approval_restores_hidden_window": true,
+  "no_audio_or_network": true,
+  "microphone_muted": true,
+  "limits": "No real lock, acoustic/model/provider tests, human accessibility review or mixed-DPI hardware qualification",
+  "shutdown_joined": true
+}

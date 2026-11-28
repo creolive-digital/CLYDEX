@@ -1,5 +1,19 @@
 # Requirements traceability
 
+## Phase 06 bounded traceability (2026-11-28)
+
+| Requirements / task IDs | Implementation and evidence | Remaining boundary |
+|---|---|---|
+| FND/LIFE/TEST / P6-01,12 | Clean reviewed baseline admission, existing suites, native/frozen ownership checks | Native SQL/VPS/audio/model/rig acceptance unchanged |
+| SEC/OPS / P6-02,03 | Trusted metadata/schemas, fixed registry, selected paths, exact approvals, safe capture/media | Trusted adapters/code are not OS sandboxing; optional devices unverified |
+| DEV / P6-04 | Selected Git, scripts, diagnostics, SQL classes, Docker/SSH, coordinator assistance | External accounts, native SQL/IIS/SSH/Docker qualification; unsupported operations explicit |
+| AUTO / P6-05,06 | Versioned bounded DAG, visual/voice draft/selected scripting, previews, receipts, scheduling/routines | External event subscriptions/ingress partial; voice/model quality pending |
+| FEED/MON / P6-07 | Explicit sources, stale/error/timestamps, opt-in polling, shared actual metrics | No default paid polling or fabricated live data |
+| PLUGIN / P6-08 | Disabled local manifest install/trust/hash/process runtime and typed SDK | Dynamic feed/event/integration/health extension protocols are contracts; hostile-code containment pending |
+| MCP/INTEGRATIONS / P6-09 | Current explicit HTTP client/schema review and official API codecs | No automatic authorization; live OAuth/accounts/optional libraries unverified |
+| SYNC / P6-10 | v1 compatibility, v2 data validation, disabled local imports/CAS/tombstone safety | Offline revocation is delayed; handles/credentials/grants not synchronized |
+| UI/TEST/DOC / P6-11–13 | Functional existing-bridge views, local checks, actual screenshots and reports | Human accessibility/long-run performance/fresh installer remain gates |
+
 ## Phase 05 task traceability (2026-11-28)
 
 | Task | Implementation / evidence | Acceptance boundary |

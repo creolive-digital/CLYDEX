@@ -1,0 +1,18 @@
+{
+  "sdk_version": 1,
+  "id": "clydex.synthetic_echo",
+  "version": "1.0.0",
+  "name": "Synthetic Echo",
+  "description": "Offline SDK example. Returns only explicitly supplied synthetic text.",
+  "compatibility": "clydex-v2-sdk1",
+  "entry": "echo.py",
+  "permissions": ["plugins.execute"],
+  "dependencies": [],
+  "events": [],
+  "tools": [{
+    "name": "echo.text",
+    "description": "Return bounded synthetic text; no network, files or credentials.",
+    "inputSchema": {"type":"object","properties":{"text":{"type":"string","maxLength":1000}},"required":["text"],"additionalProperties":false},
+    "outputSchema": {"type":"object","properties":{"text":{"type":"string","maxLength":1000}},"required":["text"],"additionalProperties":false}
+  }]
+}

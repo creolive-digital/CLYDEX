@@ -1,0 +1,206 @@
+{
+  "date": "2026-11-28",
+  "base": "f39fb8080af5f91972602a5b7b7a8fedd2fb76ee",
+  "branch": "v2",
+  "admission": {
+    "desktop_passed": 222,
+    "cloud_passed": 28,
+    "cloud_native_skipped": 1,
+    "frontend_passed": 22,
+    "typecheck": true,
+    "production_build": true
+  },
+  "desktop": {
+    "passed": 256,
+    "seconds": 42.116,
+    "lint": true,
+    "compile": true
+  },
+  "cloud": {
+    "passed": 30,
+    "skipped": 1,
+    "native_sql_verified": false,
+    "seconds": 39.494,
+    "lint": true,
+    "compile": true,
+    "repository": "explicit simulation"
+  },
+  "frontend": {
+    "passed": 31,
+    "seconds": 21.48,
+    "typecheck": true,
+    "production_build_seconds": 3.88,
+    "three_chunk_advisory": true
+  },
+  "archive": {
+    "passed": 4,
+    "fresh_process": true,
+    "tracked_bytes_unchanged": true
+  },
+  "native": {
+    "kind": "Actual Windows WebView2, Core and DPAPI; synthetic local workflows",
+    "passed": true,
+    "no_external_network": true,
+    "no_audio_models_or_desktop_capture": true,
+    "observed_metrics": {
+      "os": "Windows",
+      "release": "10",
+      "cpu_percent": 83.2,
+      "memory_percent": 58,
+      "memory_total_bytes": 21367050240,
+      "process_memory_bytes": 106545152,
+      "disk_total_bytes": 239359700992,
+      "disk_free_bytes": 4386594816,
+      "disk_percent": 98.2,
+      "observed_at": 1795876898.5370338,
+      "gpu": null,
+      "gpu_status": "No configured GPU telemetry adapter",
+      "cpu_scope": "system-wide utilization",
+      "process_cpu_scope": "CLYDEX Python process; 100% equals one logical CPU",
+      "process_cpu_percent_one_core": 8.23
+    },
+    "responsive_overflow_760": false,
+    "exact_reviews": 5,
+    "completed_run": true,
+    "stop_prevented_next_action": true,
+    "elapsed_seconds": 10.439,
+    "bridge": [
+      "hud_command",
+      "hud_read",
+      "hud_snapshot"
+    ],
+    "native_picker": "Not interactively exercised; no private paths selected",
+    "limits": "No live services, SQL Server, camera/screen capture, acoustic or physical-lock acceptance",
+    "shutdown_joined": true
+  },
+  "hud_regression": {
+    "kind": "native Windows WebView2; isolated synthetic profile",
+    "passed": true,
+    "bridge": [
+      "hud_command",
+      "hud_read",
+      "hud_snapshot"
+    ],
+    "webgl": true,
+    "viewport": {
+      "width": 1344,
+      "height": 861,
+      "dpr": 1
+    },
+    "rendered_frames_over_2s": 26,
+    "system_counters": {
+      "os": "Windows",
+      "release": "10",
+      "cpu_percent": 74.2,
+      "memory_percent": 58,
+      "memory_total_bytes": 21367050240,
+      "process_memory_bytes": 103972864,
+      "disk_total_bytes": 239359700992,
+      "disk_free_bytes": 4406079488,
+      "disk_percent": 98.2,
+      "observed_at": 1795876812.4928432,
+      "gpu": null,
+      "gpu_status": "No configured GPU telemetry adapter",
+      "cpu_scope": "system-wide utilization",
+      "process_cpu_scope": "CLYDEX Python process; 100% equals one logical CPU",
+      "process_cpu_percent_one_core": 6.1
+    },
+    "minimized_frames_over_1s": 0,
+    "memory_crud_encryption_and_ui_refresh": true,
+    "reduced_motion_frames_over_1s": 0,
+    "shared_timer_survives_modes": true,
+    "native_monitor_moves": 2,
+    "native_modes": [
+      "window",
+      "fullscreen",
+      "widget",
+      "floating",
+      "mini",
+      "tray"
+    ],
+    "approval_restores_hidden_window": true,
+    "no_audio_or_network": true,
+    "microphone_muted": true,
+    "limits": "No real lock, acoustic/model/provider tests, human accessibility review or mixed-DPI hardware qualification",
+    "shutdown_joined": true
+  },
+  "packaging": {
+    "wheels": [
+      {
+        "name": "clydex-2.0.0.dev1-py3-none-any.whl",
+        "sha256": "f7d8ec3a0bcee49d58b79818ae7fa8bcd493ccc0ce2bb079a491db2144fe9b5c"
+      },
+      {
+        "name": "clydex_cloud-0.5.0.dev1-py3-none-any.whl",
+        "sha256": "77c8eae12d6a93da11687a24f194046d81959aa51e9d405892aeda1a3137afe5"
+      }
+    ],
+    "frozen_resources": true,
+    "embedded_cloud_client": true,
+    "cloud_server_excluded": true,
+    "frontend_files_verified": 14,
+    "legacy_fallback": true,
+    "operating_modules_verified": [
+      "automation.workspace",
+      "automation.workflows.schema",
+      "automation.workflows.runtime",
+      "automation.scheduler",
+      "plugins.manager",
+      "plugins.sdk",
+      "integrations.mcp",
+      "integrations.services",
+      "tools.worker",
+      "tools.catalog",
+      "security.schema"
+    ],
+    "schema5": true,
+    "packaged_iana_timezone": true,
+    "timezone_license_notices": true,
+    "actual_frozen_plugin_helper": true,
+    "helper_started_core": false,
+    "optional_sql_camera_mqtt": "Dependencies/accounts/hardware not activated or accepted"
+  },
+  "frozen_startup": {
+    "window_initialized": true,
+    "exit_code": 0,
+    "core_started": true,
+    "core_stopped": true,
+    "cloud_disabled": true,
+    "elapsed_seconds": 7.871,
+    "limits": "Frozen native window/startup/clean shutdown only; no DOM, network, audio or installer acceptance"
+  },
+  "installed_operating_tool_count": 21,
+  "protected_sha256": {
+    "docs/CLYDEX_Master_Product_Blueprint_v1.1.pdf": "258831e9659dc66145c80d2759c5bc6857be7798d6400f0b5ae876586ec45d2c",
+    "docs/CLYDEX_Codex_Master_Instructions_v1.1.md": "6bd06df66c55d714b708984bfd72349a8ef2e503deb410a84abb284e7c470680",
+    "assets/branding/clydex_logo_reference.png": "e49d7bdda1b73b24ce74c67e0e63be5f8a0e0e1735f7ce4b66757ef027c3754f",
+    "assets/avatars/clydex_avatar_reference.png": "c9e20e5b061fc50c1cbf3fdf851f15ca6fcea9a008552ee7f0cf596685fc0d5f"
+  },
+  "no_remote_push": true,
+  "no_ci_workflow": true,
+  "limitations": [
+    "No native SQL Server, VPS, real account or device acceptance",
+    "SDK dynamic extensions and external event ingress remain partial",
+    "Hostile plugin code is not sandboxed",
+    "No acoustic/model/language/production-rig qualification",
+    "No Inno compiler/fresh installer/signing acceptance"
+  ],
+  "environment": {
+    "python": "3.13.14",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "node": "v24.13.1",
+    "native_ui": "Windows WebView2"
+  },
+  "no_paid_private_external_or_production_actions": true,
+  "checks": {
+    "root_lint": true,
+    "cloud_lint": true,
+    "python_compilation": true,
+    "frontend_typecheck": true,
+    "frontend_production_build": true,
+    "new_verifier_lint": true,
+    "legacy_native": true,
+    "synthetic_credential_manager_roundtrip": true,
+    "git_diff_check": true
+  }
+}

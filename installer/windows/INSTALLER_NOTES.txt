@@ -40,3 +40,9 @@ Display modes share one Core and one set of time tools. Tray hiding requires
 reviewed native tray controls. The avatar is the approved reference presentation;
 a matching production facial/full-body rig and precise lip synchronization are
 not bundled. See FRONTEND_ARCHITECTURE.md and AVATAR_RENDERING.md.
+
+PHASE 06 LOCAL AUTOMATION
+New workflows, schedules, plugins, integrations and polling stay disabled/disarmed.
+Review each exact operating action. Optional SQL/camera/MQTT libraries and accounts
+are not installed or activated by enabling the UI. See docs/OPERATING_TOOLS.md.
+The packaged private helper owns reviewed code in a process; it is not a sandbox.

@@ -1,5 +1,13 @@
 # Testing and acceptance
 
+## Phase 06 verification boundary (2026-11-28)
+
+Admission: 222 desktop passed (28.451 s), 28 cloud passed/one native SQL skipped (47.086 s), 22 frontend passed (21.81 s), TypeScript/build passed (Vite 2.46 s). No baseline failure. Phase 05 actual native/package evidence was reviewed before implementation.
+
+Use `scripts/verify_phase06.ps1 -CloudPython <isolated cloud interpreter>` for local Python/cloud/frontend/lint/compile/archive checks. Native `verify_operating_native.py` exercises actual WebView2/Core/DPAPI and synthetic local workflow reviews/Stop; client-area screenshots contain only the disposable window. Existing `verify_windows_smoke.py`, `verify_hud_smoke.py` and `verify_cloud_native.py` retain earlier acceptance coverage. `verify_phase06_package.py` checks actual wheels, embedded sources/resources/timezones/frontend and the fixed frozen helper with the synthetic SDK example.
+
+Tests cover graph/schema/conditions/loops/CAS/history, cancellation and policy, disabled/duplicate/timezone triggers, selected file/Git/SQL safety, plugin manifests/hash/runtime, official codec faults, MCP JSON/SSE/header/authority boundaries, credential privacy, capture indication, feed mutation refusal, inert sync/tombstones, bridge/editor/invalid-JSON behavior and existing regressions. Cloud repositories remain explicit simulation; native SQL skip is not success. No test uses real private accounts, messages, camera/desktop capture, paid providers or production infrastructure. Final results, screenshots and package fingerprints are recorded in PHASE_06_COMPLETION_REPORT and evidence/phase06.
+
 ## Phase 05 engineering evidence (2026-11-28)
 
 Use `scripts/verify_phase05.ps1 -CloudPython <isolated cloud interpreter>`. It runs active Python tests/lint/compile, cloud tests/lint/compile, frontend tests/typecheck/build and the archive tests in a separate process. No automatic GitHub Actions workflow is recreated. Exact final counts/timings, screenshot and package manifests are in PHASE_05_COMPLETION_REPORT and `docs/evidence/phase05/`.

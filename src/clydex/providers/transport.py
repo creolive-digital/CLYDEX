@@ -98,6 +98,7 @@ class _SocketAdapter:
 class HTTPResult:
     status: int
     body: bytes
+    headers: tuple[tuple[str, str], ...] = ()
 
 
 class HTTPTransport:
@@ -147,7 +148,7 @@ class HTTPTransport:
         return self.exchange(method, url, headers, body, cancel, timeout, limit, receive, accepted={200}).body
 
     def exchange(self, method: str, url: str, headers: dict, body: bytes | None,
-                 cancel, timeout: float, limit: int, receive=None, *, accepted=None) -> HTTPResult:
+                 cancel, timeout: float, limit: int, receive=None, *, accepted=None, stop_receiving=None) -> HTTPResult:
         deadline = time.monotonic() + timeout
         _check(cancel, deadline)
         parts = urlsplit(url)
@@ -184,8 +185,10 @@ class HTTPTransport:
                     receive(chunk)
                 else:
                     result.extend(chunk)
+                if stop_receiving and stop_receiving():
+                    break
             _check(cancel, deadline)
-            return HTTPResult(response.status, bytes(result))
+            return HTTPResult(response.status, bytes(result), tuple(response.getheaders()))
         except (OSError, http.client.HTTPException, ValueError) as exc:
             _check(cancel, deadline)
             raise ProviderFailure('network') from exc

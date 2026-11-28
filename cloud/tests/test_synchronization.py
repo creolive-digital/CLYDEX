@@ -71,3 +71,31 @@ class SynchronizationTests(unittest.TestCase):
         with self.assertRaises(CloudError):
             self.sync.push(self.actor, [self.operation, invalid])
         self.assertEqual(self.sync.pull(self.actor)['changes'], [])
+
+    def test_v2_workflow_sync_is_inert_versioned_and_idempotent(self):
+        self.sync.configure(self.actor, {c: c == 'workflows' for c in CATEGORIES})
+        definition = dict(contract_version=2, id=str(uuid.uuid4()), name='Synthetic cloud workflow', timeout=30,
+            inputs={'type': 'object', 'properties': {}, 'required': [], 'additionalProperties': False},
+            nodes=[dict(id='sample', kind='tool', config={'tool': 'monitoring.sample', 'arguments': {}}, x=60, y=80)], edges=[])
+        operation = dict(operation_id=str(uuid.uuid4()), entity_id=definition['id'], category='workflows',
+                         base_version=0, deleted=False, payload=definition)
+        result = self.sync.push(self.actor, [operation])
+        self.assertEqual(result, self.sync.push(self.actor, [operation]))
+        change = self.sync.pull(self.actor)['changes'][0]
+        self.assertEqual(change['payload'], definition)
+        self.assertNotIn('enabled', change['payload'])
+        deleted = dict(operation, operation_id=str(uuid.uuid4()), base_version=1, deleted=True, payload={})
+        self.sync.push(self.actor, [deleted])
+        self.assertTrue(self.sync.pull(self.actor)['changes'][-1]['deleted'])
+
+    def test_v2_workflow_credentials_and_authority_rejected(self):
+        from clydex.automation.routines import template
+        value = template('custom')
+        value['enabled'] = True
+        with self.assertRaises(ValueError):
+            validate_payload('workflows', value)
+        value.pop('enabled')
+        value['nodes'] = [dict(id='unsafe', kind='tool', config={'tool': 'integration.request',
+            'arguments': {'authorization': 'Synthetic forbidden capability'}}, x=0, y=0)]
+        with self.assertRaises(ValueError):
+            validate_payload('workflows', value)

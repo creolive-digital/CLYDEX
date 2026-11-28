@@ -204,3 +204,12 @@ CURRENT V2 FILE LOCATIONS
 - Active static UI: frontend\legacy\; V2 business logic: src\clydex\.
 - Obsolete root Python import facades were removed; import clydex package modules directly.
 - Root contains project metadata and README.md; original V1 remains in v1-old\.
+
+PHASE 06 — SUPERVISED OPERATING TOOLS
+Automation Studio, Developer Center, Routines, Triggers, Intelligence Feeds, Plugins,
+Integrations, Monitoring and Activity share the existing Core. Save workflows and
+profiles disabled; enable reviewed versions and arm schedules/polling separately
+each session. Stop, lock, sleep and hiding the app disarm background work.
+Do not place credentials in workflow/profile JSON. Use Credential Manager fields.
+Executable scripts/plugins require source trust and exact review; they are not
+sandboxed. See docs/OPERATING_TOOLS.md and docs/PHASE_06_COMPLETION_REPORT.md.

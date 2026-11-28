@@ -1,0 +1,1017 @@
+[
+  {
+    "id": "operating.configure",
+    "description": "operating configure",
+    "scope": "operating.settings",
+    "risk": "high",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "data": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "operation": {
+          "maxLength": 4096,
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "data"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": false,
+    "destinations": [],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "workflow.checkpoint",
+    "description": "workflow checkpoint",
+    "scope": "automation.approval",
+    "risk": "high",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "message": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "node": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "workflow": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        }
+      },
+      "required": [
+        "workflow",
+        "node",
+        "message"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": false,
+    "destinations": [],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "files.inspect",
+    "description": "files inspect",
+    "scope": "files.selected.read",
+    "risk": "sensitive",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "enum": [
+            "read",
+            "list",
+            "metadata"
+          ],
+          "type": "string"
+        },
+        "relative": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "selection": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        }
+      },
+      "required": [
+        "selection",
+        "operation",
+        "relative"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": true,
+    "destinations": [],
+    "idempotent": true,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "files.modify",
+    "description": "files modify",
+    "scope": "files.selected.write",
+    "risk": "high",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_sha256": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "write",
+            "mkdir",
+            "delete"
+          ],
+          "type": "string"
+        },
+        "relative": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "selection": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 4096,
+          "type": "string"
+        }
+      },
+      "required": [
+        "selection",
+        "operation",
+        "relative",
+        "text",
+        "expected_sha256"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": false,
+    "destinations": [],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "developer.git_read",
+    "description": "developer git read",
+    "scope": "developer.git.read",
+    "risk": "sensitive",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "enum": [
+            "status",
+            "history",
+            "diff",
+            "branches"
+          ],
+          "type": "string"
+        },
+        "selection": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        }
+      },
+      "required": [
+        "selection",
+        "operation"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": true,
+    "destinations": [],
+    "idempotent": true,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "developer.git_branch",
+    "description": "developer git branch",
+    "scope": "developer.git.write",
+    "risk": "high",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "branch": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "create",
+            "switch"
+          ],
+          "type": "string"
+        },
+        "selection": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        }
+      },
+      "required": [
+        "selection",
+        "operation",
+        "branch"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": false,
+    "destinations": [],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "developer.script",
+    "description": "developer script",
+    "scope": "developer.script",
+    "risk": "high",
+    "timeout": 120,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "selection": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        },
+        "sha256": {
+          "maxLength": 4096,
+          "type": "string"
+        }
+      },
+      "required": [
+        "selection",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows"
+    ],
+    "read_only": false,
+    "destinations": [],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "developer.diagnostic",
+    "description": "developer diagnostic",
+    "scope": "developer.diagnostics",
+    "risk": "sensitive",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "profile": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile",
+        "operation"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": true,
+    "destinations": [],
+    "idempotent": true,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "developer.docker_manage",
+    "description": "developer docker manage",
+    "scope": "developer.docker.write",
+    "risk": "high",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "container": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "start",
+            "stop",
+            "restart"
+          ],
+          "type": "string"
+        },
+        "profile": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile",
+        "operation",
+        "container"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": false,
+    "destinations": [],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "developer.ssh_service",
+    "description": "developer ssh service",
+    "scope": "developer.ssh.write",
+    "risk": "high",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "enum": [
+            "restart"
+          ],
+          "type": "string"
+        },
+        "profile": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        },
+        "service": {
+          "maxLength": 4096,
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile",
+        "operation",
+        "service"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": false,
+    "destinations": [],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "developer.sql_read",
+    "description": "developer sql read",
+    "scope": "developer.sql.read",
+    "risk": "sensitive",
+    "timeout": 40,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        },
+        "query": {
+          "maxLength": 4096,
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile",
+        "query"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": true,
+    "destinations": [],
+    "idempotent": true,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "developer.sql_write",
+    "description": "developer sql write",
+    "scope": "developer.sql.write",
+    "risk": "high",
+    "timeout": 40,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        },
+        "query": {
+          "maxLength": 4096,
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile",
+        "query"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": false,
+    "destinations": [],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "developer.sql_schema",
+    "description": "developer sql schema",
+    "scope": "developer.sql.schema",
+    "risk": "high",
+    "timeout": 40,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        },
+        "query": {
+          "maxLength": 4096,
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile",
+        "query"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": false,
+    "destinations": [],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "integration.request",
+    "description": "integration request",
+    "scope": "integrations.external",
+    "risk": "high",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "data": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "operation": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "profile": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile",
+        "operation",
+        "data"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": false,
+    "destinations": [
+      "reviewed configured service"
+    ],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "mcp.request",
+    "description": "mcp request",
+    "scope": "integrations.mcp",
+    "risk": "high",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "operation": {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        "server": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        },
+        "tool": {
+          "maxLength": 4096,
+          "type": "string"
+        }
+      },
+      "required": [
+        "server",
+        "operation",
+        "tool",
+        "arguments"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": false,
+    "destinations": [
+      "reviewed MCP endpoint"
+    ],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "plugins.invoke",
+    "description": "plugins invoke",
+    "scope": "plugins.execute",
+    "risk": "high",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "plugin": {
+          "maxLength": 36,
+          "minLength": 36,
+          "type": "string"
+        },
+        "tool": {
+          "maxLength": 4096,
+          "type": "string"
+        }
+      },
+      "required": [
+        "plugin",
+        "tool",
+        "arguments"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": false,
+    "destinations": [],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "monitoring.sample",
+    "description": "monitoring sample",
+    "scope": "monitoring.local",
+    "risk": "sensitive",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {},
+      "required": [],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": true,
+    "destinations": [],
+    "idempotent": true,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "monitoring.gpu",
+    "description": "monitoring gpu",
+    "scope": "monitoring.local",
+    "risk": "sensitive",
+    "timeout": 15,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {},
+      "required": [],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": true,
+    "destinations": [],
+    "idempotent": true,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "feeds.read",
+    "description": "feeds read",
+    "scope": "feeds.local",
+    "risk": "sensitive",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "feed": {
+          "maxLength": 4096,
+          "type": "string"
+        }
+      },
+      "required": [
+        "feed"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows",
+      "Linux",
+      "Darwin"
+    ],
+    "read_only": true,
+    "destinations": [],
+    "idempotent": true,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "capture.once",
+    "description": "capture once",
+    "scope": "capture.visible",
+    "risk": "high",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "device": {
+          "maximum": 15,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "kind": {
+          "enum": [
+            "screen",
+            "camera"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "device"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows"
+    ],
+    "read_only": false,
+    "destinations": [],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  },
+  {
+    "id": "media.control",
+    "description": "media control",
+    "scope": "media.local",
+    "risk": "high",
+    "timeout": 60,
+    "arguments": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "enum": [
+            "play_pause",
+            "volume_up",
+            "volume_down",
+            "mute"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "type": "object"
+    },
+    "results": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "platforms": [
+      "Windows"
+    ],
+    "read_only": false,
+    "destinations": [],
+    "idempotent": false,
+    "approval_required": true,
+    "cancellation": "cooperative; completed effects cannot be undone",
+    "approval_policy": "One-time exact review; legacy LOW user actions and explicit context-free Codex requests retain documented exceptions",
+    "audit_metadata": [
+      "action_digest",
+      "tool",
+      "outcome"
+    ]
+  }
+]

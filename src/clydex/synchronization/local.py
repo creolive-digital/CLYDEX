@@ -230,6 +230,16 @@ class LocalSync:
         with self.store.connect() as c:
             c.execute('DELETE FROM sync_outbox WHERE owner=? AND binding=? AND id=?', (self.owner, binding, key))
 
+    def replicas(self, binding, category):
+        if category not in CATEGORIES:
+            raise ValueError('Unknown replica category.')
+        with self.store.connect() as c:
+            rows = c.execute('SELECT entity_id,version,payload FROM sync_replicas WHERE owner=? AND binding=? '
+                             'AND category=? AND deleted=0 ORDER BY entity_id LIMIT 100',
+                             (self.owner, binding, category)).fetchall()
+        return [dict(id=key, version=version, payload=self.open(binding, 'replica:' + key, payload))
+                for key, version, payload in rows]
+
     def snapshot(self, binding):
         with self.store.connect() as c:
             queued = c.execute('SELECT id,category,entity_id,status,attempts,error,next_attempt FROM sync_outbox WHERE owner=? AND binding=? '

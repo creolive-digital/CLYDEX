@@ -10,6 +10,10 @@ _source = ROOT / 'src'
 if _source.is_dir() and str(_source) not in sys.path:
     sys.path.insert(0, str(_source))
 
+if __name__ == '__main__' and sys.argv[1:] == ['--internal-worker']:
+    from clydex.tools.worker import main as worker_main
+    raise SystemExit(worker_main())
+
 from clydex.desktop.studio import Studio
 
 

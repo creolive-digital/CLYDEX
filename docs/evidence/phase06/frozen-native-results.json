@@ -1,0 +1,9 @@
+{
+  "window_initialized": true,
+  "exit_code": 0,
+  "core_started": true,
+  "core_stopped": true,
+  "cloud_disabled": true,
+  "elapsed_seconds": 7.871,
+  "limits": "Frozen native window/startup/clean shutdown only; no DOM, network, audio or installer acceptance"
+}

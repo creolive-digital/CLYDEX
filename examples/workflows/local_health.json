@@ -1,0 +1,42 @@
+{
+  "contract_version": 2,
+  "id": "1b3c907a-89d4-432b-af16-7d9193a6920a",
+  "name": "Local system observation",
+  "inputs": {
+    "type": "object",
+    "properties": {},
+    "required": [],
+    "additionalProperties": false
+  },
+  "nodes": [
+    {
+      "id": "sample",
+      "kind": "tool",
+      "config": {
+        "tool": "monitoring.sample",
+        "arguments": {}
+      },
+      "x": 60,
+      "y": 80
+    },
+    {
+      "id": "receipt",
+      "kind": "output",
+      "config": {
+        "value": {
+          "$ref": "sample.os"
+        }
+      },
+      "x": 380,
+      "y": 80
+    }
+  ],
+  "edges": [
+    {
+      "from": "sample",
+      "to": "receipt",
+      "port": "next"
+    }
+  ],
+  "timeout": 120
+}

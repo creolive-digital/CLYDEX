@@ -4,6 +4,7 @@ import time
 import uuid
 
 MESSAGES = {
+    'resource.alert': 'A configured local resource threshold was exceeded. Review Monitoring.',
     'task.complete': 'Local task completed.', 'task.interrupted': 'Task interrupted. Completed effects remain.',
     'approval.waiting': 'An action needs your review.', 'voice.warning': 'Local voice needs attention. Check Voice settings.',
     'task.error': 'A task could not complete. Check the conversation and settings.',

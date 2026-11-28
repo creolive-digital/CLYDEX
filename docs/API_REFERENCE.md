@@ -1,5 +1,9 @@
 # Phase 05 API contract
 
+## Phase 06 desktop contract extension (2026-11-28)
+
+Cloud REST routes remain unchanged. Workflow sync accepts backward-compatible inert v1 and validated v2 data; arrival is not execution or enablement. The existing three-method local HUD adds `hud_read("operating", {})`, `operating.select` with native picker kind, and `operating.action` with a fixed validated operation inventory. See `automation/workspace.FIELDS`, WORKFLOW_SCHEMA and FRONTEND_ARCHITECTURE. There is no public Windows/workflow execution endpoint or arbitrary method/route/path dispatch.
+
 The independently deployable FastAPI service uses `/v1`. Request models in `cloud/src/clydex_cloud/api/contracts.py` and route response contracts are authoritative; the local OpenAPI export is generated from the application, never hand-maintained as a competing interface. Public docs are disabled by default. No endpoint controls Windows, runs SQL supplied by clients, executes shell/code/macros, or invokes an AI orchestration engine.
 
 ## Contract inventory

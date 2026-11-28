@@ -10,7 +10,7 @@ def object_schema(**fields):
 STRING = {'type': 'string'}
 APP_ACTIONS = ('list_windows', 'manage_window', 'list_controls', 'press_control', 'append_text')
 STEP = object_schema(action={'type': 'string', 'enum': [
-    'open_app', 'browse', 'read_tab', 'read_inbox', 'draft_reply', 'windows_task', *APP_ACTIONS]},
+    'operating_tool', 'open_app', 'browse', 'read_tab', 'read_inbox', 'draft_reply', 'windows_task', *APP_ACTIONS]},
     target=STRING, detail=STRING, control=STRING)
 PLAN = object_schema(steps={'type': 'array', 'items': STEP}, message=STRING)
 

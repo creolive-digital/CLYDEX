@@ -1,5 +1,11 @@
 # Repository Guidelines
 
+## Current owner-authorized Phase 06
+
+Phase 06 publication authorization: the owner subsequently requested pushing this completed engineering checkpoint to GitHub. Commit and publish it on `v2` only. This supersedes the historical no-push/uncommitted statements for this publication; it does not authorize main changes, merge, tag, release, deployment, workflow recreation or later-phase work.
+
+The latest owner instruction authorizes Phase 06 engineering on `v2`, superseding historical phase stops and the older React/cloud-future statements below. Reuse the existing Core/coordinator/executor/three-method HUD. Keep all new workflows, triggers, plugins, integrations and polling disabled/disarmed by default. Follow docs/OPERATING_TOOLS.md, docs/AUTOMATION_ENGINE.md and docs/PLUGIN_SDK.md; trusted code/process ownership is not an OS sandbox. Preserve original specifications, main, v1-old and branding. Do not recreate GitHub Actions, push, deploy, activate paid/live/private services or advance beyond the Phase 06 owner-review checkpoint.
+
 Phase 05 publication authorization: the owner subsequently requested pushing the completed Phase 05 checkpoint to GitHub. Commit and publish the reviewed engineering changes on `v2` only. This supersedes historical uncommitted/no-push statements for this checkpoint; it does not authorize deployment, main changes, merging, tagging, releasing, restoring workflows or starting Phase 06.
 
 Publication record: after the Phase 04 engineering handoff, the owner explicitly requested committing and pushing that completed checkpoint to GitHub on `v2`. This supersedes the phase's historical no-push restriction for this publication only. It does not authorize merging main, tagging, releasing, activating providers or starting another phase.

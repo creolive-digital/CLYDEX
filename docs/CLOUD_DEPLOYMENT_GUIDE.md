@@ -1,5 +1,9 @@
 # Private Linux deployment and recovery
 
+## Phase 06 boundary (2026-11-28)
+
+Phase 06 adds local operating services and backward-compatible workflow data contracts only. It does not deploy the VPS, run production SQL migrations or expose a public Windows/workflow-control endpoint. Existing hosting/license/key-custody/TLS and live acceptance approvals remain required.
+
 These are prepared engineering configurations, **not a deployed service**. No VPS, DNS, public ports, paid service, production database, SQL container image, license or large model was activated. The automatic GitHub Actions workflow remains removed. Use local verification scripts. Before deployment, the owner must approve hosting costs, production SQL edition/terms, ODBC terms, image digests, certificates, retention/recovery ownership and private-data activation.
 
 ## Selected topology and prerequisites

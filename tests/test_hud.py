@@ -133,7 +133,7 @@ class HudTests(unittest.TestCase):
         self.core.providers.build = Mock(side_effect=AssertionError('No startup inference'))
         result = self.api.hud_read('bootstrap')['data']
         states = {row['component']: row for row in result['initialization']}
-        self.assertEqual(states['Database']['detail'], 'Schema 4')
+        self.assertEqual(states['Database']['detail'], 'Schema 5')
         self.assertEqual(states['Providers']['status'], 'unverified')
         self.assertEqual(states['Voice']['status'], 'gated')
         self.core.providers.build.assert_not_called()

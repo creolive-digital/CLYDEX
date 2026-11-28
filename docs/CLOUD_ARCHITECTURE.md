@@ -1,5 +1,9 @@
 # CLYDEX Phase 05 cloud architecture
 
+## Phase 06 preservation (2026-11-28)
+
+The local operating workspace remains inside the existing desktop Core/executor. Cloud shares only v1/v2 workflow data validation, never launches Windows actions or schedules a desktop run. Imports need local validation/enablement; credentials/grants/arming do not transfer. SQL Server, server-managed AES-GCM, key custody and VPS decisions are unchanged. Desktop SQLite advances additively to schema 5; historical schema-4 references below describe Phase 05. No public control endpoint, deployment or new cloud agent exists.
+
 The owner approved this engineering baseline on 2026-11-28: self-hosted FastAPI, SQL Server 2025 on supported Ubuntu, private VPS filesystem storage, server-managed AES-256-GCM envelope encryption, separately stored keys and owner-held encrypted recovery exports. The VPS can decrypt for ingestion/search. **This is not end-to-end encryption.** Production edition/licensing, hosting, public exposure, private-data transfers and model installation remain separate owner decisions.
 
 ## Boundaries and ownership

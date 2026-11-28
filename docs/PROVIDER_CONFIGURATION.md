@@ -1,5 +1,9 @@
 # Phase 02 configuration and privacy
 
+## Phase 06 boundary (2026-11-28)
+
+Phase 06 routes selected-content developer analysis and voice/text workflow drafting through the existing IntelligenceCoordinator and outbound policy. Installed tool schemas are public planner instructions; private selections/tool content are not silently injected. Existing providers stay disabled/unconfigured as before, and private result transfer still requires exact review. No new provider or paid activation follows the operating UI.
+
 ## Phase 05 Knowledge Vault boundary (2026-11-28)
 
 Personal cloud storage is a separate reviewed service, not an eighth AI provider. The seven-provider registry and Fast/Balanced/Advanced/Offline routing remain unchanged. Cloud storage is disabled by default and obeys the existing startup allow-cloud, privacy/personality and Offline ceilings. It does not make paid inference requests. Every selected transfer is exactly reviewed; login/category selection does not activate background sync.

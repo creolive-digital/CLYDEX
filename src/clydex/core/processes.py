@@ -59,17 +59,20 @@ class OutputLimitExceeded(ClydexError):
     code = 'output_limit'
 
 
-def run_process(args: list[str], *, input: str, cwd, timeout: float,
+def run_process(args: list[str], *, input: str = '', cwd=None, timeout: float,
                 cancel: Cancellation, max_output_bytes: int = 1_048_576,
-                watch_files: tuple = (), binary_output: bool = False) -> subprocess.CompletedProcess:
+                watch_files: tuple = (), binary_output: bool = False, env: dict | None = None,
+                memory_limit_bytes: int | None = None) -> subprocess.CompletedProcess:
     if cancel.is_set():
         raise Cancelled('Process canceled before launch.')
     encoded = input.encode('utf-8')
     if (len(encoded) > 1_048_576 or not 0 < timeout <= 900 or max_output_bytes < 1
             or type(binary_output) is not bool):
         raise ValueError('Invalid process input or limits.')
+    if memory_limit_bytes is not None and (type(memory_limit_bytes) is not int or memory_limit_bytes < 67108864):
+        raise ValueError('Invalid native memory limit.')
     process = subprocess.Popen(
-        args, cwd=cwd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        args, cwd=cwd, env=env, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         creationflags=(getattr(subprocess, 'CREATE_NO_WINDOW', 0) | (4 if os.name == 'nt' else 0)),
         start_new_session=os.name != 'nt')
     job = None
@@ -81,6 +84,10 @@ def run_process(args: list[str], *, input: str, cwd, timeout: float,
             job = win32job.CreateJobObject(None, '')
             info = win32job.QueryInformationJobObject(job, win32job.JobObjectExtendedLimitInformation)
             info['BasicLimitInformation']['LimitFlags'] = win32job.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+            if memory_limit_bytes is not None:
+                info['BasicLimitInformation']['LimitFlags'] |= win32job.JOB_OBJECT_LIMIT_JOB_MEMORY | win32job.JOB_OBJECT_LIMIT_ACTIVE_PROCESS
+                info['JobMemoryLimit'] = memory_limit_bytes
+                info['BasicLimitInformation']['ActiveProcessLimit'] = 8
             win32job.SetInformationJobObject(job, win32job.JobObjectExtendedLimitInformation, info)
             win32job.AssignProcessToJobObject(job, int(process._handle))
             assigned = True

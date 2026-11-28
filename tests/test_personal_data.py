@@ -208,7 +208,7 @@ class MigrationTests(unittest.TestCase):
         store = LocalStore(self.path)
         self.assertFalse(store.get_setting('speak_replies'))
         with store.connect() as db:
-            self.assertEqual(db.execute('PRAGMA user_version').fetchone()[0], 4)
+            self.assertEqual(db.execute('PRAGMA user_version').fetchone()[0], LocalStore.SCHEMA_VERSION)
             self.assertEqual(db.execute('SELECT count(*) FROM audit_events').fetchone()[0], 1)
             self.assertEqual(db.execute('SELECT count(*) FROM conversations').fetchone()[0], 0)
         LocalStore(self.path)  # Idempotent reopening.

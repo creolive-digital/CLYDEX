@@ -57,6 +57,11 @@ class HudService:
         self.widget = widget or WidgetService()
         self.system = SystemInformation()
         self.notifications = NotificationCenter()
+        if hasattr(self.core, 'operating'):
+            self.system = self.core.operating.system
+            self.core.operating.notify = self._notify
+            self.core.operating.quiet = lambda: self.preferences.values.dnd or self.core.personality.config.mode in ('focus', 'gaming')
+            self.core.operating.capture_indicator = self._capture_indicator
         self._lock, self._closed = threading.RLock(), threading.Event()
         self._thread = None
         self._chat, self._revision, self._last_busy = [], 0, False
@@ -105,6 +110,7 @@ class HudService:
         with self._lock:
             if frame['voice']['locked']:
                 self.core.cloud.lock()
+                self.core.operating.stop(clear=True)
                 self._chat.clear()
                 self.notifications.clear()
                 frame.update(messages=[], intelligence_events=[], voice_events=[], level=0, bands=[], wave=[], review=None)
@@ -171,6 +177,7 @@ class HudService:
                 provider=copy.deepcopy(self.core.engine.intelligence.state) if self.core.engine.intelligence else {},
                 session=dict(temporary=self.core.conversations.current.temporary, title=self.core.conversations.current.title),
                 personality=self.core.personality.config.mode,
+                operating_revision=self.core.operating.revision,
                 language=self.core.voice.config.recognition_language,
                 widget=self.widget.snapshot())
 
@@ -207,6 +214,8 @@ class HudService:
             if self.core.queue.busy:
                 return {'busy': True}
             return self.core.cloud.snapshot()
+        if section == 'operating':
+            return self.core.operating.snapshot()
         self.widget.start()
         return self.widget.snapshot()
 
@@ -245,8 +254,28 @@ class HudService:
             'cloud.configure': lambda: s._intelligence_work(lambda: self.core.cloud.configure(values['values'])),
             'cloud.action': lambda: s._intelligence_work(lambda: self.core.cloud.execute(values['operation'], values['values'])),
             'knowledge.select': lambda: self._select_knowledge(values.get('folder', False)),
+            'operating.action': lambda: s._intelligence_work(lambda: self.core.operating.execute(values['operation'], values['values'])),
+            'operating.select': lambda: self._select_operating(values['kind']),
         }
         return functions[action]()
+
+    def _capture_indicator(self, active):
+        if self.display.window is None or not self.core.voice.privacy.visible or self.core.voice.privacy.refresh():
+            return False
+        self.display.window.set_title('CLYDEX · CAPTURE ACTIVE' if active else 'CLYDEX · Your Personal Digital Intelligence')
+        return True
+
+    def _select_operating(self, kind):
+        if kind not in ('file', 'folder', 'script', 'plugin') or self.core.queue.busy or self.display.window is None:
+            return False
+        import webview
+        paths = self.display.window.create_file_dialog(webview.FileDialog.FOLDER if kind in ('folder', 'plugin') else webview.FileDialog.OPEN,
+                                                      allow_multiple=False)
+        if not paths or self.core.voice.privacy.refresh():
+            return False
+        self.core.operating.selections.add(paths[0], kind)
+        self.core.operating.revision += 1
+        return True
 
     def _select_knowledge(self, folder):
         if self.core.queue.busy or self.display.window is None:

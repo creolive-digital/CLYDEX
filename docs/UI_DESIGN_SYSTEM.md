@@ -1,5 +1,9 @@
 # CLYDEX HUD design system
 
+## Phase 06 additions (2026-11-28)
+
+The original SVG graph uses the existing Cyber Cyan panels, typography, focus states, controls and review dialogs. Nodes expose keyboard/drag positioning and labeled connection/parameter controls. Nine operating views reuse the existing navigation, emergency Stop/mute and native approval restoration. Literal untrusted tool/MCP content never becomes HTML. Source/credential settings remain reviewable; stored credentials are not displayed. Responsive overflow and real WebView2 screenshots are recorded in PHASE_06_COMPLETION_REPORT; optional capture previews are explicitly RAM-only and do not imply OCR/lip-sync/avatar acceptance.
+
 ## Phase 05 additions (2026-11-28)
 
 Cloud, Knowledge Vault, Devices and Synchronization reuse the Cyber Cyan panels, hybrid fonts, existing icons, review dialogs and persistent Stop/mute controls. New source/citation, file, quota, structured-data and device rows preserve keyboard labels and literal text rendering. Navigation scrolls vertically at smaller heights; no external CDN, replacement logo, avatar face or new renderer is introduced. Native 1360/760-pixel screenshots and component evidence are in the Phase 05 report; production avatar and acoustic acceptance are unchanged.

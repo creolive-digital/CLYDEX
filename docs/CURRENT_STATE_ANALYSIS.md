@@ -1,5 +1,11 @@
 # Current state analysis
 
+## Current Phase 06 assessment (2026-11-28)
+
+The reviewed clean Phase 05 baseline passed admission (222 desktop, 28 cloud plus one SQL skip, 22 frontend). The same Core/coordinator/serial queue/executor now owns the operating workspace, installed tool registry, DPAPI schema-5 workflow versions/statuses, bounded DAG interpreter, disabled/session-armed triggers, routines, observed feeds, reviewed local plugin processes and explicit MCP/integration clients. React/SVG editing and nine operating management views extend the existing three-method HUD, approved branding and legacy fallback.
+
+No separate operating agent, public Windows endpoint, alternative database, permission system or notification engine was created. Official 2026-07-28 MCP is explicitly pinned; unsupported legacy/complex schemas fail closed. SDK protocols, external ingress and optional native capabilities have explicit partial status. Source/native/frozen and synthetic/live distinctions are maintained in PHASE_06_COMPLETION_REPORT. Original SQL/VPS/acoustic/model/avatar gates remain open; the product is not declared production-ready.
+
 ## Current Phase 05 assessment (2026-11-28)
 
 Phase 05 is implemented locally on `v2` from clean reviewed `f2b1a094252c7db76c73812ff451fdc27bcf9263`. The owner approved the SQL Server 2025/Ubuntu and server-managed envelope encryption engineering baseline. The independent FastAPI API, generated SQL schema, authentication/device foundation, encrypted file vault/parsers/jobs, keyword/gated native-vector retrieval, shared-coordinator RAG, reviewed sync/outbox/offline cache and four React management screens are described in PHASE_05_COMPLETION_REPORT.

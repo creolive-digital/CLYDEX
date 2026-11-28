@@ -1,5 +1,11 @@
 # Phase 04 frontend architecture
 
+## Phase 06 operating extension (2026-11-28)
+
+`features/automation` composes the shared operating view, typed contracts, SVG workflow editor and responsive styles. Nine actual management views cover Automation Studio, Developer Center, Routines, Triggers, Intelligence Feeds, Plugins, Integrations/MCP, Monitoring and Activity. The graph is original React/SVG code; no graph library/CDN or replacement artwork is introduced. Keyboard node movement, connection editing, parameters, backend preview, version/enable/run/history and disabled defaults are functional.
+
+Only the existing three methods remain exposed. The shared JSON inventory adds an `operating` read and validated `operating.action`/`operating.select`; a fixed Python inner inventory rejects unknown fields/operations. Native picker output is opaque and expiring. Current profile revisions, destinations, scripts/checksums bind exact reviews; no arbitrary shell/Python/path/credential retrieval dispatch exists. Invalid JSON blocks form submission. Actual results/statuses are read from Core; lock unmounts private pages and clears RAM results. Local schema is now 5; legacy fallback remains supported. See PHASE_06_COMPLETION_REPORT for actual screenshots and verification limits.
+
 ## Phase 05 extension (2026-11-28)
 
 Four feature directories (`cloud`, `knowledge`, `devices`, `synchronization`) extend the existing React HUD using its existing tokens/components/hooks. They display only observed backend state and explicit disabled/unconfigured/insufficient-evidence status. No direct cloud credentials, API fetches or persistent tokens exist in React. Password entry is cleared on submit; lock unmounts private pages and Core clears RAM sessions/results.

@@ -17,11 +17,13 @@ datas = [
     (str(ROOT / 'assets/legacy/clydex_projection.png'), '.'),
 ]
 binaries = []
-hiddenimports = ['clydex.core.legacy_engine', 'clydex.voice.spectrum', 'win32timezone']
+hiddenimports = ['clydex.core.legacy_engine', 'clydex.voice.spectrum', 'clydex.tools.worker', 'win32timezone']
 
 # The package lives under src; collect migration SQL and Windows helper scripts.
-from PyInstaller.utils.hooks import collect_data_files
+from PyInstaller.utils.hooks import collect_data_files, copy_metadata
 datas += collect_data_files('clydex')
+datas += collect_data_files('tzdata')
+datas += copy_metadata('tzdata')  # Preserve the timezone distribution's license notices.
 
 # Collect all sub-packages, data files, and native DLLs for packages that
 # ship compiled extensions or use runtime data discovery.

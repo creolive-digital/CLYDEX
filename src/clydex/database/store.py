@@ -8,8 +8,9 @@ import threading
 
 
 class LocalStore:
-    SCHEMA_VERSION = 4
-    MIGRATIONS = ('001_foundation.sql', '002_conversations.sql', '003_memory.sql', '004_cloud.sql')
+    SCHEMA_VERSION = 5
+    MIGRATIONS = ('001_foundation.sql', '002_conversations.sql', '003_memory.sql', '004_cloud.sql',
+                  '005_operating.sql')
     def __init__(self, path: Path):
         self.path = Path(path)
         self._lock = threading.RLock()

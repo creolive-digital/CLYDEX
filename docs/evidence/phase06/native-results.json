@@ -1,0 +1,36 @@
+{
+  "kind": "Actual Windows WebView2, Core and DPAPI; synthetic local workflows",
+  "passed": true,
+  "no_external_network": true,
+  "no_audio_models_or_desktop_capture": true,
+  "observed_metrics": {
+    "os": "Windows",
+    "release": "10",
+    "cpu_percent": 83.2,
+    "memory_percent": 58,
+    "memory_total_bytes": 21367050240,
+    "process_memory_bytes": 106545152,
+    "disk_total_bytes": 239359700992,
+    "disk_free_bytes": 4386594816,
+    "disk_percent": 98.2,
+    "observed_at": 1795876898.5370338,
+    "gpu": null,
+    "gpu_status": "No configured GPU telemetry adapter",
+    "cpu_scope": "system-wide utilization",
+    "process_cpu_scope": "CLYDEX Python process; 100% equals one logical CPU",
+    "process_cpu_percent_one_core": 8.23
+  },
+  "responsive_overflow_760": false,
+  "exact_reviews": 5,
+  "completed_run": true,
+  "stop_prevented_next_action": true,
+  "elapsed_seconds": 10.439,
+  "bridge": [
+    "hud_command",
+    "hud_read",
+    "hud_snapshot"
+  ],
+  "native_picker": "Not interactively exercised; no private paths selected",
+  "limits": "No live services, SQL Server, camera/screen capture, acoustic or physical-lock acceptance",
+  "shutdown_joined": true
+}

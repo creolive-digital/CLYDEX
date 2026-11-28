@@ -1,5 +1,9 @@
 # Knowledge Vault
 
+## Phase 06 boundary (2026-11-28)
+
+Phase 06 preserves the existing Vault, encrypted cache, ingestion safety, citations and private outbound RAG rules. Workflow/plugin/MCP content is untrusted data and cannot install permissions or execute through document ingestion. No new embedding model, OCR/audio path, SQL service or cloud deployment was activated.
+
 ## Actual formats and provenance
 
 All source content is untrusted data. There is no uploaded-code/macro/SQL executor, URL crawler or automatic local-folder watcher. Uploads require authenticated ownership and a collection. The desktop requires a native explicit file/folder selection and an exact reviewed transfer; selected files are fingerprinted and rechecked after approval. Folder imports are bounded snapshots: at most 16 files/20 MiB total, 10 MiB each, three nested levels, 500 inspected entries and a three-second inspection budget; hidden/reparse/symlink paths are excluded.

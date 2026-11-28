@@ -1,5 +1,7 @@
 # CLYDEX V2
 
+Phase 06 adds supervised local operating tools, the React Automation Studio, disabled/versioned workflows and routines, explicit feeds/monitoring, local reviewed plugins and controlled MCP/service codecs. See [Phase 06 report](docs/PHASE_06_COMPLETION_REPORT.md) for actual verification and partial/live acceptance boundaries. No automatic schedules, polling, plugin execution or cloud activation follows installation. Local checks: `scripts/verify_phase06.ps1 -CloudPython <isolated-cloud-python>`.
+
 Phase 05 adds the optional personal cloud account and Knowledge Vault on `v2`. Cloud is disabled by default; local chat/voice/memory continue independently. See [Phase 05 checkpoint](docs/PHASE_05_COMPLETION_REPORT.md), [cloud architecture](docs/CLOUD_ARCHITECTURE.md) and [private deployment/recovery guide](docs/CLOUD_DEPLOYMENT_GUIDE.md). Native SQL Server/Linux/embedding/production acceptance and earlier acoustic/3D asset gates remain pending. The owner-removed automatic GitHub Actions workflow stays removed; use `scripts/verify_phase05.ps1` for local checks. No public deployment or paid/private activation follows from installation.
 
 Windows-first personal AI assistant. Active code is in `src/clydex/`; the original V1 release is preserved independently in `v1-old/`.

@@ -57,16 +57,22 @@ class ToolExecutor:
             finally:
                 self.permissions.revoke(approval)
         token.check()
+        if spec.scope in self._disabled_scopes:
+            self._audit(action.digest, action.tool, 'denied')
+            raise PermissionDenied('Capability was disabled while awaiting approval.')
         self._audit(action.digest, action.tool, 'approved')
         started = time.monotonic()
         try:
             result = operation(action.arguments)
-            if type(result) not in spec.result_types:
+            try:
+                spec.validate_result(result)
+            except ValueError:
                 raise RuntimeError('Tool result violated its contract; effects may have completed.')
             # Never retry a non-idempotent operation after timeout or cancellation.
             # Native adapters must implement their own cooperative timeout/stop.
             if time.monotonic() - started > spec.timeout:
                 raise RuntimeError('Tool exceeded its time budget; effects may have completed.')
+            token.check()
         except Cancelled:
             self._audit(action.digest, action.tool, 'cancelled')
             raise

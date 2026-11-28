@@ -1,5 +1,14 @@
 # Changelog
 
+## V2 Phase 06 — supervised operating engineering (2026-11-28)
+
+- Extended installed tool metadata/contracts and post-review scope/cancellation enforcement; reused the existing executor/coordinator/Core.
+- Added selected-file/developer/system/media adapters, explicit SQL classes and official service/MCP codecs with disabled profile/credential controls.
+- Added DPAPI schema 5 workflow versions, bounded declarative interpreter, previews/receipts, disabled/session-armed triggers, routines and observed feeds.
+- Added reviewed hash-pinned local plugin runtime/SDK, fixed source/frozen helper ownership and explicit non-sandbox trust limits.
+- Added functional Cyber Cyan SVG workflow editor and developer/routine/trigger/feed/plugin/integration/monitoring/activity views via the existing three-method bridge.
+- Added local security/regression/native/package verification and engineering documentation. External ingress/SDK extensions, optional native services and live/production acceptance are explicitly qualified. No CI workflow, deployment or push.
+
 ## V2 Phase 05 — local engineering owner review (2026-11-28)
 
 - Added independent versioned FastAPI service, protected configuration, request limits/logging and actual OpenAPI contracts; no public desktop-control endpoint.

@@ -1,5 +1,9 @@
 # Opt-in synchronization
 
+## Phase 06 workflow contract extension (2026-11-28)
+
+The original inert v1 format remains accepted. Shared validation now accepts constrained v2 DAG data; it excludes enablement, grants, credentials/recognized secret patterns and executable expressions. No cloud service executes these graphs. The desktop stores incoming data as encrypted replicas until a separate reviewed import creates a new disabled local identity. Explicit local validation, handle re-binding and enablement are mandatory. Save/restore/import uses CAS and never synchronizes permission grants or reusable approvals. Connected tombstones disable matching imported copies; offline revocation remains delayed. Profiles, credential stores, trigger arming and local selections never synchronize. See WORKFLOW_SCHEMA and AUTOMATION_ENGINE. Historical Phase 05-only statements below describe that checkpoint.
+
 ## Policy and contract
 
 Every category starts disabled on the desktop and server: Knowledge Vault metadata, confirmed non-local personal memory, explicitly saved safe conversation history, whitelisted preferences, inert workflow contracts, registered-device metadata and themes. This matches product decision D35; notification history is not a synchronization category. File upload is a separate explicit operation. No account login, category toggle, startup, timer or reconnect silently initiates transfer.

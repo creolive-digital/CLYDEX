@@ -1,5 +1,9 @@
 # SQL Server and local synchronization design
 
+## Phase 06 local additive migration (2026-11-28)
+
+Desktop schema 5 adds DPAPI owner/category operating records, retained workflow versions, encrypted sanitized run statuses and hashed trigger receipts with bounded retention/quotas. Migration remains transactional, preserves existing history/memory/cloud/settings/audit tables and refuses downgrade. Back up the prior profile before a real upgrade; rollback uses a separate prior-profile backup, never forced schema-number changes. Cloud remains SQL Server 2025 with the same production schema/encryption boundary; no alternative primary database, production migration or native SQL acceptance was introduced.
+
 ## Approved database baseline
 
 Product decisions D33/D53–55 retain local SQLite, Microsoft SQL Server, Ubuntu and private VPS files. The owner explicitly approved SQL Server **2025 (17.x)** for this engineering implementation, with GA vector types/exact distance only. Microsoft lists Ubuntu 22.04/24.04 with XFS/ext4 among supported Linux configurations; SLES support was removed in this release. Production images, updates and host support must be checked again before deployment. [Microsoft Linux release information](https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-release-notes-2025?view=sql-server-ver17).
