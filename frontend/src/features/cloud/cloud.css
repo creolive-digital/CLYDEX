@@ -1,0 +1,15 @@
+.cloud-facts {display:grid;grid-template-columns:minmax(100px,1fr) 1.5fr;gap:14px;font-size:13px;line-height:1.6}
+.cloud-facts dt{color:var(--muted)}
+.cloud-facts dd{margin:0;overflow-wrap:anywhere}
+.cloud-file{display:flex;align-items:center;gap:16px;justify-content:space-between;padding:14px 0;border-bottom:1px solid #ffffff12}
+.cloud-file span{min-width:0;overflow-wrap:anywhere;font-size:13px}
+.cloud-file small{display:block;margin-top:6px;color:var(--muted);font-size:11px}
+.cloud-json{max-height:260px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:#0005;border:1px solid #ffffff14;padding:14px;font-size:12px;line-height:1.7}
+.vault-documents{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.pairing-token{display:block;overflow-wrap:anywhere;margin:16px 0;padding:12px;background:#0005;font-size:12px;user-select:all}
+.source-excerpt{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8}
+.navigation nav{overflow-y:auto;overflow-x:hidden;min-height:0;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.navigation nav button span{max-width:100%;overflow-wrap:anywhere;line-height:1.35}
+.navigation nav button{min-width:0;padding:8px 2px}
+.page-stack>.panel p:not(.quiet-note):not(.empty){line-height:1.75}
+@media(max-width:650px){.cloud-file{align-items:flex-start;flex-direction:column}.cloud-facts{grid-template-columns:1fr}.cloud-facts dd{margin-bottom:10px}}

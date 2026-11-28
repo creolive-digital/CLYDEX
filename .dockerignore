@@ -1,0 +1,12 @@
+*
+!pyproject.toml
+!src/
+!src/**
+!cloud/
+!cloud/pyproject.toml
+!cloud/requirements-runtime.lock
+!cloud/src/
+!cloud/src/**
+**/__pycache__/
+**/*.egg-info/
+**/*.pyc

@@ -5,6 +5,7 @@ from clydex.core.errors import PermissionDenied
 
 
 SECRET_PATTERNS = (
+    r'\bclx[ar]\.[a-f0-9-]{36}\.[A-Za-z0-9_-]{20,}',
     r'-----BEGIN [A-Z ]*PRIVATE KEY-----',
     r'\b(?:sk-[A-Za-z0-9_-]{16,}|gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[A-Z0-9]{16})\b',
     r'(?i)\bbearer\s+[A-Za-z0-9_.-]{12,}',

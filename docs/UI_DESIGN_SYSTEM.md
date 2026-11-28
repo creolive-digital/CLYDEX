@@ -1,5 +1,9 @@
 # CLYDEX HUD design system
 
+## Phase 05 additions (2026-11-28)
+
+Cloud, Knowledge Vault, Devices and Synchronization reuse the Cyber Cyan panels, hybrid fonts, existing icons, review dialogs and persistent Stop/mute controls. New source/citation, file, quota, structured-data and device rows preserve keyboard labels and literal text rendering. Navigation scrolls vertically at smaller heights; no external CDN, replacement logo, avatar face or new renderer is introduced. Native 1360/760-pixel screenshots and component evidence are in the Phase 05 report; production avatar and acoustic acceptance are unchanged.
+
 Cyber Cyan remains the default identity. The owner-supplied Intelligence Core logo and Digital Wireframe masculine face are preserved byte-for-byte. The UI does not invent an alternative logo, face, personal name, live task, provider status or system metric. The avatar is explicitly labeled as an approved reference with a production rig pending.
 
 ## Tokens and composition

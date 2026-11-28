@@ -1,5 +1,6 @@
 """One provider coordinator for the existing agent; never replays a tool plan."""
 import json
+from dataclasses import replace
 
 from clydex.core.commands import PLAN
 from clydex.core.context import ContextBundle
@@ -15,7 +16,7 @@ class IntelligenceCoordinator:
         self.registry, self.memory = registry, memory
         self.state = {'provider': 'codex', 'model': '', 'status': 'idle', 'usage': {}, 'memory_used': 0}
 
-    def respond(self, engine, instructions: str, data: dict, schema: dict):
+    def respond(self, engine, instructions: str, data: dict, schema: dict, *, knowledge=None, local_only=False):
         task = 'planning' if schema is PLAN else 'summary' if 'results' in data else 'conversation'
         personality = getattr(engine, 'personality', None)
         privacy_mode = engine.config.privacy_mode or bool(personality and personality.privacy_mode)
@@ -26,6 +27,8 @@ class IntelligenceCoordinator:
         memories = self.memory.relevant(str(data.get('request', ''))) if self.memory else []
         context = ContextBundle.from_legacy(data, memories,
             local_only=bool(data.get('history') and getattr(engine, 'history_local_only', False)))
+        if knowledge is not None:
+            context = replace(context, knowledge_json=canonical_json(knowledge), local_only=context.local_only or local_only)
         size = len((instructions + canonical_json(context.data()) + canonical_json(schema)).encode('utf-8')) + 1024
         registry = self.registry
         if registry is None:

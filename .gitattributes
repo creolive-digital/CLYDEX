@@ -2,3 +2,5 @@
 /docs/CLYDEX_Codex_Master_Instructions_v1.1.md -text
 /docs/CLYDEX_Master_Product_Blueprint_v1.1.pdf binary
 /v1-old/** -text
+# Linux operator scripts must retain executable shebang line endings on Windows checkouts.
+/deployment/linux/*.sh text eol=lf

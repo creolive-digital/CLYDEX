@@ -1,5 +1,24 @@
 # Requirements traceability
 
+## Phase 05 task traceability (2026-11-28)
+
+| Task | Implementation / evidence | Acceptance boundary |
+|---|---|---|
+| P5-01 | Repository/spec/Phase 04 audit, admitted regressions; ADR 048 | Earlier acoustic/rig/live gates unchanged |
+| P5-02 | `cloud/.../api`, `core`, OpenAPI, HTTP/TLS/privacy tests | Local actual HTTP + simulated SQL; public deployment pending |
+| P5-03 | `repositories/schema.py`, packaged SQL migrations, native guarded test | 26-table T-SQL generated; native SQL suite skipped by default |
+| P5-04 | `authentication`, `devices`, security/HTTPS tests | Synthetic real hashes/tokens/encryption; no default admin |
+| P5-05 | `storage/files.py`, `knowledge/vault.py` | Owner authorization/checksum/quota/version/deletion fixtures |
+| P5-06 | Shared bounded `knowledge/ingestion.py`, workers and processing tests | Real parsers on synthetic files; OCR/audio/live web unsupported/gated |
+| P5-07 | Retrieval, optional embeddings, `knowledge/retrieval.py`, coordinator extension | Keyword/citations verified; model/native vector/answer quality gated |
+| P5-08 | Shared sync contracts, local schema 4/queue/cache, cloud synchronization | Conflicts/atomicity/idempotency/consent simulated; live multi-device pending |
+| P5-09 | Four React feature screens; same three HUD methods | Component and actual Windows screenshots; picker gestures pending |
+| P5-10 | Docker/Linux/nginx templates, operator CLI, encrypted logical recovery | Actual isolated logical restore; real SQL/Linux deployment/restore pending |
+| P5-11 | Local script, expanded tests, native/frozen/wheel evidence | No CI recreation; explicit mocked/simulated/native distinctions |
+| P5-12 | Seven new design/API/deployment/completion documents, screenshots and this tracking update | Stop at Phase 05 owner review; Phase 06 not started |
+
+Full final evidence is in PHASE_05_COMPLETION_REPORT. Current owner authorization supersedes older phase stops; paid/private/infrastructure activation and remote push remain unapproved.
+
 ## Phase 04 checkpoint (2026-11-27)
 
 | Requirement / task | Engineering classification | Evidence / remaining boundary |

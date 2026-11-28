@@ -1,5 +1,21 @@
 # Architecture decisions
 
+## Phase 05 decisions (2026-11-28)
+
+| ADR | Decision | Consequence |
+|---|---|---|
+| 048 | Owner explicitly approved server-managed AES-256-GCM envelopes, separate keys/recovery exports and SQL Server 2025/Ubuntu GA exact-vector baseline. | VPS can decrypt; not E2EE. Production edition/licensing/hosting/private activation remain separate. No database substitution or preview indexes. |
+| 049 | Independent FastAPI distribution shares only headless contracts/parsers; desktop retains one Core/coordinator/voice/executor. | No public Windows control or duplicate AI engine. Cloud outage/config failure does not block desktop startup. |
+| 050 | Encrypt embeddings at rest; bounded decrypted candidates use parameterized native exact VECTOR_DISTANCE. | Preserves approved native SQL strategy without preview ANN or another vector DB. Native inference/capacity remains unverified. |
+| 051 | Argon2id, opaque short access, hashed rotating refresh, one-use recovery/pairing and fixed device scopes. | Request-time owner/session/device checks; RAM-only desktop credentials, lock clears them. No default admin or token retrieval bridge. |
+| 052 | Raw bounded uploads, UUID private encrypted files, SQL leases and owned bounded parser children. | No macros/code/SQL execution or URL crawling; explicit OCR/audio/legacy format limitations. Quotas count original bytes; index bounds are separate. |
+| 053 | Manual per-category opt-in, DPAPI outbox/inbox/cache and additive local schema 4. | Immutable retries, optimistic conflicts, tombstones and account binding. Existing memory/history imports and mappings commit atomically; DPAPI ciphertext never crosses devices. |
+| 054 | Bounded encrypted full-service logical recovery exports with separately held passphrase. | Actual synthetic isolated restore tested; native SQL restore, large-scale backup and production key operations remain gates. Restore revokes devices/sessions. |
+| 055 | Extend the existing three-method HUD with four functional screens and native selected-file tokens. | No arbitrary routes/paths/OS/credentials. Keep approved visual references, legacy fallback and removed CI workflow. Local verification replaces CI. |
+| 056 | Single API process with bounded request/auth concurrency, privacy-safe metadata logs and explicit operator migrations. | Deployment/CA/SQL qualification is separate; no automatic production schema, model downloads or infrastructure activation. |
+
+See CLOUD_ARCHITECTURE, DATABASE_DESIGN, KNOWLEDGE_VAULT, SYNCHRONIZATION_DESIGN and CLOUD_DEPLOYMENT_GUIDE. Phase 05 authorization supersedes historical phase stops below; stop at the Phase 05 owner review checkpoint.
+
 ## Phase 04 decisions (2026-11-27)
 
 | ADR | Decision | Rationale / consequence |

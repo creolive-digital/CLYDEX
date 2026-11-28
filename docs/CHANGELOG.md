@@ -1,5 +1,15 @@
 # Changelog
 
+## V2 Phase 05 — local engineering owner review (2026-11-28)
+
+- Added independent versioned FastAPI service, protected configuration, request limits/logging and actual OpenAPI contracts; no public desktop-control endpoint.
+- Added SQL Server 2025 schema/migrations, owned encrypted records/files, quotas, versioned document jobs and bounded literal/OOXML/PDF ingestion.
+- Added Argon2id accounts, rotating hashed sessions, recovery, scoped one-use pairing and device revocation.
+- Added keyword citations, optional licensed local embeddings/native exact distance gate and private reviewed RAG through the existing coordinator.
+- Added manual per-category synchronization, conflict/idempotency/tombstone handling, schema 4 DPAPI outbox/inbox/cache and reviewed source imports.
+- Added functional React account/vault/device/sync/cache screens with native selection tokens; preserved branding/legacy/three-method bridge.
+- Added encrypted logical recovery with actual isolated synthetic restore, private deployment templates, local tests/build scripts and native/package evidence. Native SQL/Linux/model/production and existing acoustic/rig acceptance remain pending. No workflow restored and no push/deployment/release.
+
 ## V2 Phase 04 — local owner review checkpoint (2026-11-27)
 
 - Added local React/TypeScript/Vite cinematic Cyber Cyan HUD, approved logo/face references, hybrid typography and reusable accessible controls; retained legacy fallback.

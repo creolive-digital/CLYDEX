@@ -50,6 +50,60 @@ class HudTests(unittest.TestCase):
         self.core.stop()
         self.fail('HUD task did not settle.')
 
+    def configure_cloud(self):
+        self.core.config = replace(self.core.config, allow_cloud=True, privacy_mode=False)
+        self.engine.config = self.core.config
+        self.assertTrue(self.api.hud_command('cloud.configure', {'values': {'enabled': True, 'endpoint': 'https://fixture.invalid'}})['ok'])
+        self.assertTrue(self.settle(True))
+
+    def test_cloud_configuration_and_login_have_exact_reviews_without_startup_network(self):
+        self.core.cloud.client.transport = Mock()
+        self.configure_cloud()
+        self.core.cloud.client.transport.exchange.assert_not_called()
+        self.assertTrue(self.api.hud_command('cloud.action', {'operation': 'login', 'values':
+            {'login': 'synthetic-owner', 'password': 'Synthetic-Review-Fixture-83'}})['ok'])
+        reviews = self.settle(False)
+        self.assertEqual(len(reviews), 1)
+        self.assertNotIn('Synthetic-Review-Fixture-83', reviews[0]['script'])
+        self.assertIn('credential_digest', reviews[0]['script'])
+        self.core.cloud.client.transport.exchange.assert_not_called()
+        self.assertEqual(self.core.cloud.client.access, '')
+
+    def test_headless_lock_clears_cloud_credentials_and_private_presentation(self):
+        self.core.cloud.client.access, self.core.cloud.client.refresh = 'synthetic-access', 'synthetic-refresh'
+        self.core.cloud.results['search'] = {'items': [{'excerpt': 'Synthetic private context'}]}
+        self.core.voice.privacy.probe = lambda: True
+        self.core.voice.privacy.refresh()
+        self.assertEqual(self.core.cloud.client.access, '')
+        self.assertEqual(self.core.cloud.client.refresh, '')
+        self.assertEqual(self.core.cloud.results, {})
+        self.assertFalse(self.api.hud_read('cloud')['ok'])
+
+    def test_changed_selected_file_is_rejected_after_upload_review(self):
+        self.configure_cloud()
+        self.core.cloud.client.access = 'synthetic-access'
+        self.core.cloud.client.transport = Mock()
+        source = self.paths.directory('tmp') / 'fixture.md'
+        source.write_text('Synthetic original', encoding='utf-8')
+        self.core.cloud.selection([source])
+        key = next(iter(self.core.cloud.selections))
+        self.assertTrue(self.api.hud_command('cloud.action', {'operation': 'document.upload',
+            'values': {'selection': key, 'collection_id': '00000000-0000-0000-0000-000000000001'}})['ok'])
+        deadline = time.monotonic() + 3
+        while not self.engine.pending_review() and time.monotonic() < deadline:
+            time.sleep(.005)
+        self.assertIsNotNone(self.engine.pending_review())
+        source.write_text('Synthetic modified', encoding='utf-8')
+        self.settle(True)
+        self.core.cloud.client.transport.exchange.assert_not_called()
+
+    def test_cloud_bridge_has_no_arbitrary_http_or_filesystem_dispatch(self):
+        self.core.cloud.client.transport = Mock()
+        self.assertFalse(self.api.hud_command('cloud.action', {'operation': 'shell.run', 'values': {}, 'url': 'https://fixture.invalid'})['ok'])
+        self.assertTrue(self.api.hud_command('cloud.action', {'operation': 'http.request', 'values': {'path': 'private'}})['ok'])
+        self.settle(False)
+        self.core.cloud.client.transport.exchange.assert_not_called()
+
     def test_bridge_exposes_only_three_entrypoints_and_rejects_unknown_fields(self):
         self.assertEqual([x for x in dir(self.api) if not x.startswith('_')], ['hud_command', 'hud_read', 'hud_snapshot'])
         for action, payload in [('__class__', {}), ('shell.run', {'script': 'never execute'}),
@@ -79,7 +133,7 @@ class HudTests(unittest.TestCase):
         self.core.providers.build = Mock(side_effect=AssertionError('No startup inference'))
         result = self.api.hud_read('bootstrap')['data']
         states = {row['component']: row for row in result['initialization']}
-        self.assertEqual(states['Database']['detail'], 'Schema 3')
+        self.assertEqual(states['Database']['detail'], 'Schema 4')
         self.assertEqual(states['Providers']['status'], 'unverified')
         self.assertEqual(states['Voice']['status'], 'gated')
         self.core.providers.build.assert_not_called()

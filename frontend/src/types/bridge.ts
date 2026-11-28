@@ -1,10 +1,11 @@
+import type {CloudSnapshot,CloudOperation} from '../features/cloud/types';
 import contract from '../../../src/clydex/desktop/hud_contract.json';
 
 export type Json = null | boolean | number | string | Json[] | {[key: string]: Json};
 export type Values = Record<string, Json>;
 export type VoiceState = 'standby' | 'wake_detected' | 'listening' | 'transcribing' | 'thinking' | 'waiting_for_approval' | 'speaking' | 'interrupted' | 'sleeping' | 'error';
 export type DisplayMode = 'window' | 'fullscreen' | 'widget' | 'floating' | 'mini' | 'tray';
-export type Page = 'overview' | 'conversation' | 'intelligence' | 'memory' | 'voice' | 'personality' | 'notifications' | 'settings';
+export type Page = 'overview' | 'conversation' | 'intelligence' | 'memory' | 'voice' | 'personality' | 'notifications' | 'settings' | 'cloud' | 'knowledge' | 'devices' | 'synchronization';
 export interface Preferences {
   theme: 'cyber' | 'midnight' | 'graphite'; accent: string; animations: boolean; reduced_motion: boolean;
   resource_saving: boolean; fps: 15 | 30 | 60; particles: number; detail: 'low' | 'balanced' | 'high';
@@ -52,6 +53,7 @@ type FieldType<T> = T extends 'string' | 'string?' ? string : T extends 'boolean
 type Fields<T> = {[K in keyof T as T[K] extends `${string}?` ? never : K]: FieldType<T[K]>} & {[K in keyof T as T[K] extends `${string}?` ? K : never]?: FieldType<T[K]>};
 // JSON module values widen to strings; explicit command payload contracts keep call sites strict.
 export interface CommandPayloads {
+  'cloud.configure': {values:Values}; 'cloud.action': {operation:CloudOperation;values:Values}; 'knowledge.select': {folder?:boolean};
   'chat.send': {message: string}; 'chat.clear': {}; 'voice.capture': {check?: boolean}; 'voice.mute': {muted: boolean};
   'voice.stop': {}; 'voice.test': {}; 'voice.arm': {}; 'voice.configure': {values: Values}; 'voice.download': {model: string};
   'personality.configure': {values: Values; address?: string}; 'provider.configure': {name: string; values: Values; secret?: string; remove_key?: boolean};
@@ -62,7 +64,7 @@ export interface CommandPayloads {
   'widget.action': {operation: string; seconds?: number; hour?: number; minute?: number; city?: string};
   'notifications.clear': {}; 'notifications.native_test': {}; 'startup.greet': {};
 }
-export interface ReadResults {bootstrap: Bootstrap; intelligence: Intelligence; voice: VoiceSettings; memories: Memories; conversations: Conversation[]; export: string; preferences: Preferences; permissions: Permissions; widget: WidgetData}
+export interface ReadResults {cloud: CloudSnapshot; bootstrap: Bootstrap; intelligence: Intelligence; voice: VoiceSettings; memories: Memories; conversations: Conversation[]; export: string; preferences: Preferences; permissions: Permissions; widget: WidgetData}
 export interface Reply {ok: boolean; error?: string; data?: unknown}
 export interface PythonBridge {hud_snapshot(): Promise<unknown>; hud_read(section: string, params: Values): Promise<Reply>; hud_command(action: string, payload: unknown): Promise<Reply>}
 declare global {interface Window {pywebview?: {api: PythonBridge}}}

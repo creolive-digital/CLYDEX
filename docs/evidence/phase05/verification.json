@@ -1,0 +1,66 @@
+{
+  "date": "2026-11-28",
+  "branch": "v2",
+  "base_commit": "f2b1a094252c7db76c73812ff451fdc27bcf9263",
+  "workflow_recreated": false,
+  "public_deployment": false,
+  "private_data_or_paid_calls": false,
+  "sql_server": "Not run; no owner-authorized disposable environment supplied",
+  "cloud_repository": "Explicit SQLite simulation; never production primary",
+  "python": {
+    "discovered": 222,
+    "passed": 222,
+    "skipped": 0,
+    "seconds": 32.462
+  },
+  "cloud": {
+    "discovered": 29,
+    "passed": 28,
+    "skipped": 1,
+    "seconds": 30.279
+  },
+  "frontend": {
+    "passed": 22,
+    "typecheck": true,
+    "build": true,
+    "vite_seconds": 3.27,
+    "duration": "20.98s (environment 67%, setup 21%, tests 7%, import 3%, transform 1%, worker 1%)"
+  },
+  "archive": {
+    "discovered": 4,
+    "passed": 4,
+    "skipped": 0,
+    "seconds": 0.004
+  },
+  "lint": {
+    "python": true,
+    "cloud": true
+  },
+  "compilation": {
+    "python": true,
+    "cloud": true
+  },
+  "compose": "Local docker compose config --quiet exit 0; no pull/build/up/deployment",
+  "restore": "Actual encrypted logical synthetic fixture restore; simulated SQL, not SQL Server .bak/native restore",
+  "legacy_smoke": "Tk and legacy WebView2 passed; browser Crashpad metrics temporary-directory cleanup warning recorded",
+  "protected_sha256": {
+    "assets/branding/clydex_logo_reference.png": "e49d7bdda1b73b24ce74c67e0e63be5f8a0e0e1735f7ce4b66757ef027c3754f",
+    "assets/avatars/clydex_avatar_reference.png": "c9e20e5b061fc50c1cbf3fdf851f15ca6fcea9a008552ee7f0cf596685fc0d5f",
+    "docs/CLYDEX_Master_Product_Blueprint_v1.1.pdf": "258831e9659dc66145c80d2759c5bc6857be7798d6400f0b5ae876586ec45d2c",
+    "docs/CLYDEX_Codex_Master_Instructions_v1.1.md": "6bd06df66c55d714b708984bfd72349a8ef2e503deb410a84abb284e7c470680"
+  },
+  "main_commit": "e65fe46e19e554066a43926f4a0e5335843096c8",
+  "pyinstaller_elapsed_seconds": 174.682,
+  "package_verification": "Clean PyInstaller; compiled cloud client equals source; 14 frontend files and schema 4 match; cloud server excluded; wheels built externally",
+  "runtime_dependencies": "27 pinned runtime dependencies; pip check passed",
+  "native_limits": "No interactive picker, physical lock, actual SQL, Linux, live providers/models or production acceptance",
+  "final_review": {
+    "changed_files": 140,
+    "protected_assets_specs_main_archive_unchanged": true,
+    "workflow_absent": true,
+    "new_high_signal_credential_matches": 0,
+    "existing_secret_rejection_fixture": "Preserved unchanged; test-only non-secret marker",
+    "document_links_valid": true
+  },
+  "publication_verification": "Corrected schema-unique SQL constraint names before first publication; regenerated canonical DDL, cloud tests/lint/compile and wheels reverified. Native SQL remains unverified."
+}

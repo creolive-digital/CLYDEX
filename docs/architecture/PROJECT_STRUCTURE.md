@@ -1,5 +1,18 @@
 # Project structure and public interfaces
 
+## Phase 05 actual extension (2026-11-28)
+
+- `cloud/`: independent `clydex-cloud` package, API/core/auth/devices/sync/vault/storage/workers/repositories/tests, runtime lock and generated OpenAPI.
+- `cloud/src/clydex_cloud/repositories/migrations/`: canonical packaged SQL Server DDL/reverse migration; `database/mssql/README.md` links this single source.
+- `src/clydex/cloud`, `knowledge`, `synchronization`: desktop client/workspace, shared format/citation contracts, DPAPI queue/cache and existing-coordinator RAG.
+- `src/clydex/database/migrations/004_cloud.sql`: additive local schema 4; imports/mappings share one transaction.
+- `frontend/src/features/{cloud,knowledge,devices,synchronization}`: four functional React screens using the existing three-method HUD bridge.
+- `deployment/{docker,linux,nginx}`: private templates/scripts only, no deployed service or SQL image.
+- `scripts/verify_phase05.ps1`, `verify_cloud_native.py`, `verify_phase05_package.py`, `verify_frozen_startup.py`, schema/OpenAPI generation scripts: local verification without GitHub Actions.
+- `docs/evidence/phase05`: synthetic/native screenshots and concise verification manifests; runtime builds/data remain outside source.
+
+The automatic workflow remains removed. Historical inventories below describe earlier checkpoints; no current `.github/workflows` build is provided. Existing legacy/widget/archive and branding paths remain unchanged. New business logic never lives at repository root.
+
 ## Phase 04 extension
 
 The current primary frontend is `frontend/src/` (React/TypeScript), with `app`, `components`, `features`, `hooks`, `services`, `stores`, `themes` and `styles`. `frontend/tests/` contains deterministic Vitest/jsdom tests. Package/lock/TS/Vite configuration stays under `frontend/`. Vite emits to ignored `deployment/windows/artifacts/frontend/`; it never mixes generated files into source. Fonts/license notices are bundled; expected owner logo/face references are supplied under `assets/branding/` and `assets/avatars/` and remain unchanged. No unnecessary model/texture/sound placeholder directories were created.

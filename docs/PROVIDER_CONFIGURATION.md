@@ -1,5 +1,11 @@
 # Phase 02 configuration and privacy
 
+## Phase 05 Knowledge Vault boundary (2026-11-28)
+
+Personal cloud storage is a separate reviewed service, not an eighth AI provider. The seven-provider registry and Fast/Balanced/Advanced/Offline routing remain unchanged. Cloud storage is disabled by default and obeys the existing startup allow-cloud, privacy/personality and Offline ceilings. It does not make paid inference requests. Every selected transfer is exactly reviewed; login/category selection does not activate background sync.
+
+Knowledge-assisted answers reuse IntelligenceCoordinator and classify retrieved excerpts as private context. External AI transfer requires the existing provider-specific exact review; excerpts cannot grant permissions. Insufficient evidence avoids a model call; offline cached questions require a configured local provider. The optional cloud-side local embedding adapter is explicitly licensed/digest-pinned, off by default and never downloads a model. Native vector/inference quality and all live provider acceptance remain pending.
+
 Phase 03 continuation: voice transcripts use the same IntelligenceCoordinator, outbound compartments, configured providers, cost ceilings and exact-action reviews described here. Personality privacy mode adds a cloud restriction; it cannot enable a provider or relax core/routing privacy. Optional encrypted addressing is private context and requires transfer review. No new AI provider or cloud speech service was activated. See [voice configuration](VOICE_CONFIGURATION.md) and [Phase 03 evidence](PHASE_03_COMPLETION_REPORT.md). Historical Phase 02 protocol/configuration guidance below remains applicable.
 
 Validated against official documentation on 2026-11-26. These are implementation contracts and synthetic test results, not live connectivity or model-availability claims. No SDK dependency or invented default model was added. The existing logged-in Codex CLI remains the only enabled default provider. Six HTTP providers start disabled without models or credentials.

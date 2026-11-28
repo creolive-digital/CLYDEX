@@ -29,6 +29,7 @@ from clydex.personality.service import PersonalityService
 from clydex.voice.privacy import VoicePrivacy
 from clydex.voice.service import VoiceRuntime
 from clydex.voice.events import VoiceState
+from clydex.cloud.workspace import CloudWorkspace
 
 
 def legacy_recognition_mode() -> str | None:
@@ -90,6 +91,8 @@ class CoreApplication:
             if speak is not None:
                 self.engine.speak_preference = speak
             self.queue = SupervisedQueue()
+            self.cloud = CloudWorkspace(self, owner, cipher)
+            self.register_resource(self.cloud)
             self.voice.start()
             self.logger.info('core_started')
         except Exception:
@@ -135,6 +138,8 @@ class CoreApplication:
             self._resources.append(service)
 
     def stop(self) -> None:
+        if self.voice.privacy.locked and hasattr(self, 'cloud'):
+            self.cloud.lock()
         self.engine.cancel()
         self.queue.cancel_all()
 

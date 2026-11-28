@@ -1,0 +1,17 @@
+{
+  "wheels": [
+    {
+      "name": "clydex-2.0.0.dev1-py3-none-any.whl",
+      "sha256": "a360bd32a32ce79ed078dae97329f5f89a55e4ef417a28fecb81a503fb495619"
+    },
+    {
+      "name": "clydex_cloud-0.5.0.dev1-py3-none-any.whl",
+      "sha256": "98d60cc9039b28aea891b0b8909cd5d625dba22d872859c104629760a46bb98a"
+    }
+  ],
+  "frozen_resources": true,
+  "embedded_cloud_client": true,
+  "cloud_server_excluded": true,
+  "frontend_files_verified": 14,
+  "legacy_fallback": true
+}

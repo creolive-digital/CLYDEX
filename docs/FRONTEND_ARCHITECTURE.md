@@ -1,5 +1,13 @@
 # Phase 04 frontend architecture
 
+## Phase 05 extension (2026-11-28)
+
+Four feature directories (`cloud`, `knowledge`, `devices`, `synchronization`) extend the existing React HUD using its existing tokens/components/hooks. They display only observed backend state and explicit disabled/unconfigured/insufficient-evidence status. No direct cloud credentials, API fetches or persistent tokens exist in React. Password entry is cleared on submit; lock unmounts private pages and Core clears RAM sessions/results.
+
+The bridge still exposes exactly `hud_snapshot`, `hud_read`, `hud_command`; shared JSON inventory remains version 1 with a `cloud` read and `cloud.configure`, `cloud.action`, `knowledge.select` commands. The Python inner operation whitelist validates exact fields, UUIDs, types and bounded payloads, and delegates all effects to the existing queue/executor/outbound policy. It accepts no arbitrary HTTP URL/path, Python/shell call, credential read or frontend filesystem path. Native picker output becomes expiring opaque file tokens; files are fingerprinted again after exact approval. Imported themes use the existing presentation service and capability scope.
+
+Cloud/Vault/Devices/Synchronization screens cover sign in/configuration/status, collections/notes/uploads/versions/jobs/search/citations, offline selection/limits/removal, pairing/revocation/rotation and opt-in queued/incoming changes. Runtime speech activation continues through existing voice controls; workflow replicas are inert. Native screenshots and mocked/component versus actual Windows/SQL-simulation evidence are linked in PHASE_05_COMPLETION_REPORT. The desktop package includes local schema 4, both frontends and the client; it excludes the independent cloud server.
+
 React/TypeScript/Vite replaces the primary Studio presentation incrementally. `frontend/legacy` remains unchanged and launchable with `python scripts/windows/clydex_voice_agent.pyw --legacy`. A missing HUD build selects that fallback. Both presentations use the existing CoreApplication; there is no new AI, voice, conversation, memory or permission engine.
 
 ## Build and source boundaries

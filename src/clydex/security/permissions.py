@@ -73,6 +73,11 @@ class PermissionService:
 
 # No model-controlled risk/scope fields. Only these installed capabilities exist.
 TOOL_SPECS = (
+    ToolSpec('cloud.configure', 'cloud.settings', Risk.HIGH, 30, (('configuration', dict),), (dict,)),
+    ToolSpec('cloud.request', 'cloud.vault', Risk.HIGH, 900,
+             (('operation', str), ('destination', str), ('data', dict), ('credential_digest', str)), (dict,)),
+    ToolSpec('sync.apply', 'local.synchronization', Risk.HIGH, 120, (('change', dict),), (dict,)),
+    ToolSpec('knowledge.cache', 'local.knowledge', Risk.HIGH, 120, (('operation', str), ('data', dict)), (dict,)),
     ToolSpec('app.launch', 'apps.launch', Risk.LOW, 25, (('name', str), ('app_id', str)), (type(None),)),
     ToolSpec('app.read', 'apps.inspect', Risk.SENSITIVE, 25, (('action', str), ('target', str)), (list,)),
     ToolSpec('app.manage', 'apps.windows', Risk.LOW, 10, (('operation', str), ('window', dict)), (str,)),

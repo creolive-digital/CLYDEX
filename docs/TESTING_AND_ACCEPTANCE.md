@@ -1,5 +1,15 @@
 # Testing and acceptance
 
+## Phase 05 engineering evidence (2026-11-28)
+
+Use `scripts/verify_phase05.ps1 -CloudPython <isolated cloud interpreter>`. It runs active Python tests/lint/compile, cloud tests/lint/compile, frontend tests/typecheck/build and the archive tests in a separate process. No automatic GitHub Actions workflow is recreated. Exact final counts/timings, screenshot and package manifests are in PHASE_05_COMPLETION_REPORT and `docs/evidence/phase05/`.
+
+Admission passed 201 Python tests (17.533 s), 16 frontend tests (24.82 s), TypeScript/build (Vite 8.64 s). Phase 04 native/package evidence was reviewed. New deterministic cases cover authentication/refresh replay/recovery, pairing/revocation/scopes/owner isolation, encrypted files/ingestion/citations/deletion, unsafe archive/XML/code handling, job cancellation, sync duplicates/conflicts/backoff/staging/import rollback, private outbound RAG review, cache expiry/replay/account binding and actual request-log privacy.
+
+Cloud repository fixtures are **SQLite simulation**, not SQL Server verification. Real loopback Uvicorn/FastAPI TLS tests use an ephemeral trusted synthetic certificate. Local embedding protocol tests use a mock, with no model download/inference. Recovery tests actually encrypt/export/restore synthetic files/rows into an empty isolated simulated database, verify content/checksum and revoke restored sessions. Native SQL tests stay skipped until separately authorized against a dedicated empty disposable database. No real production resource was used.
+
+Actual Windows WebView2 tests run the real frontend/bridge/Core/DPAPI against real FastAPI routes through an in-process dependency adapter with simulated SQL; screenshots are native client-area captures. This proves native rendering/bridge/data flow, not production SQL/TLS/Linux/audio behavior. The broader HUD/legacy/widget smoke and clean frozen build/resource/startup checks are separately recorded. Actual picker gestures, physical lock, acoustic/model/language/rig, long-run performance, Inno/fresh install and release acceptance remain pending. A WebView2 Crashpad metrics cleanup warning occurred in legacy smoke; it does not establish complete browser-temp cleanup.
+
 ## Phase 04 local owner review verification (2026-11-27)
 
 Reviewed `5258c8f` admission: 185 tests in 16.772 s; successful exact-checkpoint CI [45954460043](https://github.com/creolive-digital/CLYDEX/actions/runs/45954460043). New work remains local, so no new remote CI result is claimed. Detailed results, actual screenshots and limits are in PHASE_04_COMPLETION_REPORT and `docs/evidence/phase04/`.

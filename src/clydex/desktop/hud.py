@@ -52,6 +52,7 @@ class HudService:
             mimetypes.add_type(mime, suffix)
         self.studio, self.core = studio, studio._core
         self.preferences = DesktopPreferences(self.core.paths)
+        self.core.cloud.apply_theme = self.preferences.configure
         self.display = display or DisplayController(studio, self.core.paths)
         self.widget = widget or WidgetService()
         self.system = SystemInformation()
@@ -103,6 +104,7 @@ class HudService:
         frame = self.studio.snapshot()
         with self._lock:
             if frame['voice']['locked']:
+                self.core.cloud.lock()
                 self._chat.clear()
                 self.notifications.clear()
                 frame.update(messages=[], intelligence_events=[], voice_events=[], level=0, bands=[], wave=[], review=None)
@@ -201,6 +203,10 @@ class HudService:
             return dict(scopes=[dict(scope=s, disabled=s in self.core.engine.executor._disabled_scopes,
                 startup_disabled=s in self.core.config.disabled_scopes) for s in sorted({s.scope for s in TOOL_SPECS})],
                 cloud_allowed=self.core.config.allow_cloud, privacy_ceiling=self.core.config.privacy_mode)
+        if section == 'cloud':
+            if self.core.queue.busy:
+                return {'busy': True}
+            return self.core.cloud.snapshot()
         self.widget.start()
         return self.widget.snapshot()
 
@@ -236,8 +242,23 @@ class HudService:
             'notifications.clear': lambda: self.notifications.clear() or True,
             'notifications.native_test': lambda: self.native_notification() if self.preferences.values.native_notifications else False,
             'startup.greet': self._greet,
+            'cloud.configure': lambda: s._intelligence_work(lambda: self.core.cloud.configure(values['values'])),
+            'cloud.action': lambda: s._intelligence_work(lambda: self.core.cloud.execute(values['operation'], values['values'])),
+            'knowledge.select': lambda: self._select_knowledge(values.get('folder', False)),
         }
         return functions[action]()
+
+    def _select_knowledge(self, folder):
+        if self.core.queue.busy or self.display.window is None:
+            return False
+        import webview
+        paths = self.display.window.create_file_dialog(webview.FileDialog.FOLDER if folder else webview.FileDialog.OPEN,
+                                                      allow_multiple=not folder)
+        if not paths:
+            return False
+        if self.core.voice.privacy.refresh():
+            return False
+        return self.core.cloud.selection(paths, folder=folder)
 
     def _clear_chat(self):
         if not self.studio.clear():

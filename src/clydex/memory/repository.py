@@ -80,3 +80,23 @@ class MemoryRepository:
                        ('deleted', utc_now(), key, self.owner, revision, 'active')).rowcount
             if changed != 1:
                 raise PermissionDenied('Memory changed after review.')
+
+    def apply_sync(self, db, key, payload, deleted=False):
+        """Trusted reviewed import inside the sync mapping transaction; never automatic memory."""
+        identifier(key)
+        now = utc_now()
+        if deleted:
+            db.execute('UPDATE memories SET content=NULL,status=?,revision=revision+1,updated_at=? WHERE id=? AND owner=?',
+                       ('deleted', now, key, self.owner))
+            return
+        self.validate(payload['category'], payload['value'], payload['origin'], 'manual_ui', '', True, False)
+        if not db.execute('SELECT 1 FROM memories WHERE id=? AND owner=?', (key, self.owner)).fetchone():
+            count = db.execute('SELECT count(*) FROM memories WHERE owner=? AND status=?', (self.owner, 'active')).fetchone()[0]
+            if count >= 1000:
+                raise PermissionDenied('Memory capacity reached.')
+            db.execute('INSERT INTO memories VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)', (key, self.owner, payload['category'],
+                self.cipher.seal(payload['value'], self.owner), payload['origin'], 'manual_ui', '', 1, 0, now, now, 'active', 1))
+        else:
+            db.execute('UPDATE memories SET category=?,content=?,origin=?,confirmed=1,updated_at=?,revision=revision+1 '
+                       'WHERE id=? AND owner=? AND local_only=0', (payload['category'], self.cipher.seal(payload['value'], self.owner),
+                       payload['origin'], now, key, self.owner))

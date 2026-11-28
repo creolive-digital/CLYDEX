@@ -1,5 +1,21 @@
 # Open issues and requirement conflicts
 
+## Phase 05 checkpoint disposition (2026-11-28)
+
+| ID | Engineering disposition | Remaining owner / external acceptance |
+|---|---|---|
+| OI-41 | SQL Server 2025-only TLS adapter, generated 26-table migration/checksum/empty rollback, test-only simulated repository and guarded native suite. | Production edition/license, Ubuntu build/CA/hardware, actual native migrations/locking/vector/restore. Existing workstation SQL untouched; no SQL image/EULA accepted. |
+| OI-42 | Blind keyword retrieval works on synthetic fixtures; optional exact local model digest and encrypted native vector scan are implemented. | Owner selects/licenses/installs a model, validates languages/quality and SQL native distance/performance. Fixed loopback model service needs a reviewed container networking arrangement before activation. |
+| OI-43 | Approved server-managed AES-GCM and independent recovery exports; no E2EE/DPAPI cross-device claim. | Operator key custody, live master/auth rotation procedure, retention, disk/TDE policy, passphrase recovery and compromise response. Losing keys/exports can lose content. |
+| OI-44 | Private non-root Compose/nginx/TLS/SQL templates and bounded metadata logging/limits. | No Linux image/service deployed; actual TLS/proxy trust, firewall, least privilege, penetration testing and capacity acceptance remain open. Per-process limiter assumes one API process. |
+| OI-45 | UTF-8, PDF text layer, OOXML, saved HTML and notes extracted; images/WAV stored with explicit status. | No OCR, audio inference, live URL crawl, legacy Office conversion or exhaustive hostile parser certification. JPEG checks are container signatures, not a decoder guarantee. |
+| OI-46 | Actual encrypted logical export/restore on synthetic isolated SQL simulation, tamper rejection and revoked restored sessions. | Native SQL `.bak` and logical restore/identity handling, Linux filesystem/crash recovery and large-scale streaming exports. Logical format caps at 256 MiB/100k rows per table; reconcile any crash-orphan encrypted files during operator maintenance. |
+| OI-47 | Actual source WebView2 screens, preserved legacy widget/UI and clean frozen startup/resources verified. | Native picker gestures, physical lock/mixed-DPI/accessibility, Inno/fresh install/signing and long-run acceptance. Legacy smoke emitted a WebView2 Crashpad metrics temporary-directory cleanup warning; checks/shutdown passed, but complete browser-temp cleanup is not claimed. |
+| OI-48 | Manual opt-in categories, immutable idempotent operations, conflicts/tombstones, DPAPI queue/cache and reviewed atomic imports. | Real multi-device/offline stress and owner conflict/retention policy. Preferences/metadata replicas do not imply automatic runtime capture changes; workflows remain inert Phase 06 contracts. Offline revocation is observed only on reconnection. |
+| OI-49 | Final review corrected missing cloud HTTP runtime dependency, stale-replay cache invalidation and duplicate generated SQL constraint names; tests/packaging/local scripts cover these. | Linux wheel/image resolution and native SQL performance remain unverified; no claim of production readiness follows from local passing tests. |
+
+Previous OI-25–29/32 and OI-34–40 acceptance qualifications remain applicable. Phase 05 supersedes historical scope stops, without claiming acoustic/model/rig/production acceptance. No automatic CI, remote push or public deployment.
+
 ## Phase 04 checkpoint disposition (2026-11-27)
 
 | IDs | Engineering disposition | Owner / external acceptance |

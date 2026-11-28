@@ -1,5 +1,11 @@
 # Development roadmap
 
+## Current Phase 05 disposition (2026-11-28)
+
+P5-01–12 engineering is delivered for owner review with explicitly gated SQL/model/Linux/production acceptance. The owner approved the SQL Server 2025 and server-managed AES-GCM baseline; no hosting, paid activation or private transfer follows from that approval. See PHASE_05_COMPLETION_REPORT for implemented versus simulated/native/unverified results, remaining decisions and actual evidence.
+
+Phase 06 remains unimplemented and requires a new owner instruction. Workflow synchronization contains inert versioned contracts only. Mobile, robot, marketplace and full automation execution are not activated. Stop at Phase 05. The removed GitHub Actions workflow stays removed; local scripts provide checks. No push/merge/tag/release.
+
 ## Current Phase 04 disposition (2026-11-27)
 
 The explicit Phase 04 owner instruction supersedes historical checkpoint stops below. P4-01 audit/admission, P4-02 frontend/bridge, P4-03 functional screens, P4-04 reference renderer, P4-05 display modes, P4-06 startup/sounds, P4-07 shared widget/notifications, P4-08 declared verification and P4-09 documentation are implemented for local review. The authorized fallback is a labeled owner reference with an extensible renderer; facial/full-body rigging, blinking and precise lip sync remain asset-dependent, not completed features. Live voice/provider acceptance is unchanged. See PHASE_04_COMPLETION_REPORT. Stop at Phase 04; Phase 05–08 remain unimplemented/unapproved.

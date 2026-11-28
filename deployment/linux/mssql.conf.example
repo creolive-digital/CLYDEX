@@ -1,0 +1,10 @@
+# SQL Server 2025 on a supported Ubuntu host. Install/edition/license acceptance is separate.
+[network]
+tcpport = 1433
+forceencryption = 1
+tlscert = /var/opt/mssql/secrets/sqlserver.pem
+tlskey = /var/opt/mssql/secrets/sqlserver.key
+tlsprotocols = 1.2
+[memory]
+memorylimitmb = 4096
+# No preview feature activation. No public SQL listener/firewall rule is supplied.

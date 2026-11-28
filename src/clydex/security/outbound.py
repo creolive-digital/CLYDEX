@@ -6,6 +6,12 @@ from clydex.providers.base import ProviderConfig
 
 class OutboundPolicy:
     @staticmethod
+    def cloud_service(*, enabled: bool, privacy: bool, offline: bool, allow_cloud: bool):
+        """Owner-hosted storage is separate from paid AI, under the same privacy ceiling."""
+        if not enabled or privacy or offline or not allow_cloud:
+            raise PermissionDenied('Cloud storage is disabled by the local outbound privacy policy.')
+
+    @staticmethod
     def check(provider: ProviderConfig, context: ContextBundle, *, privacy: bool,
               offline: bool, allow_cloud: bool, task_type: str, size: int) -> float | None:
         if not provider.enabled or task_type not in provider.capabilities.task_types:

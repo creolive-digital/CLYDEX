@@ -1,5 +1,9 @@
 # Phase 03 voice and personality
 
+## Phase 05 privacy boundary (2026-11-28)
+
+Cloud synchronization and the offline knowledge cache exclude ambient/raw microphone recordings and sensitive voice-derived history. No voice engine or cloud STT path is added. An owner can separately select an existing PCM WAV file as a reviewed document upload; it receives metadata/storage and `needs_transcription`, not an invented transcription. Current local voice/wake/language/asset/acoustic limitations remain unchanged; cloud accounts do not authenticate spoken commands or bypass action approval.
+
 The local voice runtime feeds the existing CoreApplication queue, IntelligenceCoordinator, conversations, memory and exact-action executor. Text chat still works without a microphone or speech model. Engineering verification and external acceptance are distinguished in [PHASE_03_COMPLETION_REPORT.md](PHASE_03_COMPLETION_REPORT.md).
 
 ## First use

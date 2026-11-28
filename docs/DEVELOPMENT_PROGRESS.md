@@ -1,5 +1,38 @@
 # Development progress
 
+## Owner-authorized Phase 05 publication
+
+Following the Phase 05 handoff, the owner explicitly requested a GitHub push. Commit and publish the completed checkpoint on `v2` only. Pre-publication review matched all 140 paths to the checkpoint manifest, found no new high-signal credential literals or generated/runtime artifacts, and verified main, archive, specifications and approved assets unchanged. Remote `v2` matched the reviewed base before publication. Publication review found and corrected duplicate generated SQL constraint names, regenerated the canonical migration and added a regression proving names are schema-unique. Reverification passed 28 cloud tests with one native SQL test skipped, cloud lint/compilation and updated wheels. Existing 222 desktop Python, 22 frontend and four archive test results plus local/native/build evidence remain applicable; desktop/frontend code is unchanged by the SQL fix. Keep automatic GitHub Actions removed; no deployment, main merge, tag, release or later phase.
+
+## Phase 05 owner-review checkpoint (2026-11-28)
+
+P5-01–12 engineering delivered locally: independent FastAPI/SQL Server schema, secure accounts/devices, encrypted Knowledge Vault/parsers/jobs, keyword/gated native vectors, shared-coordinator RAG, reviewed opt-in sync/DPAPI cache, four React screens and encrypted logical recovery/deployment templates. Final evidence: **222 Python passed**, **27 cloud passed / 1 native SQL skipped**, **22 frontend passed**, four separate archive tests, lint/compile/TypeScript/build, actual loopback TLS, Windows screenshots/six-mode/legacy checks, clean frozen resources/startup and separate wheels. Actual isolated logical restore uses simulated SQL; no native SQL/Linux/model/production acceptance is implied. See PHASE_05_COMPLETION_REPORT and docs/evidence/phase05.
+
+The owner-approved AES-GCM/SQL Server 2025 engineering baseline is recorded. External SQL/licensing/deployment/key custody/model/hardware decisions remain explicit. Main/archive/specifications/branding preserved; workflow stays removed. Changes remain uncommitted/unpublished. Stop at Phase 05 review; no push, merge, tag, release, private/paid activation or Phase 06 work.
+
+## Phase 05 admission and implementation plan (2026-11-28)
+
+Owner authorizes Cloud Infrastructure and Knowledge Vault engineering on clean `v2` at `f2b1a094252c7db76c73812ff451fdc27bcf9263`, superseding the historical Phase 04 stop. The removed GitHub Actions workflow stays removed; no push/merge/tag/release or real infrastructure/private data/paid/model activation is authorized. Original specifications, main, archive and branding remain protected.
+
+Admission: **201 Python tests passed in 17.533 s**, **16 frontend tests passed in 24.82 s**, TypeScript and production build passed (Vite 8.64 s). Reviewed Phase 04 native, encrypted-memory, six-mode/two-monitor, packaging/resource and frozen startup evidence. Acoustic/model/language/production-avatar gates are unchanged. Docker's Linux engine and an existing local SQL service are present; no SQL container image is cached and the owner's existing SQL service will not be used as a test database without authorization. Any in-process test database is explicitly simulation, not SQL Server validation.
+
+| Task | Bounded engineering scope |
+|---|---|
+| P5-01 | Audit/admission, official SQL/Linux/vector/licensing reconciliation and owner decision records. |
+| P5-02 | Independent FastAPI package, versioned contracts, bounded requests/rates/jobs, privacy-safe errors/logs and OpenAPI. |
+| P5-03 | Owned SQL Server schema/migrations/repositories, transactions, constraints/indexes and isolated verification hooks. |
+| P5-04 | Secure provisioning/authentication, rotating hashed sessions, recovery and scoped pairing/revocation. |
+| P5-05 | Validated owner-isolated encrypted filesystem storage, quotas/checksums/versions/deletion. |
+| P5-06 | Bounded ingestion for declared actual parsers, safe source locations, jobs/reprocessing and explicit OCR/audio gates. |
+| P5-07 | Keyword/native-vector retrieval contracts, model/version gates, citations and shared coordinator RAG/private-transfer reviews. |
+| P5-08 | Per-category opt-in incremental sync, idempotency/conflicts/tombstones/offline queue and DPAPI-safe local cache. |
+| P5-09 | Typed bridge and functional React cloud/vault/device/sync/cache interfaces; no fabricated data. |
+| P5-10 | Reproducible private Linux deployment/TLS templates, bounded workers, encrypted backup and isolated restore verification. |
+| P5-11 | Synthetic security/HTTP/desktop/frontend regressions and actual local/native/build checks, clearly separate SQL/deployment gates. |
+| P5-12 | Cloud/database/vault/sync/API/deployment design and completion report, evidence and maintained tracking docs; stop at Phase 05. |
+
+The owner explicitly approved the proposed engineering baseline through the input control: server-managed AES-256-GCM envelope encryption with separate key storage and owner-held encrypted recovery exports; SQL Server 2025 on supported Ubuntu using GA vector types/exact distance, without preview ANN indexes. The cloud can decrypt for ingestion/search; this is not end-to-end encryption. Production edition/licensing, hosting, live activation and all data transfers still require separate approval. Official product D53–55 retain Ubuntu, SQL Server native vectors conditional on feasibility, and private VPS filesystem storage; no separate vector database or external embedding provider is selected.
+
 ## Owner-requested workflow removal (2026-11-27)
 
 After confirming Phase 04 GitHub Actions run 45987118593 succeeded on `v2` at `d39e1d5`, the owner requested removal of the unnecessary action. Remove `.github/workflows/build.yml` from `v2` and publish the removal. Local test/build scripts remain available; historical CI evidence is retained. No application code, main branch, archive, tag or release changes. Validation is limited to the workflow deletion, documentation and clean Git diff; application tests are not rerun for this configuration/documentation-only change.

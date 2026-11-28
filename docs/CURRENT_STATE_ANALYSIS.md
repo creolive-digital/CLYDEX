@@ -1,5 +1,13 @@
 # Current state analysis
 
+## Current Phase 05 assessment (2026-11-28)
+
+Phase 05 is implemented locally on `v2` from clean reviewed `f2b1a094252c7db76c73812ff451fdc27bcf9263`. The owner approved the SQL Server 2025/Ubuntu and server-managed envelope encryption engineering baseline. The independent FastAPI API, generated SQL schema, authentication/device foundation, encrypted file vault/parsers/jobs, keyword/gated native-vector retrieval, shared-coordinator RAG, reviewed sync/outbox/offline cache and four React management screens are described in PHASE_05_COMPLETION_REPORT.
+
+Cloud remains disabled/unconfigured by default. All desktop transfers use existing permissions/privacy and the supervised queue. The existing working SQL service was not touched; tests explicitly simulate the repository, with separate loopback TLS and native Windows evidence. Production SQL migrations/licensing, Linux deployment, real embeddings, native SQL backup/restore and hardware/security acceptance remain pending. Phase 03 acoustic/language/wake and Phase 04 rig/visual/hardware gates are unchanged.
+
+No push, merge, tag, release or public infrastructure activation is authorized. Automatic GitHub Actions remains removed; use local verification scripts. Historical phase stops/CI claims below apply to their original checkpoints and are superseded by this owner instruction.
+
 ## Current Phase 04 assessment (2026-11-27)
 
 The owner authorized the React/TypeScript HUD on reviewed `v2` checkpoint `5258c8f`. Admission passed 185 tests and verified successful Phase 03 CI run 45954460043. The supplied logo/face PNGs exist and are preserved; no rigged model exists. Historical statements below that Phase 04 is unauthorized or all reference assets are missing are superseded.

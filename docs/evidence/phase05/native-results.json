@@ -1,0 +1,20 @@
+{
+  "kind": "Actual Windows WebView2; real FastAPI in-process; synthetic SQLite SQL-repository simulation",
+  "passed": true,
+  "no_external_network": true,
+  "no_audio_or_models": true,
+  "responsive_overflow_760": false,
+  "exact_reviews": 14,
+  "document_status": "ready",
+  "citation_count": 1,
+  "cache_count": 1,
+  "elapsed_seconds": 19.104,
+  "native_picker": "Not interactively exercised; explicit synthetic selection supplied",
+  "bridge": [
+    "hud_command",
+    "hud_read",
+    "hud_snapshot"
+  ],
+  "python_working_set_bytes": 151875584,
+  "shutdown_joined": true
+}

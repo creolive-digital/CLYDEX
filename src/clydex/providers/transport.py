@@ -11,6 +11,7 @@ import select
 import socket
 import ssl
 import time
+from dataclasses import dataclass
 from urllib.parse import urlsplit
 
 from clydex.core.errors import Cancelled
@@ -93,6 +94,12 @@ class _SocketAdapter:
                 _wait(self.stream, True, self.cancel, self.deadline)
 
 
+@dataclass(frozen=True)
+class HTTPResult:
+    status: int
+    body: bytes
+
+
 class HTTPTransport:
     def _connect_socket(self, parts, cancel, deadline):
         port = parts.port or (443 if parts.scheme == 'https' else 80)
@@ -137,6 +144,10 @@ class HTTPTransport:
 
     def request(self, method: str, url: str, headers: dict, body: bytes | None,
                 cancel, timeout: float, limit: int, receive=None) -> bytes:
+        return self.exchange(method, url, headers, body, cancel, timeout, limit, receive, accepted={200}).body
+
+    def exchange(self, method: str, url: str, headers: dict, body: bytes | None,
+                 cancel, timeout: float, limit: int, receive=None, *, accepted=None) -> HTTPResult:
         deadline = time.monotonic() + timeout
         _check(cancel, deadline)
         parts = urlsplit(url)
@@ -154,7 +165,7 @@ class HTTPTransport:
             connection.request(method, (parts.path or '/') + ('?' + parts.query if parts.query else ''),
                                body=body, headers=headers)
             response = connection.getresponse()
-            if response.status != 200:
+            if accepted is not None and response.status not in accepted:
                 kind = {401: 'authentication', 403: 'authentication', 404: 'model_unavailable',
                         429: 'rate_limit', 400: 'invalid_request'}.get(response.status, 'service_error')
                 raise ProviderFailure(kind, response.status)
@@ -174,7 +185,7 @@ class HTTPTransport:
                 else:
                     result.extend(chunk)
             _check(cancel, deadline)
-            return bytes(result)
+            return HTTPResult(response.status, bytes(result))
         except (OSError, http.client.HTTPException, ValueError) as exc:
             _check(cancel, deadline)
             raise ProviderFailure('network') from exc

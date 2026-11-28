@@ -122,6 +122,23 @@ class ConversationRepository:
             db.execute('INSERT INTO conversation_preferences VALUES(?,?) '
                        'ON CONFLICT(owner) DO UPDATE SET retention_days=excluded.retention_days', (self.owner, days))
 
+    def apply_sync(self, db, key, payload, deleted=False):
+        """Caller owns reviewed conflict checks and the same SQLite transaction."""
+        identifier(key)
+        now = utc_now()
+        db.execute('DELETE FROM messages WHERE conversation_id=? AND owner=?', (key, self.owner))
+        if deleted:
+            db.execute('UPDATE conversations SET title=NULL,status=?,revision=revision+1 WHERE id=? AND owner=?',
+                       ('deleted', key, self.owner))
+            return
+        title = self.cipher.seal(validate_private_text(payload['title'], 120), self.owner)
+        db.execute('INSERT INTO conversations(id,owner,title,created_at,updated_at,status) VALUES(?,?,?,?,?,?) '
+                   'ON CONFLICT(id) DO UPDATE SET title=excluded.title,updated_at=excluded.updated_at,revision=conversations.revision+1',
+                   (key, self.owner, title, now, now, 'active'))
+        for message in payload['messages']:
+            db.execute('INSERT INTO messages VALUES(?,?,?,?,?,?,?,?)', (str(uuid.uuid4()), key, self.owner, message['role'],
+                self.cipher.seal(validate_private_text(message['content']), self.owner), now, message['provider'], message['model']))
+
     def purge_expired(self, cutoff: str):
         with self.store.connect() as db:
             ids = db.execute('SELECT id FROM conversations WHERE owner=? AND status<>? AND updated_at<?',

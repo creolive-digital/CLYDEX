@@ -1,3 +1,6 @@
+PHASE 05 ADDENDUM (2026-11-28)
+The Windows desktop still uses deployment/windows/requirements.txt and its existing launchers. The optional cloud server is a separate environment/package; install the local headless root and ./cloud together only for cloud development. Do not add SQL/HTTP server dependencies to the Windows desktop merely to use the client. See CLOUD_DEPLOYMENT_GUIDE.md for protected configuration, verified TLS, operator migrations/provisioning, local verification and recovery. No workflow is recreated; SQL/model/VPS/private activation remains owner gated.
+
 CLYDEX V2 — Windows 10/11
 =======================================
 PHASE 04 HUD
